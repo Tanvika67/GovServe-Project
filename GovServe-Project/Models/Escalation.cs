@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GovServe.Controllers;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 
 namespace GovServe.Models
 {
