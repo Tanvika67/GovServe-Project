@@ -10,18 +10,20 @@ namespace GovServe.Models
 		[Required]
 		[ForeignKey("Application")]
 		public int ApplicationId { get; set; } //FK from Application Table
-
-		//public virtual Applications Application { get; set; }
-
-		public int AssignedOfficerId { get; set; }
+		[Required]
+		public int SupervisorId {  get; set; }
+		[Required]
+		public int AssignedOfficerId {  get; set; }
 		[RegularExpression("Pending|Approved|Rejected", ErrorMessage = "Status must be Pending,Approved or Rejected")]
 		public string Status { get; set; }
 		[Required]
 		public DateTime AssignedDate { get; set; }
 		[Required]
-		public DateTime CreatedDate { get; set; }
+		public DateTime CompletedDate { get; set; }
 		[Required]
-		public DateTime SLADeadline { get; set; }
+		public bool IsEscalated { get; set; } = false;
+		[Required]
+		public DateTime LastUpdated { get; set; }
 
 	}
 }
