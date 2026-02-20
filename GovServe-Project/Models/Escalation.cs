@@ -11,7 +11,7 @@ namespace GovServe.Models
 		[Required]
 		[ForeignKey("Case")]
 		public int CaseId {  get; set; }
-		//public virtual Cases CaseId { get; set; }       //==> why error
+		
 		[Required]
 		[RegularExpression("Citizen",ErrorMessage ="RaisedByType must be Citizen")]
 		public int? RaisedByType { get; set; }
