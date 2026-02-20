@@ -1,8 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using GovServe_Project.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<GovServe_ProjectContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GovServe_ProjectContext") ?? throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
 // Add services to the container.
 
