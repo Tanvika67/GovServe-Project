@@ -10,16 +10,17 @@ namespace GovServe.Models
 		[Required]
 		[ForeignKey("User")]
 		public int  UserId { get; set; }
-	//	public virtual Users UserId { get; set; }    // ==>why error
+		[ForeignKey("Case")]
+		public int CaseId {  get; set; }
 		[Required]
-		[StringLength(150)]
+		[StringLength(1000)]
 		public string Message { get; set; }
 		[Required]
 		[RegularExpression("Info|Warning|Alert")]
         public string Category {  get; set; }
 		[Required]
 		[RegularExpression("Read|Unread")]
-		public string Status{ get; set; }
+		public string Status{ get; set; }         //Unread, Read
 		[Required]
 		public DateTime CreatedDate { get; set; }
 

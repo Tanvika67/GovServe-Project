@@ -13,16 +13,22 @@ namespace GovServe.Models
 		public int CaseId {  get; set; }
 		
 		[Required]
-		[RegularExpression("Citizen",ErrorMessage ="RaisedByType must be Citizen")]
-		public int? RaisedByType { get; set; }
+		public int EscalatedByUserId { get; set; }             //Citizen or GrievanceOfficer or Supervisor
+		public int PreviousOfficerId {  get; set; }
+		public int NewOfficerId { get; set; }
+		
 		[Required]
-		[StringLength(200,MinimumLength =5)]
+		[StringLength(500,MinimumLength =5)]
 		public string Reason { get; set; }
 		[Required]
 		[RegularExpression("Pending|Resolved|",ErrorMessage ="Status must be Pending or Resolved")]
 		public string Status { get; set; }
 		[Required]
-		public DateTime CreatedDate { get; set; }
+		public DateTime EscalationDate {  get; set; }
+		[Required]
+		public DateTime ResolvedDate {  get; set; }
+		[Required]
+		public int EscalationLevel { get; set; } = 1;
 
 	}
 }
