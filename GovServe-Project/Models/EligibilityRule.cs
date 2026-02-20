@@ -1,29 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GovServe.Models
+namespace GovServe_Project.Models
 {
+    [Table("EligibilityRules")]
     public class EligibilityRule
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RuleID { get; set; }
 
-        [Required (ErrorMessage="Service ID is Required")]
-        [ForeignKey(nameof(Service))]
+        // "Service" in requirement means ServiceID (FK)
+        [Required(ErrorMessage = "ServiceID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "ServiceID must be a positive number.")]
         public int ServiceID { get; set; }
 
-        [ValidateNever]
-        public virtual Service Service { get; set; }
+        [Required(ErrorMessage = "Rule description is required.")]
+        [StringLength(1000, MinimumLength = 5,
+            ErrorMessage = "Rule description must be between 5 and 1000 characters.")]
+        public string RuleDescription { get; set; } = default!;
 
-        [Required(ErrorMessage ="Rule Description is Required.")]
-        [StringLength(300,ErrorMessage="Rule Description cannot exceed 300 character.")]
-        public string RuleDescription {  get; set; }
+        [Required(ErrorMessage = "Rule expression is required.")]
+        [StringLength(4000, ErrorMessage = "Rule expression cannot exceed 4000 characters.")]
+        public string RuleExpression { get; set; } = default!; 
 
-        [Display(Name ="Rule Expression (Optional)")]
-        public string RuleExpression {  get; set; }
-
-        
-
+        // Navigation
+        [ForeignKey(nameof(ServiceID))]
+        public Service? Service { get; set; }
     }
 }

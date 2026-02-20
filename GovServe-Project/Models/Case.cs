@@ -11,7 +11,7 @@ namespace GovServe.Models
 		[ForeignKey("Application")]
 		public int ApplicationId { get; set; } //FK from Application Table
 
-		public virtual Applications Application { get; set; }
+		//public virtual Applications Application { get; set; }
 
 		public int AssignedOfficerId { get; set; }
 		[RegularExpression("Pending|Approved|Rejected", ErrorMessage = "Status must be Pending,Approved or Rejected")]

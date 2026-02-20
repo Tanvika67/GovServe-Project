@@ -1,38 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GovServe.Models
+namespace GovServe_Project.Models
 {
+    [Table("RequiredDocuments")]
     public class RequiredDocument
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DocumentID { get; set; }
 
-        [Required(ErrorMessage = "Service ID is required.")]
-        [ForeignKey(nameof(Service))]
+        // "Service" in requirement means ServiceID (FK)
+        [Required(ErrorMessage = "ServiceID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "ServiceID must be a positive number.")]
         public int ServiceID { get; set; }
-        [ValidateNever]
-        public virtual Service Service { get; set; }
 
-        [Required(ErrorMessage = "Document Name is required.")]
-        [StringLength(150, ErrorMessage = "Document Name cannot exceed 150 characters.")]
-        [Display(Name = "Document Name")]
-        public string DocumentName { get; set; }
+        [Required(ErrorMessage = "Document name is required.")]
+        [StringLength(150, MinimumLength = 2,
+            ErrorMessage = "Document name must be between 2 and 150 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Document name allows letters, numbers, spaces, and - & ( ).")]
+        public string DocumentName { get; set; } = default!;
 
-        [Display(Name = "Is Mandatory?")]
+        [Required(ErrorMessage = "Mandatory flag is required.")]
         public bool Mandatory { get; set; }
 
-        [StringLength(100, ErrorMessage = "Document Type cannot exceed 100 characters.")]
-        [Display(Name = "Document Type")]
-        public string DocumentType { get; set; } // e.g. ID Proof
-
-        // ⭐ NEW: Allowed formats (PDF or Photo)
-        [Required]
-        [Display(Name = "Allowed File Formats")]
-        public string AllowedFormats { get; set; } = "PDF,JPG,PNG";
-
         // Navigation
-       
+        [ForeignKey(nameof(ServiceID))]
+        public Service? Service { get; set; }
     }
 }

@@ -1,25 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GovServe.Models
+namespace GovServe_Project.Models
 {
+    [Table("Departments")]
     public class Department
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentID { get; set; }
 
-        [Required(ErrorMessage = "Department Name is required.")]
-        [StringLength(100, ErrorMessage = "Department Name cannot exceed 100 characters.")]
-        public string DepartmentName { get; set; }
+        [Required(ErrorMessage = "Department name is required.")]
+        [StringLength(100, MinimumLength = 2,
+            ErrorMessage = "Department name must be between 2 and 100 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Department name allows letters, numbers, spaces, and - & ( ).")]
+        public string DepartmentName { get; set; } = default!;
 
-        [StringLength(250, ErrorMessage = "Description cannot exceed 250 characters.")]
-        public string Description { get; set; }
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+        public string? Description { get; set; }
 
-        [Display(Name = "Is Active")]
+        [Required(ErrorMessage = "IsActive is required.")]
         public bool IsActive { get; set; } = true;
 
-        // Navigation Property
-        public virtual ICollection<Service> Services { get; set; } = new List<Service>();
+        // Navigation
+        public ICollection<Service> Services { get; set; } = new List<Service>();
     }
 }

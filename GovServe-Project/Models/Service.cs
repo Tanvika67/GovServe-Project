@@ -1,58 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
 
-namespace GovServe.Models
+namespace GovServe_Project.Models
 {
+    [Table("Services")]
     public class Service
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ServiceID { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(Department))]
+        [Required(ErrorMessage = "DepartmentID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "DepartmentID must be a positive number.")]
         public int DepartmentID { get; set; }
 
-        [ValidateNever]
-        public virtual Department Department { get; set; }
+        [Required(ErrorMessage = "Service name is required.")]
+        [StringLength(120, MinimumLength = 2,
+            ErrorMessage = "Service name must be between 2 and 120 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Service name allows letters, numbers, spaces, and - & ( ).")]
+        public string ServiceName { get; set; } = default!;
 
-        [Required(ErrorMessage = "Service Name is required.")]
-        [StringLength(150, MinimumLength = 5,
-            ErrorMessage = "Service Name must be between 5 and 150 characters.")]
-        public string ServiceName { get; set; }
+        [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters.")]
+        public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Description is required.")]
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
-        public string Description { get; set; }
-
-        [Range(0, 365, ErrorMessage = "SLA days must be between 0 and 365.")]
-        [Display(Name = "SLA (Days)")]
+        [Required(ErrorMessage = "SLA days are required.")]
+        [Range(1, 365, ErrorMessage = "SLA days must be between 1 and 365.")]
         public int SLA_Days { get; set; }
 
-        [Display(Name = "Active Status")]
-        public bool Status { get; set; }
+        [Required(ErrorMessage = "Status is required.")]
+        public ServiceStatus Status { get; set; } = ServiceStatus.Active;
 
         [Required]
-        [Display(Name = "Created On")]
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
-        // Navigation Collections (not validated on model binding)
-        [ValidateNever]
-        public virtual ICollection<EligibilityRule> EligibilityRules { get; set; }
-            = new List<EligibilityRule>();
+        // Navigation
+        [ForeignKey(nameof(DepartmentID))]
+        public Department? Department { get; set; }
 
-        [ValidateNever]
-        public virtual ICollection<RequiredDocument> RequiredDocuments { get; set; }
-            = new List<RequiredDocument>();
-
-        [ValidateNever]
-        public virtual ICollection<WorkflowStage> WorkflowStages { get; set; }
-            = new List<WorkflowStage>();
-
-        // Future Expansion
-        // public ICollection<ServiceReport> ServiceReports { get; set; } 
-        //    = new List<ServiceReport>();
+        public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
+        public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
+        public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
+        public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
     }
 }
