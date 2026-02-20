@@ -25,5 +25,6 @@ namespace GovServe.Models
 		[Required]
 		public DateTime LastUpdated { get; set; }
 
+
 	}
 }
