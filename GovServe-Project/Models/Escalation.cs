@@ -12,6 +12,7 @@ namespace GovServe.Models
 		[Required]
 		[ForeignKey("Case")]
 		public int CaseId {  get; set; }
+		
 		[Required]
 		public int EscalatedByUserId { get; set; }             //Citizen or GrievanceOfficer or Supervisor
 		public int PreviousOfficerId {  get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GovServe_Project.Enum;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,10 +22,12 @@ namespace GovServe_Project.Models
         [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "IsActive is required.")]
-        public bool IsActive { get; set; } = true;
+
+        [Required]
+        public DepartmentStatus Status { get; set; } = DepartmentStatus.Active;
+
 
         // Navigation
-        public ICollection<Service> Services { get; set; } = new List<Service>();
+        //public ICollection<Service> Services { get; set; } = new List<Service>();
     }
 }

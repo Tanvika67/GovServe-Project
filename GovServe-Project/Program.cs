@@ -1,21 +1,34 @@
+using GovServe_Project.Data;
+using GovServe_Project.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using GovServe_Project.Data;
+using Microsoft.OpenApi;
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<GovServe_ProjectContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("GovServe_ProjectContext") ?? throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
 // Add services to the container.
+builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -29,9 +42,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//app.UseRouting();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
 app.MapControllers();
 
+
 app.Run();
+
+
+
+
+
