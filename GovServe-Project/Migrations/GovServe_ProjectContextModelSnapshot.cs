@@ -51,7 +51,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasKey("CaseId");
 
-                    b.ToTable("Case");
+                    b.ToTable("Case");                 
                 });
 #pragma warning restore 612, 618
         }

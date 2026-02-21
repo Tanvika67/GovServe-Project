@@ -6,6 +6,7 @@ namespace GovServe.Models
 	public class Case
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CaseId { get; set; }   //Primary key
 		[Required]
 		[ForeignKey("Application")]

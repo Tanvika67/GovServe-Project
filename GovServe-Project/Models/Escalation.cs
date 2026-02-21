@@ -7,6 +7,7 @@ namespace GovServe.Models
 	public class Escalation
 	{
 		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int EscalationId { get; set; }
 		[Required]
 		[ForeignKey("Case")]
