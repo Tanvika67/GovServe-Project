@@ -13,7 +13,7 @@ namespace GovServe_Project.Models
 		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
 		[ValidateNever]
-		public virtual Applications Application { get; set; }
+		public virtual Application Application { get; set; }
 		public int DocumentID { get; set; }
 		//[ForeignKey("DocumentID")]
 		//[ValidateNever]
