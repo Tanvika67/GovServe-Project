@@ -1,6 +1,6 @@
 ﻿namespace GovServe_Project.Services.Interfaces
 {
-    public class IUserServices
+    public class ICitizenDocumentService
     {
     }
 }
