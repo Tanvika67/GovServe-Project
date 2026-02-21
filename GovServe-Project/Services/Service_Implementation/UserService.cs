@@ -1,6 +1,6 @@
 ﻿namespace GovServe_Project.Services.Service_Implementation
 {
-    public class UserServices
+    public class UserService
     {
     }
 }

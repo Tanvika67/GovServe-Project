@@ -29,6 +29,8 @@ namespace GovServe_Project.Models
 		public string Role { get; set; }
 
 		// Navigation Property
-		//public virtual ICollection<Applications> Applications { get; set; }
+		public virtual ICollection<Application> Applications { get; set; }
+		//public virtual ICollection<Grievance> Grievances { get; set; }
+		//public virtual ICollection<Appeal> Appeals { get; set; }
 	}
 }

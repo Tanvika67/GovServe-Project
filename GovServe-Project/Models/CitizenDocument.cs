@@ -15,9 +15,8 @@ namespace GovServe_Project.Models
 		[ValidateNever]
 		public virtual Application Application { get; set; }
 		public int DocumentID { get; set; }
-		//[ForeignKey("DocumentID")]
-		//[ValidateNever]
-		//public virtual RequiredDocument Required { get; set; }
+		[ForeignKey("DocumentID")]
+		public virtual RequiredDocument Required { get; set; }
 
 		[Required, MaxLength(100)]
 		public string DocumentType { get; set; }
@@ -32,5 +31,6 @@ namespace GovServe_Project.Models
 		[RegularExpression("Submitted|Under Review|Approved|Rejected",
 	ErrorMessage = "Status must be Submitted, Under Review, Approved or Rejected")]
 		public string VerificationStatus { get; set; }
+		
 	}
 }
