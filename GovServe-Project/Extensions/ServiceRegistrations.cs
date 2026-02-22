@@ -1,11 +1,12 @@
 ﻿
-
-
 using GovServe_Project.Data;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implementation;
-using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Service_Implementation;
+using GovServe_Project.Repositories;
+using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.Admin;
+using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
+using GovServe_Project.Services;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 namespace GovServe_Project.Extensions
@@ -25,11 +26,20 @@ namespace GovServe_Project.Extensions
                
               //Repository
                services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+               services.AddScoped<IServiceRepository, ServiceRepository>();
+               services.AddScoped<IEligibilityRuleRepository, EligibilityRuleSrvice>();
+               services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
+               services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
+               services.AddScoped<ISLARecordRepository, SLARecordRepository>();
+            
 
             //Services
             services.AddScoped<IDepartmentService, DepartmentService>();
-
-
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
+            services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
+            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+            services.AddScoped<ISLARecordService, SLARecordService>();
 
             return services;
             }
