@@ -21,7 +21,7 @@ namespace GovServe_Project.Models
 		//public virtual Service Service { get; set; }
 
 		[Required]
-		public int DepartmnetID { get; set; }
+		public int DepartmentID { get; set; }
 		//[ForeignKey("DepartmnetID")]
 		//[ValidateNever]
 		//public virtual Department Department { get; set; }
@@ -36,7 +36,9 @@ namespace GovServe_Project.Models
 		[Required]
 		public DateTime SubmittedDate { get; set; }
 
-		[Required]
+        public DateTime? CompletedDate { get; set; }
+
+        [Required]
 		//	[RegularExpression("Submitted|Under Review|Approved|Rejected",
 		//ErrorMessage = "Status must be Submitted and No Submitted")]
 		public string Status { get; set; }

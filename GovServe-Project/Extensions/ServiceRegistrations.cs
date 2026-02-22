@@ -31,7 +31,8 @@ namespace GovServe_Project.Extensions
                services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
                services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
                services.AddScoped<ISLARecordRepository, SLARecordRepository>();
-            
+            services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
+
 
             //Services
             services.AddScoped<IDepartmentService, DepartmentService>();
@@ -40,6 +41,8 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
+            services.AddScoped<IServiceReportService, ServiceReportService>();
+
 
             return services;
             }

@@ -1,34 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GovServe_Project.Models.AdminModels
+[Table("ServiceReports")]
+public class ServiceReport
 {
-    public class ServiceReport
-    {
-        [Key]
-        public int ReportID { get; set; }
+    [Key]
+    public int ReportID { get; set; }
 
-        //Application
-        public int TotalApplications { get; set; }
-        public int ApprovedApplication { get; set; }
+    [Required]
+    public ReportScopeType Scope { get; set; } = default!;
+    // Example: "Department-5", "Service-3", "Period-2025-01"
 
-        public int RejectedApplication { get; set; }
-        public int PendingApplication { get; set; }
-        
-        //cases
-        public int TotalCases { get; set; }
-        public int ActiveCases { get; set; }
-        public int EscalateCases { get; set; }
+    [NotMapped]
+    public ServiceReportMetricsDTO Metrics { get; set; } = new();
 
-        //SLA Recode
-        public int TotalSLARecords { get; set; }
-        public int SLABreachedCases { get; set; }
-
-        //Grievance
-        public int TotalGrievances { get; set; }
-        public int ResolvedGrievances { get; set; }
-        public int pendingGrievances { get; set; }
-
-        public DateTime ReportDate { get; set; } = DateTime.Now;
-    }
+    public DateTime GeneratedDate { get; set; } = DateTime.UtcNow;
 }

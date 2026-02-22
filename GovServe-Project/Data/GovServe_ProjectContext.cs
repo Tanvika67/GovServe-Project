@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using GovServe.Models;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models;
 
 namespace GovServe_Project.Data
 {
@@ -22,6 +23,7 @@ namespace GovServe_Project.Data
         public DbSet<RequiredDocument> RequiredDocuments { get; set; } = default!;
         public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
         public DbSet<SLARecord> SLARecords{ get; set; } = default!;
+        public DbSet<Applications> Applications { get; set; } = default!;
 
         internal async Task SaveChaangesAsync(Service service)
         {
