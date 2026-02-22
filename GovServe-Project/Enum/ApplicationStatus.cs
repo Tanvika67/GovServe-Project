@@ -2,10 +2,10 @@
 {
     public class ApplicationStatus
     {
-		Pending,
-        InProgress,
-        Approved,
-        Rejected,
-        Resubmitted
+		//Pending,
+  //      InProgress,
+  //      Approved,
+  //      Rejected,
+  //      Resubmitted
 	}
 }

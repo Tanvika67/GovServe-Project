@@ -17,5 +17,11 @@ namespace GovServe_Project.Data
 
         public DbSet<GovServe.Models.Case> Case { get; set; } = default!;
         public DbSet<GovServe_Project.Models.Department> Department { get; set; } = default!;
+        public DbSet<GovServe_Project.Models.Service> Service { get; set; } = default!;
+        public DbSet<GovServe_Project.Models.Application> Application { get; set; } = default!;
+        public DbSet<GovServe_Project.Models.RequiredDocument> RequiredDocument { get; set; } = default!;
+        public DbSet<GovServe_Project.Models.CitizenDocument> CitizenDocument { get; set; } = default!;
+        public DbSet<GovServe_Project.Models.User> User { get; set; } = default!;
+
     }
 }

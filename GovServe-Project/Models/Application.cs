@@ -4,15 +4,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GovServe_Project.Models
 {
-    public class Application
-    {
+	public class Application
+	{
 		[Key]
 		public int ApplicationID { get; set; }
 
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
-		[ValidateNever]
-
 		public virtual User User { get; set; }
 
 		public int ServiceID { get; set; }
@@ -33,7 +31,7 @@ namespace GovServe_Project.Models
 		public DateTime SubmittedDate { get; set; }
 
 		[Required]
-		public string ApplicationStatus { get; set; }= "Pending";
+		public string ApplicationStatus { get; set; } = "Pending";
 
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }

@@ -7,7 +7,7 @@ using GovServe_Project.Enum;
 namespace GovServe_Project.Models
 {
     [Table("SLARecords")]
-    public class SLARecord : IValidatableObject
+    public class SLARecord 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,7 +1,14 @@
-﻿namespace GovServe_Project.Services.Interfaces
+﻿using GovServe_Project.Models;
+namespace GovServe_Project.Services.Interfaces
 {
-    public class IApplicationsServices
-    {
+	public interface IApplicationService
+	{
+		Task CreateApplication(Application app);
 
-    }
+		Task<List<Application>> MyApplications(int userId);
+
+		Task<Application> ApplicationStatus(int id);
+
+		Task DeleteApplication(int id);
+	}
 }
