@@ -27,7 +27,8 @@ namespace GovServe_Project.Models.AdminModels
         public DepartmentStatus Status { get; set; } = DepartmentStatus.Active;
 
 
-        // Navigation
-        //public ICollection<Service> Services { get; set; } = new List<Service>();
-    }
+		// Navigation
+		//public ICollection<Service> Services { get; set; } = new List<Service>();
+		public ICollection<User> User { get; set; }
+	}
 }

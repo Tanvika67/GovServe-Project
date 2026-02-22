@@ -1,6 +1,7 @@
 ﻿namespace GovServe_Project.Services.Service_Implementation
 {
-    public class ApplicationServices
-    {
-    }
+	public class SupervisorService
+	{
+
+	}
 }

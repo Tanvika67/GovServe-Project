@@ -5,54 +5,55 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GovServe.Models;
 using GovServe_Project.Data;
+using GovServe_Project.Models;
 
 namespace GovServe_Project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CasesController : ControllerBase
+    public class DepartmentsController : ControllerBase
     {
         private readonly GovServe_ProjectContext _context;
 
-        public CasesController(GovServe_ProjectContext context)
+
+        public DepartmentsController(GovServe_ProjectContext context)
         {
             _context = context;
         }
 
-        // GET: api/Cases
+        // GET: api/Departments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Case>>> GetCase()
+        public async Task<ActionResult<IEnumerable<Department>>> GetDepartment()
         {
-            return await _context.Case.ToListAsync();
+            return await _context.Department.ToListAsync();
         }
 
-        // GET: api/Cases/5
+        // GET: api/Departments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Case>> GetCase(int id)
+        public async Task<ActionResult<Department>> GetDepartment(int id)
         {
-            var @case = await _context.Case.FindAsync(id);
+            var department = await _context.Department.FindAsync(id);
 
-            if (@case == null)
+            if (department == null)
             {
                 return NotFound();
             }
 
-            return @case;
+            return department;
         }
 
-        // PUT: api/Cases/5
+        // PUT: api/Departments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCase(int id, Case @case)
+        public async Task<IActionResult> PutDepartment(int id, Department department)
         {
-            if (id != @case.CaseId)
+            if (id != department.DepartmentID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(@case).State = EntityState.Modified;
+            _context.Entry(department).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace GovServe_Project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CaseExists(id))
+                if (!DepartmentExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +74,36 @@ namespace GovServe_Project.Controllers
             return NoContent();
         }
 
-        // POST: api/Cases
+        // POST: api/Departments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Case>> PostCase(Case @case)
+        public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
-            _context.Case.Add(@case);
+            _context.Department.Add(department);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCase", new { id = @case.CaseId }, @case);
+            return CreatedAtAction("GetDepartment", new { id = department.DepartmentID }, department);
         }
 
-        // DELETE: api/Cases/5
+        // DELETE: api/Departments/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCase(int id)
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var @case = await _context.Case.FindAsync(id);
-            if (@case == null)
+            var department = await _context.Department.FindAsync(id);
+            if (department == null)
             {
                 return NotFound();
             }
 
-            _context.Case.Remove(@case);
+            _context.Department.Remove(department);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CaseExists(int id)
+        private bool DepartmentExists(int id)
         {
-            return _context.Case.Any(e => e.CaseId == id);
+            return _context.Department.Any(e => e.DepartmentID == id);
         }
     }
 }
