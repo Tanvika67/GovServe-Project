@@ -30,7 +30,7 @@ namespace GovServe_Project.Extensions
 
 
 			//Services
-			//services.AddScoped<IDepartmentService, DepartmentService>();
+			services.AddScoped<IDepartmentService, DepartmentService>();
 			services.AddScoped<ISupervisorService, SupervisorService>();
 
 
