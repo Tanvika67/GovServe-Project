@@ -28,6 +28,12 @@ namespace GovServe_Project.Data
         public DbSet<Application> Application { get; set; } = default!;
         public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
 
+        public DbSet<User> User { get; set; } = default!;
+        public DbSet<Escalation> Escalation { get; set; } = default!;
+        public DbSet<Notification> Notification { get; set; } = default!;
+
+
+
         internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
