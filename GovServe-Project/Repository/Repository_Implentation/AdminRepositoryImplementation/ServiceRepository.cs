@@ -3,7 +3,7 @@ using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
 
-namespace GovServe_Project.Repository.Repository_Implentation.Admin
+namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation
 {
     public class ServiceRepository : IServiceRepository
     {

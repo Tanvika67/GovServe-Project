@@ -1,14 +1,12 @@
-﻿using Azure.Core;
-using GovServe_Project.Data;
+﻿using GovServe_Project.Data;
 using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
-using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace GovServe_Project.Repository.Repository_Implentation.Admin
+
+namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation
 {
     public class ServiceReportRepository : IServiceReportRepository
     {
@@ -21,7 +19,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
 
         public async Task<ServiceReportMetricsDTO> GenerateMetricsAsync(ReportFilterRequest request)
         {
-            IQueryable<Applications> applications = _context.Applications;
+            IQueryable<Application> Application = _context.Application;
             IQueryable<SLARecord> SLARecords = _context.SLARecords;
 
 
@@ -44,20 +42,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
                     break;
             }
 
-            var list = await applications.ToListAsync();
+            var list = await Application.ToListAsync();
 
             int total = list.Count;
-            int approved = list.Count(a => a.Status == "Approved");
-            int slaBreached = list.Count(a => a.Status== "Breached");
+            int approved = list.Count(a => a.ApplicationStatus == "Approved");
+            int slaBreached = list.Count(a => a.ApplicationStatus== "Breached");
 
             double approvalRate = total == 0 ? 0 :
                 (double)approved / total * 100;
 
-            double avgTurnaround = list
-                .Where(a => a.CompletedDate != null)
-                .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
-                .DefaultIfEmpty(0)
-                .Average();
+            //double avgTurnaround = list
+            //    .Where(a => a.CompletedDate != null)
+            //    .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
+            //    .DefaultIfEmpty(0)
+            //    .Average();
 
             double slaRate = total == 0 ? 0 :
                 (double)slaBreached / total * 100;
@@ -66,7 +64,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
             {
                 ApplicationsCount = total,
                 ApprovalRate = Math.Round(approvalRate, 2),
-                AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
+               // AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
                 SLABreachRate = Math.Round(slaRate, 2)
             };
         }

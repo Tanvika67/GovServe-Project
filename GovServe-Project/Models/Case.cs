@@ -11,7 +11,7 @@ namespace GovServe.Models
 		[Required]
 		[ForeignKey("Application")]
 		public int ApplicationId { get; set; } //FK from Application Table
-		public virtual Application Application { get; set; }
+		//public virtual Application Application { get; set; }
 		[Required]
 		public int SupervisorId {  get; set; }
 		[Required]
