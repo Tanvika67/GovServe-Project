@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Models.AdminModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GovServe_Project.Models
@@ -33,12 +34,11 @@ namespace GovServe_Project.Models
 		[Required]
 		public DateTime SubmittedDate { get; set; }
 
-		[Required]
-		//	[RegularExpression("Submitted|Under Review|Approved|Rejected",
-		//ErrorMessage = "Status must be Submitted and No Submitted")]
-		public string Status { get; set; }
-
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
+
+		[Required]
+		[RegularExpression("Submitted|Under Review|Approved|Rejected",
+         ErrorMessage = "Status must be Submitted and No Submitted")]
 		public string ApplicationStatus { get; set; }= "Pending";
 
 		//public virtual ICollection<Grievance> Grievances { get; set; }

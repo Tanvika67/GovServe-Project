@@ -57,7 +57,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasKey("CaseId");
 
-                    b.ToTable("Case");                 
+                    b.ToTable("Case");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.Department", b =>
@@ -79,31 +79,6 @@ namespace GovServe_Project.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.HasKey("DepartmentID");
-
-                    b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.Department", b =>
-                {
-                    b.Property<int>("DepartmentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"));
-
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.HasKey("DepartmentID");
 
@@ -209,9 +184,6 @@ namespace GovServe_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceID"));
 
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
@@ -306,7 +278,7 @@ namespace GovServe_Project.Migrations
             modelBuilder.Entity("GovServe_Project.Models.Service", b =>
                 {
                     b.HasOne("GovServe_Project.Models.Department", "Department")
-                        .WithMany("Services")
+                        .WithMany()
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -323,11 +295,6 @@ namespace GovServe_Project.Migrations
                         .IsRequired();
 
                     b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.Department", b =>
-                {
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.Service", b =>

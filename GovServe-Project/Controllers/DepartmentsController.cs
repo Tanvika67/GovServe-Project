@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Data;
 using GovServe_Project.Models;
+using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Controllers
 {
@@ -26,14 +27,14 @@ namespace GovServe_Project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartment()
         {
-            return await _context.Department.ToListAsync();
+            return await _context.Departments.ToListAsync();
         }
 
         // GET: api/Departments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Department>> GetDepartment(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
 
             if (department == null)
             {
@@ -79,7 +80,7 @@ namespace GovServe_Project.Controllers
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
-            _context.Department.Add(department);
+            _context.Departments.Add(department);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDepartment", new { id = department.DepartmentID }, department);
@@ -89,13 +90,13 @@ namespace GovServe_Project.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var department = await _context.Department.FindAsync(id);
+            var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
             }
 
-            _context.Department.Remove(department);
+            _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -103,7 +104,7 @@ namespace GovServe_Project.Controllers
 
         private bool DepartmentExists(int id)
         {
-            return _context.Department.Any(e => e.DepartmentID == id);
+            return _context.Departments.Any(e => e.DepartmentID == id);
         }
     }
 }
