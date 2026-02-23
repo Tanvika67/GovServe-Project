@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace GovServe_Project.DTOs
+﻿namespace GovServe_Project.DTOs
 {
-    public class CreateApplicationDTO
-    {
-		[Required]
-		public int ServiceID { get; set; }
+	public class CreateApplicationDTO
+	{
+		public string ServiceId { get; set; }
+
+		public int UserId { get; set; }
+
+		public DateTime SubmittedDate { get; set; }
+
+		public string ApplicationStatus { get; set; } = "Submitted";
 	}
 }

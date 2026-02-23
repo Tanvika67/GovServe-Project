@@ -8,8 +8,6 @@ namespace GovServe_Project.Repository.Repository_Implentation
 	public class CitizenDocumentRepository : ICitizenDocumentRepository
 	{
 		private readonly GovServe_ProjectContext _context;
-
-		// Inject DbContext
 		public CitizenDocumentRepository(GovServe_ProjectContext context)
 		{
 			_context = context;
@@ -36,12 +34,6 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			return await _context.CitizenDocument.FindAsync(id);
 		}
 
-		// Update document
-		public async Task Update(CitizenDocument doc)
-		{
-			_context.CitizenDocument.Update(doc);
-			await _context.SaveChangesAsync();
-		}
 
 		// Delete document
 		public async Task Delete(CitizenDocument doc)

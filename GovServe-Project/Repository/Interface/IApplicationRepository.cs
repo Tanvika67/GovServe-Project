@@ -3,13 +3,14 @@ namespace GovServe_Project.Repository.Interface
 {
 	public interface IApplicationRepository
 	{
-		Task AddApplication(Application app);
 
-		Task<List<Application>> GetByUser(int userId);
+		Task CreateAsync(Application application);
 
-		Task<Application> GetById(int id);
+		Task<Application> GetByIdAsync(int id);
 
-		Task Delete(Application app);
+		Task<List<Application>> GetByUserIdAsync(int userId);
+
+		Task DeleteAsync(Application application);
 	}
 
 }

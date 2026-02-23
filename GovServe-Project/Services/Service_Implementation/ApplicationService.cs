@@ -1,50 +1,84 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Data;
-using GovServe_Project.Repository.Interface;
+﻿using GovServe_Project.Data;
+using GovServe_Project.DTOs;
 using GovServe_Project.Models;
+using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Services.Service_Implementation
 {
 	public class ApplicationService : IApplicationService
 	{
-		private readonly IApplicationRepository _repository;
+		private readonly IApplicationRepository _applicationRepository;
 
-		public ApplicationService(IApplicationRepository repository)
+		public ApplicationService(IApplicationRepository applicationRepository)
 		{
-			_repository = repository;
+			_applicationRepository = applicationRepository;
 		}
 
+
 		// Create Application
-		public async Task CreateApplication(Application app)
+		public async Task<string> CreateApplicationAsync(CreateApplicationDTO dto)
 		{
+			// DTO → Entity Mapping
+			var app = new Application()
+			{
+				ServiceName = dto.ServiceName,
+				Description = dto.Description,
+				UserId = dto.UserId,
 
-			app.ApplicationStatus = "Pending";
 
-			await _repository.AddApplication(app);
+				ApplicationStatus = "Submitted",
+				SubmittedDate = DateTime.Now
+			};
+
+			await _applicationRepository.CreateAsync(app);
+
+			return "Application Submitted Successfully";
 		}
 
 		// My Applications
-		public async Task<List<Application>> MyApplications(int userId)
+		public async Task<List<ApplicationResponseDTO>> GetMyApplicationsAsync(int userId)
 		{
-			return await _repository.GetByUser(userId);
-		}
+			
+			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-		// Application Status
-		public async Task<Application> ApplicationStatus(int id)
-		{
-			return await _repository.GetById(id);
-		}
-
-		// Delete Application (Only Pending)
-		public async Task DeleteApplication(int id)
-		{
-			var data = await _repository.GetById(id);
-
-			if (data != null && data.ApplicationStatus == "Pending")
+			
+			var result = applications.Select(a => new ApplicationResponseDTO
 			{
-				await _repository.Delete(data);
-			}
+				UserId = a.UserId,
+				ServiceName = a.ServiceName,
+				ApplicationStatus = a.ApplicationStatus,
+			    SubmittedDate = a.SubmittedDate
+			}).ToList();
+
+			return result;
+		}
+
+		
+		// Application Status
+		public async Task<string> GetApplicationStatusAsync(int applicationId)
+		{
+			var application = await _applicationRepository.GetByIdAsync(applicationId);
+
+			if (application == null)
+				return null;
+
+			return application.ApplicationStatus;
+		}
+
+		
+		// Delete Application
+		public async Task<bool> DeleteApplicationAsync(int applicationId)
+		{
+			var application = await _applicationRepository.GetByIdAsync(applicationId);
+
+			if (application == null)
+				return false;
+
+			await _applicationRepository.DeleteAsync(application);
+
+			return true;
 		}
 	}
 }

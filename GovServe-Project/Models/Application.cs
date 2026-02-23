@@ -1,20 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GovServe_Project.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using GovServe_Project.Enum;
 
 namespace GovServe_Project.Models
 {
-<<<<<<< HEAD
+
 	public class Application
 	{
-=======
-<<<<<<< HEAD
-    public class Applications
-=======
-    public class Application
->>>>>>> 9a3d2318cc569bfc83007b5f01a7f13e94a715a5
-    {
->>>>>>> 11414cd42cb3b8121d892d0cc8f64db7b1248114
+
 		[Key]
 		public int ApplicationID { get; set; }
 
@@ -23,26 +18,12 @@ namespace GovServe_Project.Models
 		public virtual User User { get; set; }
 
 		public int ServiceID { get; set; }
-<<<<<<< HEAD
-		//[ForeignKey("ServiceID")]
-		//[ValidateNever]
-		//public virtual Service Service { get; set; }
-
-		[Required]
-		public int DepartmnetID { get; set; }
-		//[ForeignKey("DepartmnetID")]
-		//[ValidateNever]
-		//public virtual Department Department { get; set; }
-
-		[Required]
-		public string DepartmnetName { get; set; }
-		//[ForeignKey("DepartmneName")]
-		//[ValidateNever]
-		//public virtual Department Department { get; set; }
-
-=======
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
+
+		public string ServiceName { get; set; }
+		[ForeignKey("ServiceName")]
+		public virtual Service Services { get; set; }
 
 		[Required]
 		public int DepartmentID { get; set; }
@@ -50,31 +31,15 @@ namespace GovServe_Project.Models
 		public virtual Department Department { get; set; }
 
 		[Required]
-		public string DepartmentName { get; set; }
-		[ForeignKey("DepartmneName")]
-		public virtual Department Departments { get; set; }
->>>>>>> 9a3d2318cc569bfc83007b5f01a7f13e94a715a5
-
-		[Required]
 		public DateTime SubmittedDate { get; set; }
 
 		[Required]
-<<<<<<< HEAD
-		public string ApplicationStatus { get; set; } = "Pending";
-=======
-<<<<<<< HEAD
-		//	[RegularExpression("Submitted|Under Review|Approved|Rejected",
-		//ErrorMessage = "Status must be Submitted and No Submitted")]
-		public string Status { get; set; }
+		public DateTime? CompletedDate { get; set; }
 
-		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
-=======
-		public string ApplicationStatus { get; set; }= "Pending";
->>>>>>> 11414cd42cb3b8121d892d0cc8f64db7b1248114
-
+		[Required]
+		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }
 		//public virtual ICollection<Appeal> Appeals { get; set; }
->>>>>>> 9a3d2318cc569bfc83007b5f01a7f13e94a715a5
 	}
 }

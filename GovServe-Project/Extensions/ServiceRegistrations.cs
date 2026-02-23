@@ -6,7 +6,7 @@ using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Repository_Implementation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
-using GovServe_Project.Repository.Repository_Implentation
+using GovServe_Project.Repository.Repository_Implentation;
 
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
