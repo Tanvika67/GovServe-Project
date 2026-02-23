@@ -1,14 +1,12 @@
-﻿using Azure.Core;
-using GovServe_Project.Data;
+﻿using GovServe_Project.Data;
 using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
-using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace GovServe_Project.Repository.Repository_Implentation.Admin
+
+namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation
 {
     public class ServiceReportRepository : IServiceReportRepository
     {
@@ -21,7 +19,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
 
         public async Task<ServiceReportMetricsDTO> GenerateMetricsAsync(ReportFilterRequest request)
         {
-			IQueryable<Models.Application> applications = _context.Application;
+            IQueryable<Application> Application = _context.Application;
             IQueryable<SLARecord> SLARecords = _context.SLARecords;
 
 
@@ -44,7 +42,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
                     break;
             }
 
-            var list = await applications.ToListAsync();
+            var list = await Application.ToListAsync();
 
             int total = list.Count;
             int approved = list.Count(a => a.ApplicationStatus == "Approved");
@@ -66,7 +64,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.Admin
             {
                 ApplicationsCount = total,
                 ApprovalRate = Math.Round(approvalRate, 2),
-                //AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
+               // AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
                 SLABreachRate = Math.Round(slaRate, 2)
             };
         }

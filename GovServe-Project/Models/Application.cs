@@ -6,42 +6,48 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 namespace GovServe_Project.Models
 {
 	public class Application
-
 	{
+
 		[Key]
 		public int ApplicationID { get; set; }
 
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
-		[ValidateNever]
-
 		public virtual User User { get; set; }
 
-		public int ServiceID { get; set; }
+		
+		[Required]
+		public string DepartmnetName { get; set; }
+		//[ForeignKey("DepartmneName")]
+		//[ValidateNever]
+		//public virtual Department Department { get; set; }
+
 
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
 
 		[Required]
 		public int DepartmentID { get; set; }
-		[ForeignKey("DepartmentID")]
+		[ForeignKey("DepartmnetID")]
 		public virtual Department Department { get; set; }
 
 		[Required]
 		public string DepartmentName { get; set; }
-		[ForeignKey("DepartmentName")]
+		[ForeignKey("DepartmneName")]
 		public virtual Department Departments { get; set; }
+
 		[Required]
 		public DateTime SubmittedDate { get; set; }
 
-		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
-
 		[Required]
-		[RegularExpression("Submitted|Under Review|Approved|Rejected",
-         ErrorMessage = "Status must be Submitted and No Submitted")]
-		public string ApplicationStatus { get; set; }= "Pending";
 
+		public string ApplicationStatus { get; set; } = "Pending";
+		//	[RegularExpression("Submitted|Under Review|Approved|Rejected",
+		//ErrorMessage = "Status must be Submitted and No Submitted")
+
+		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }
-		//public virtual ICollection<Appeal> Appeals { get; set; } 
+		//public virtual ICollection<Appeal> Appeals { get; set; }
+
 	}
 }

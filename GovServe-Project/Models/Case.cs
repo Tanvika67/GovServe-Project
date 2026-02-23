@@ -5,39 +5,43 @@ using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Models
 {
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+
 	public class Case
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int CaseId { get; set; }   //Primary key
+		public int CaseId { get; set; }
+
 		[Required]
 		[ForeignKey("Application")]
-		public int ApplicationId { get; set; } //FK from Application Table
+		public int ApplicationId { get; set; }
 		public virtual Application Application { get; set; }
-		[Required]
-		[ForeignKey("Department")]
-		public int DepartmentId { get; set; }
 
-		public virtual Department Department { get; set; }
 		[Required]
 		public int SupervisorId { get; set; }
-		[Required]
-		public int? AssignedOfficerId { get; set; }
-		[Required]
-		public bool IsAssigned { get; set; } = false;
-		[Required]
-		[RegularExpression("^(Pending|Approved|Rejected|Assigned|Reassigned)$")]
-		public string Status { get; set; }
-		// Make these nullable in DB if not always known at creation time
-		[Required]
-		public DateTime? AssignedDate { get; set; }
-		[Required]
-		public DateTime? CompletedDate { get; set; }
-		[Required]
-		public bool IsEscalated { get; set; } = false;
-		[Required]
-		public DateTime LastUpdated { get; set; }
 
+		public int AssignedOfficerId { get; set; }
+
+		[Required]
+		public int DepartmentId { get; set; }
+
+		[Required]
+		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
+		public string Status { get; set; } = "Pending";
+
+		public DateTime? AssignedDate { get; set; }
+
+		public DateTime? CompletedDate { get; set; }
+
+		public bool IsEscalated { get; set; } = false;
+
+		public DateTime LastUpdated { get; set; } = DateTime.Now;
+
+		// SLA → 48 hours example
+		public int SlaHours { get; set; } = 48;
 	}
+
 }
 
