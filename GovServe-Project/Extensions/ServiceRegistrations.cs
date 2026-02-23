@@ -7,7 +7,6 @@ using GovServe_Project.Services;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 namespace GovServe_Project.Extensions
 {
     public static class ServiceRegistration
@@ -26,7 +25,7 @@ namespace GovServe_Project.Extensions
             //Repository
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
-            services.AddScoped<IEligibilityRuleRepository, EligibilityRuleSrvice>();
+            services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
             services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
