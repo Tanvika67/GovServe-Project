@@ -1,5 +1,9 @@
 
 using GovServe_Project.Extensions;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Repository_Implentation;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Service_Implementation;
 
 
 
@@ -16,11 +20,6 @@ builder.Services.AddSwaggerGen();
 
 
 
-builder.Services.AddScoped <IGrievanceRepository , GrievanceRepository>();
-builder.Services.AddScoped<IAppealRepository, AppealRepository>();
-
-builder.Services.AddScoped<IGrievanceService, GrievanceService>();
-builder.Services.AddScoped<IAppealService, AppealService>();
 
 
 builder.Services.AddCors(options =>

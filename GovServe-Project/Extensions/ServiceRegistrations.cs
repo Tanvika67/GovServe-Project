@@ -37,6 +37,11 @@ namespace GovServe_Project.Extensions
 			services.AddScoped<ICaseRepository, CaseRepository>();
 		    services.AddScoped<IEscalationRepository, EscalationRepository>();
 			services.AddScoped<INotificationRepository, NotificationRepository>();
+			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+			services.AddScoped<IAppealRepository, AppealRepository>();
+
+			
+
 
 
 			//Services
@@ -50,6 +55,8 @@ namespace GovServe_Project.Extensions
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IEscalationService, EscalationService>();
 			services.AddScoped<INotificationService, NotificationService>();
+			services.AddScoped<IGrievanceService, GrievanceService>();
+			services.AddScoped<IAppealService, AppealService>();
 
 			return services;
         }
