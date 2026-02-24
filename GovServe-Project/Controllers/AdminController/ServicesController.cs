@@ -45,5 +45,12 @@ namespace GovServe_Project.Controllers.AdminController
             await _service.DeleteAsync(id);
             return Ok("Deleted successfully.");
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchByDepartment([FromQuery] string departmentName)
+        {
+            return Ok(await _service.SearchByDepartmentAsync(departmentName));
+        }
+
     }
 }

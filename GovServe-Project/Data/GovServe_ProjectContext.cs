@@ -1,11 +1,9 @@
-﻿using GovServe.Models;
+﻿
+using GovServe.Models;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 
 namespace GovServe_Project.Data
@@ -31,6 +29,14 @@ namespace GovServe_Project.Data
         public DbSet<User> User { get; set; } = default!;
         public DbSet<Escalation> Escalation { get; set; } = default!;
         public DbSet<Notification> Notification { get; set; } = default!;
+        public DbSet<Grievance> Grievance { get; set; } = default!;
+
+      
+
+		public DbSet<Appeal> Appeal { get; set; } = default!;
+		
+
+
 
 
 

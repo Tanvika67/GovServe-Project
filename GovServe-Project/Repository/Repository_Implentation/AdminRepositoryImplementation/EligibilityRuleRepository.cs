@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation
 {
-    public class EligibilityRuleSrvice : IEligibilityRuleRepository
+    public class EligibilityRuleRepository : IEligibilityRuleRepository
     {
         private readonly GovServe_ProjectContext _context;
 
-        public EligibilityRuleSrvice(GovServe_ProjectContext context)
+        public EligibilityRuleRepository(GovServe_ProjectContext context)
         {
             _context = context;
         }
@@ -40,6 +40,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         {
             _context.EligibilityRules.Remove(rule);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<EligibilityRule>> GetByServiceNameAsync(string serviceName)
+        {
+            return await _context.EligibilityRules
+                .Include(r => r.Service)
+                .Where(r => r.Service != null &&
+                            r.Service.ServiceName.ToLower()
+                            .Contains(serviceName.ToLower()))
+                .ToListAsync();
         }
     }
 }

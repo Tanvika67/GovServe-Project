@@ -1,13 +1,9 @@
-using GovServe_Project.Data;
+
 using GovServe_Project.Extensions;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi;
 
 
 
@@ -21,6 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 
 

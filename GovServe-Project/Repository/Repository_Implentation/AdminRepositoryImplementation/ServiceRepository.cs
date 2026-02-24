@@ -41,5 +41,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             _context.Services.Remove(service);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Service>> GetByDepartmentNameAsync(string departmentName)
+        {
+            return await _context.Services
+                .Include(s => s.Department)
+                .Where(s => s.Department != null && s.Department.DepartmentName.ToLower() == departmentName.ToLower()).ToListAsync();
+        }
+
+        public async Task<IEnumerable<EligibilityRule>> GetByServiceNameAsync(string serviceName)
+        {
+            return await _context.EligibilityRules
+                .Include(r => r.Service)
+                .Where(r => r.Service != null && r.Service.ServiceName.ToLower().Contains(serviceName.ToLower())).ToListAsync();
+        }
+
     }
 }
