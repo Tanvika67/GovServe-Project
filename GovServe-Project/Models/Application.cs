@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using GovServe_Project.Enum;
+using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Models
 {
@@ -29,6 +30,8 @@ namespace GovServe_Project.Models
 		public int DepartmentID { get; set; }
 		[ForeignKey("DepartmnetID")]
 		public virtual Department Department { get; set; }
+
+		public string? Description { get; set; }
 
 		[Required]
 		public DateTime SubmittedDate { get; set; }

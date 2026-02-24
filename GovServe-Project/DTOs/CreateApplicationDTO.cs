@@ -6,8 +6,8 @@
 
 		public int UserId { get; set; }
 
-		public DateTime SubmittedDate { get; set; }
+        public string ServiceName { get; set; }
 
-		public string ApplicationStatus { get; set; } = "Submitted";
+		public string? Description { get; set; }
 	}
 }
