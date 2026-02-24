@@ -7,10 +7,12 @@ namespace GovServe_Project.Services.Service_Implementation
 	public class CaseService : ICaseService
 	{
 		private readonly ICaseRepository _repo;
+		private readonly INotificationService _notification;
 
-		public CaseService(ICaseRepository repo)
+		public CaseService(ICaseRepository repo, INotificationService notification)
 		{
 			_repo = repo;
+			_notification = notification;
 		}
 
 		public async Task<List<Case>> GetAllCasesAsync()
@@ -48,7 +50,7 @@ namespace GovServe_Project.Services.Service_Implementation
 
 			return "Case created successfully";
 		}
-		// Assign with department check
+		// Assign with department 
 		public async Task<string> AssignCaseAsync(int caseId, int officerId, int officerDeptId)
 		{
 			var caseData = await _repo.GetByIdAsync(caseId);
@@ -64,7 +66,12 @@ namespace GovServe_Project.Services.Service_Implementation
 			caseData.AssignedDate = DateTime.Now;
 			caseData.LastUpdated = DateTime.Now;
 
-			await _repo.UpdateAsync(caseData);
+			await _repo.UpdateAsync(caseData); 
+			await _notification.SendNotificationAsync(
+				officerId,
+				"New case assigned to you",
+				caseId
+			);
 
 			return "Case assigned successfully";
 		}
@@ -81,6 +88,8 @@ namespace GovServe_Project.Services.Service_Implementation
 			caseData.LastUpdated = DateTime.Now;
 
 			await _repo.UpdateAsync(caseData);
+			await _notification.SendNotificationAsync(newOfficerId,
+	          "Case reassigned to you",caseId);
 
 			return "Case reassigned successfully";
 		}

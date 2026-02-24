@@ -28,6 +28,7 @@ namespace GovServe_Project.Models
 		public string Category { get; set; }
 		[RegularExpression("Unread|Read", ErrorMessage = "Invalid notification status")]
 		public string Status { get; set; } = "Unread";
+		public bool IsRead {  get; set; }=false;
 
 		public DateTime CreatedDate { get; set; } = DateTime.Now;
 	}
