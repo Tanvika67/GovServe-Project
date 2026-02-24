@@ -12,17 +12,36 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		{
 			_context = context;
 		}
-		public async Task<List<Notification>> GetNotificationsAsync(int userId)
-		{
-			return await _context.Notification
-				.Where(n => n.UserId == userId)
-				.ToListAsync();
-		}
 
 		public async Task CreateAsync(Notification notification)
 		{
 			await _context.Notification.AddAsync(notification);
 			await _context.SaveChangesAsync();
+		}
+
+		public async Task<List<Notification>> GetByUserIdAsync(int userId)
+		{
+			return await _context.Notification
+				.Where(x => x.UserId == userId)
+				.OrderByDescending(x => x.CreatedDate)
+				.ToListAsync();
+		}
+
+		public async Task<int> GetUnreadCountAsync(int userId)
+		{
+			return await _context.Notification
+				.CountAsync(x => x.UserId == userId && !x.IsRead);
+		}
+
+		public async Task MarkAsReadAsync(int notificationId)
+		{
+			var data = await _context.Notification.FindAsync(notificationId);
+
+			if (data != null)
+			{
+				data.IsRead = true;
+				await _context.SaveChangesAsync();
+			}
 		}
 	}
 }

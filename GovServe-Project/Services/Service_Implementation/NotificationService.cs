@@ -12,9 +12,33 @@ namespace GovServe_Project.Services.Service_Implementation
 			_repo = repo;
 		}
 
-		public async Task<List<Notification>> GetNotificationsAsync(int userId)
+		public async Task SendNotificationAsync(int userId, string message, int caseId)
 		{
-			return await _repo.GetNotificationsAsync(userId);
+			var notification = new Notification
+			{
+				UserId = userId,
+				Message = message,
+				CaseId = caseId,
+				CreatedDate = DateTime.Now,
+				IsRead = false
+			};
+
+			await _repo.CreateAsync(notification);
+		}
+
+		public async Task<List<Notification>> GetUserNotificationsAsync(int userId)
+		{
+			return await _repo.GetByUserIdAsync(userId);
+		}
+
+		public async Task<int> GetUnreadCountAsync(int userId)
+		{
+			return await _repo.GetUnreadCountAsync(userId);
+		}
+
+		public async Task MarkAsReadAsync(int notificationId)
+		{
+			await _repo.MarkAsReadAsync(notificationId);
 		}
 	}
 }

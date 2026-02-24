@@ -2,23 +2,30 @@
 using GovServe_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 namespace GovServe_Project.Controllers
 {
 	[ApiController]
-	[Route("api/escalation")]
+	[Route("api/[controller]")]
 	public class EscalationController : ControllerBase
 	{
-		private readonly IEscalationRepository _repo;
+		private readonly IEscalationService _service;
 
-		public EscalationController(IEscalationRepository repo)
+		public EscalationController(IEscalationService service)
 		{
-			_repo = repo;
+			_service = service;
+		}
+
+		[HttpPost("escalate")]
+		public async Task<IActionResult> Escalate(int caseId, int newOfficerId, int supervisorId, string reason)
+		{
+			return Ok(await _service.EscalateCaseAsync(caseId, newOfficerId, supervisorId, reason));
 		}
 
 		[HttpGet("count")]
 		public async Task<IActionResult> Count()
 		{
-			return Ok(await _repo.GetCountAsync());
+			return Ok(await _service.GetEscalationCountAsync());
 		}
 	}
 }

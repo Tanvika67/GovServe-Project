@@ -4,19 +4,12 @@ using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Repository.Repository_Implentation;
-
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
-using GovServe_Project.Services;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
-using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
+
 namespace GovServe_Project.Extensions
 {
     public static class ServiceRegistration
