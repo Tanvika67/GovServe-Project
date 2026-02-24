@@ -21,27 +21,26 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		// Add new appeal
 		public async Task AddAsync(Appeal appeal)
 		{
-			await _context.Appeal.AddAsync(appeal);
+			await _context.Appeals.AddAsync(appeal);
 			await _context.SaveChangesAsync();
 		}
 
 		// Fetch all appeals with linked grievance
 		public async Task<List<Appeal>> GetAllAsync()
 		{
-			return await _context.Appeal.Include(a => a.Grievance).ToListAsync();
+			return await _context.Appeals.Include(a => a.Grievance).ToListAsync();
 		}
 
 		// Fetch appeal by ID
 		public async Task<Appeal> GetByIdAsync(int id)
 		{
-			return await _context.Appeal.Include(a => a.Grievance)
-										 .FirstOrDefaultAsync(a => a.AppealID == id);
+			return await _context.Appeals.Include(a => a.Grievance).FirstOrDefaultAsync(a => a.AppealID == id);
 		}
 
 		// Update appeal in database
 		public async Task UpdateAsync(Appeal appeal)
 		{
-			_context.Appeal.Update(appeal);
+			_context.Appeals.Update(appeal);
 			await _context.SaveChangesAsync();
 		}
 	}

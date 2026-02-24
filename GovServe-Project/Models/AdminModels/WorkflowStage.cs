@@ -25,7 +25,7 @@ namespace GovServe_Project.Models.AdminModels
         public int SequenceNumber { get; set; }
 
         [Required(ErrorMessage = "SLA days are required.")]
-        [Range(0, 3650, ErrorMessage = "SLA days must be between 0 and 3650.")]
+        [Range(0, 365, ErrorMessage = "SLA days must be between 0 and 365.")]
         public int SLA_Days { get; set; }
 
         // Navigation

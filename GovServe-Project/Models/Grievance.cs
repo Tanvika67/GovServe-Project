@@ -28,6 +28,6 @@ namespace GovServe.Models
 		public DateTime? ForwardedDate { get; set; } // When forwarded to supervisor
 
 		// Navigation property to related appeals
-		public List<Appeal> Appeals { get; set; }
+		public ICollection<Appeal> Appeals { get; set; }
 	}
 }

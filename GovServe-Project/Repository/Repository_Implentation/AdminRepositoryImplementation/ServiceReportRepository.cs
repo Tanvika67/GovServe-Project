@@ -51,11 +51,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             double approvalRate = total == 0 ? 0 :
                 (double)approved / total * 100;
 
-            //double avgTurnaround = list
-            //    .Where(a => a.CompletedDate != null)
-            //    .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
-            //    .DefaultIfEmpty(0)
-            //    .Average();
+            double avgTurnaround = list
+                .Where(a => a.CompletedDate != null)
+                .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
+                .DefaultIfEmpty(0)
+                .Average();
 
             double slaRate = total == 0 ? 0 :
                 (double)slaBreached / total * 100;
@@ -64,7 +64,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             {
                 ApplicationsCount = total,
                 ApprovalRate = Math.Round(approvalRate, 2),
-               // AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
+                AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
                 SLABreachRate = Math.Round(slaRate, 2)
             };
         }

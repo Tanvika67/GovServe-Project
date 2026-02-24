@@ -55,5 +55,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+        public async Task<int>GetTotalCountAsync()
+        {
+            var count=await _context.Departments.CountAsync();
+            return count;
+        }
     }
 }

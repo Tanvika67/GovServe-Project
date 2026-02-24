@@ -31,11 +31,9 @@ namespace GovServe_Project.Data
         public DbSet<Notification> Notification { get; set; } = default!;
         public DbSet<Grievance> Grievance { get; set; } = default!;
 
-      
-
-		public DbSet<Appeal> Appeal { get; set; } = default!;
+		public DbSet<Appeal> Appeals { get; set; } = default!;
 		
-
+        
 
 
 

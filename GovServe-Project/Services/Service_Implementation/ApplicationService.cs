@@ -23,7 +23,7 @@ namespace GovServe_Project.Services.Service_Implementation
 			// DTO → Entity Mapping
 			var app = new Application()
 			{
-				ServiceName = dto.ServiceName,
+				
 				Description = dto.Description,
 				UserId = dto.UserId,
 
@@ -47,7 +47,6 @@ namespace GovServe_Project.Services.Service_Implementation
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				UserId = a.UserId,
-				ServiceName = a.ServiceName,
 				ApplicationStatus = a.ApplicationStatus,
 			    SubmittedDate = a.SubmittedDate
 			}).ToList();

@@ -33,6 +33,9 @@ namespace GovServe_Project.Models.AdminModels
         [ForeignKey(nameof(StageID))]
         public WorkflowStage? Stage { get; set; }
 
+        [ForeignKey(nameof(CaseID))]
+        public Case? Case { get; set; }
+
         // Cross-field validations
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

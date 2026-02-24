@@ -6,11 +6,11 @@ namespace GovServe_Project.Controllers.AdminController
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DepartmentsController : ControllerBase
+    public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentService _service;
 
-        public DepartmentsController(IDepartmentService service)
+        public DepartmentController(IDepartmentService service)
         {
             _service = service;
         }
@@ -18,15 +18,13 @@ namespace GovServe_Project.Controllers.AdminController
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            return Ok(result);
+            return Ok(await _service.GetByIdAsync(id));
         }
 
         [HttpPost]
@@ -39,8 +37,7 @@ namespace GovServe_Project.Controllers.AdminController
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, DepartmentDTO dto)
         {
-            var result = await _service.UpdateAsync(id, dto);
-            return Ok(result);
+            return Ok(await _service.UpdateAsync(id, dto));
         }
 
         [HttpDelete("{id}")]
@@ -48,6 +45,13 @@ namespace GovServe_Project.Controllers.AdminController
         {
             await _service.DeleteAsync(id);
             return Ok("Deleted Successfully");
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetTotalCountAsync()
+        {
+            var count = await _service.GetTotalCountAsync();
+            return Ok(count);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
+using GovServe.Models;
 
 namespace GovServe_Project.Models
 {
@@ -22,8 +23,6 @@ namespace GovServe_Project.Models
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
 
-		public string ServiceName { get; set; }
-		[ForeignKey("ServiceName")]
 		public virtual Service Services { get; set; }
 
 		[Required]
@@ -42,7 +41,7 @@ namespace GovServe_Project.Models
 		[Required]
 		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
-		//public virtual ICollection<Grievance> Grievances { get; set; }
-		//public virtual ICollection<Appeal> Appeals { get; set; }
+		public virtual ICollection<Grievance> Grievances { get; set; }
+	    public virtual ICollection<Appeal> Appeals { get; set; }
 	}
 }
