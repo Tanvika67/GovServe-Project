@@ -23,7 +23,7 @@ namespace GovServe_Project.Models
 
 		[Required]
 		[RegularExpression("Submitted|Under Review|Approved|Rejected", ErrorMessage = "Status must be Submitted, Under Review, Approved or Rejected")]
-		public string VerificationStatus { get; set; }
+		public string VerificationStatus { get; set; } = "Submitted";
 
 	}
 }

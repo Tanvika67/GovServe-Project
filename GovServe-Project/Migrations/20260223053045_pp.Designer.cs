@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    [Migration("20260221185627_pp")]
+    [Migration("20260223053045_pp")]
     partial class pp
     {
         /// <inheritdoc />
@@ -45,6 +45,9 @@ namespace GovServe_Project.Migrations
                     b.Property<DateTime>("CompletedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEscalated")
                         .HasColumnType("bit");
 
@@ -75,15 +78,8 @@ namespace GovServe_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DepartmentID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DepartmneName")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("DepartmnetID")
                         .HasColumnType("int");
@@ -101,8 +97,6 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ApplicationID");
-
-                    b.HasIndex("DepartmneName");
 
                     b.HasIndex("DepartmnetID");
 
@@ -371,12 +365,6 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.Application", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.Department", "Departments")
-                        .WithMany()
-                        .HasForeignKey("DepartmneName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GovServe_Project.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmnetID")
@@ -400,8 +388,6 @@ namespace GovServe_Project.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
-
-                    b.Navigation("Departments");
 
                     b.Navigation("Service");
 

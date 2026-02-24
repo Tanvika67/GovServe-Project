@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GovServe_Project.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GovServe_Project.Models.AdminModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Models
 {
+
 	public class Application
 	{
 
@@ -15,39 +18,31 @@ namespace GovServe_Project.Models
 		[ForeignKey("UserId")]
 		public virtual User User { get; set; }
 
-		
-		[Required]
-		public string DepartmnetName { get; set; }
-		//[ForeignKey("DepartmneName")]
-		//[ValidateNever]
-		//public virtual Department Department { get; set; }
-
-
+		public int ServiceID { get; set; }
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
+
+		public string ServiceName { get; set; }
+		[ForeignKey("ServiceName")]
+		public virtual Service Services { get; set; }
 
 		[Required]
 		public int DepartmentID { get; set; }
 		[ForeignKey("DepartmnetID")]
 		public virtual Department Department { get; set; }
 
-		[Required]
-		public string DepartmentName { get; set; }
-		[ForeignKey("DepartmneName")]
-		public virtual Department Departments { get; set; }
+		public string? Description { get; set; }
 
 		[Required]
 		public DateTime SubmittedDate { get; set; }
 
 		[Required]
+		public DateTime? CompletedDate { get; set; }
 
-		public string ApplicationStatus { get; set; } = "Pending";
-		//	[RegularExpression("Submitted|Under Review|Approved|Rejected",
-		//ErrorMessage = "Status must be Submitted and No Submitted")
-
+		[Required]
+		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }
 		//public virtual ICollection<Appeal> Appeals { get; set; }
-
 	}
 }

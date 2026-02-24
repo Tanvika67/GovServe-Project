@@ -29,19 +29,6 @@ namespace GovServe_Project.Services.Service_Implementation
 			return await _repository.GetByApplication(applicationId);
 		}
 
-		// Re-upload logic
-		public async Task ReUpload(int id, string fileName)
-		{
-			var data = await _repository.GetById(id);
-
-			if (data != null)
-			{
-				data.FilePath = fileName;
-				data.VerificationStatus = "Pending";
-
-				await _repository.Update(data);
-			}
-		}
 
 		// Delete logic
 		public async Task Delete(int id)

@@ -60,26 +60,7 @@ namespace GovServe_Project.Controllers
 			return Ok(data);
 		}
 
-		// Re-upload
-		[HttpPut("reupload/{id}")]
-		public async Task<IActionResult> ReUpload(int id, IFormFile file)
-		{
-			if (!file.IsValidDocument())
-				throw new Exception("Invalid file.");
-
-			var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-
-			var path = Path.Combine("wwwroot/Documents", fileName);
-
-			using (var stream = new FileStream(path, FileMode.Create))
-			{
-				await file.CopyToAsync(stream);
-			}
-
-			await _service.ReUpload(id, fileName);
-
-			return Ok("Document Reuploaded Successfully");
-		}
+		
 
 		// Delete Document
 		[HttpDelete("{id}")]

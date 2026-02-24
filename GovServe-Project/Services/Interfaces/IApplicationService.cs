@@ -1,14 +1,19 @@
-﻿using GovServe_Project.Models;
+﻿using GovServe_Project.DTOs;
+using GovServe_Project.Models;
 namespace GovServe_Project.Services.Interfaces
 {
 	public interface IApplicationService
 	{
-		Task CreateApplication(Application app);
 
-		Task<List<Application>> MyApplications(int userId);
+		Task<string> CreateApplicationAsync(CreateApplicationDTO dto);
 
-		Task<Application> ApplicationStatus(int id);
 
-		Task DeleteApplication(int id);
+		Task<List<ApplicationResponseDTO>> GetMyApplicationsAsync(int userId);
+
+
+		Task<string> GetApplicationStatusAsync(int applicationId);
+
+
+		Task<bool> DeleteApplicationAsync(int applicationId);
 	}
 }

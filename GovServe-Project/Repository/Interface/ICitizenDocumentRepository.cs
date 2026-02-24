@@ -10,8 +10,6 @@ namespace GovServe_Project.Repository.Interface
 
 		Task<CitizenDocument> GetById(int id);
 
-		Task Update(CitizenDocument doc);
-
 		Task Delete(CitizenDocument doc);
 	}
 }
