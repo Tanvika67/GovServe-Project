@@ -30,7 +30,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
-            //services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
+           // services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
 			services.AddScoped<ICaseRepository, CaseRepository>();
@@ -48,7 +48,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
-            //services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+           // services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
 			services.AddScoped<ICaseService, CaseService>();
