@@ -31,10 +31,18 @@ namespace GovServe_Project.Data
         public DbSet<User> User { get; set; } = default!;
         public DbSet<Escalation> Escalation { get; set; } = default!;
         public DbSet<Notification> Notification { get; set; } = default!;
+        public DbSet<Grievance> Grievance { get; set; } = default!;
+
+      
+
+		public DbSet<Appeal> Appeal { get; set; } = default!;
+		
 
 
 
-        internal async Task SaveChaangesAsync(Service service)
+
+
+		internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
         }

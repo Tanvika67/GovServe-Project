@@ -24,6 +24,13 @@ builder.Services.AddSwaggerGen();
 
 
 
+builder.Services.AddScoped <IGrievanceRepository , GrievanceRepository>();
+builder.Services.AddScoped<IAppealRepository, AppealRepository>();
+
+builder.Services.AddScoped<IGrievanceService, GrievanceService>();
+builder.Services.AddScoped<IAppealService, AppealService>();
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
