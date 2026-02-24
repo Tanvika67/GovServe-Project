@@ -95,5 +95,26 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
             await _repository.DeleteAsync(service);
         }
+
+        public async Task<IEnumerable<ServiceResponseDTO>> SearchByDepartmentAsync(string departmentName)
+        {
+            var services = await _repository.GetByDepartmentNameAsync(departmentName);
+
+            if (!services.Any())
+                throw new NotFoundException("No services found for this department.");
+
+            return services.Select(s => new ServiceResponseDTO
+            {
+                ServiceID = s.ServiceID,
+                DepartmentID = s.DepartmentID,
+                ServiceName = s.ServiceName,
+                Description = s.Description,
+                SLA_Days = s.SLA_Days,
+                Status = s.Status,
+                
+            });
+        }
+
+
     }
 }

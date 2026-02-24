@@ -10,5 +10,7 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task AddAsync(Service service);
         Task UpdateAsync(Service service);
         Task DeleteAsync(Service service);
+
+        Task<IEnumerable<Service>> GetByDepartmentNameAsync(string departmentName);
     }
 }
