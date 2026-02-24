@@ -1,9 +1,14 @@
 using GovServe_Project.Data;
 using GovServe_Project.Extensions;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Repository_Implentation;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Service_Implementation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,12 +37,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.MapOpenApi();
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

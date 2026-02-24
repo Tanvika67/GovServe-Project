@@ -2,7 +2,7 @@
 {
     public enum ServiceStatus
     {
-            Inactive=0,
             Active=1,
+            InActive=2,
     }
 }
