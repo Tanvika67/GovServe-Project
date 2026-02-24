@@ -32,7 +32,22 @@ namespace GovServe_Project.Services.Service_Implementation
 		{
 			return await _repo.GetEscalatedAsync();
 		}
+		public async Task<string> CreateCaseAsync(Case model)
+		{
+			if (model == null)
+				return "Invalid case data";
 
+			// Initial values
+			model.Status = "Pending";
+			model.AssignedOfficerId = 0; // not assigned yet
+			model.IsEscalated = false;
+			model.AssignedDate = DateTime.Now;
+			model.LastUpdated = DateTime.Now;
+
+			await _repo.CreateAsync(model);
+
+			return "Case created successfully";
+		}
 		// Assign with department check
 		public async Task<string> AssignCaseAsync(int caseId, int officerId, int officerDeptId)
 		{

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GovServe_Project.Models;
 using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GovServe_Project.Controllers
 {
@@ -13,6 +14,17 @@ namespace GovServe_Project.Controllers
 		{
 			_service = service;
 		}
+
+		[HttpPost("create")]
+		public async Task<IActionResult> Create([FromBody] Case model)
+		{
+			if (model == null)
+				return BadRequest("Invalid data");
+
+			var result = await _service.CreateCaseAsync(model);
+			return Ok(result);
+		}
+
 
 		[HttpGet("all")]
 		public async Task<IActionResult> GetAll()
@@ -37,6 +49,7 @@ namespace GovServe_Project.Controllers
 		{
 			return Ok(await _service.GetEscalatedCasesAsync());
 		}
+
 
 		[HttpPost("assign")]
 		public async Task<IActionResult> Assign(int caseId, int officerId, int officerDeptId)

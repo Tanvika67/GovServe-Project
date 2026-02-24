@@ -5,9 +5,6 @@ using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Models
 {
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-
 	public class Case
 	{
 		[Key]
@@ -21,11 +18,13 @@ namespace GovServe_Project.Models
 
 		[Required]
 		public int SupervisorId { get; set; }
-
+		[ForeignKey("User")]
 		public int AssignedOfficerId { get; set; }
 
 		[Required]
+		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
 		public int DepartmentId { get; set; }
+		public virtual Department Department { get; set; }
 
 		[Required]
 		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]

@@ -23,6 +23,11 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		{
 			return await _context.Case.FirstOrDefaultAsync(c => c.CaseId == caseId);
 		}
+		public async Task CreateAsync(Case model)
+		{
+			await _context.Case.AddAsync(model);
+			await _context.SaveChangesAsync();
+		}
 
 		public async Task<List<Case>> GetByStatusAsync(string status)
 		{

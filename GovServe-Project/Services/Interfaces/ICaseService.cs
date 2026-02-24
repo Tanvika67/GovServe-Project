@@ -4,8 +4,9 @@ namespace GovServe_Project.Services.Interfaces
 {
 		public interface ICaseService
 		{
-			// Get Cases
-			Task<List<Case>> GetAllCasesAsync();
+		// Get Cases
+		    Task<string> CreateCaseAsync(Case model);
+		    Task<List<Case>> GetAllCasesAsync();
 			Task<List<Case>> GetPendingCasesAsync();
 			Task<List<Case>> GetActiveCasesAsync();
 			Task<List<Case>> GetEscalatedCasesAsync();

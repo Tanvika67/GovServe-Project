@@ -4,6 +4,7 @@ namespace GovServe_Project.Repository.Interface
 {
 	public interface ICaseRepository
 	{
+		Task CreateAsync(Case model);
 		Task<List<Case>> GetAllAsync();
 		Task<Case> GetByIdAsync(int caseId);
 		Task<List<Case>> GetByStatusAsync(string status);
