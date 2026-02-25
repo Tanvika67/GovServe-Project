@@ -1,0 +1,20 @@
+﻿using GovServe_Project.Models;
+
+
+namespace GovServe_Project.Repository.Interface
+{
+	public interface ICaseRepository
+	{
+		Task<IEnumerable<Case>> GetAllAsync();
+		Task<IEnumerable<Case>> GetByStatusAsync(string status);
+		Task<Case> GetByIdAsync(int id);
+
+		Task AddAsync(Case c);
+		void Update(Case c);
+
+		Task SaveAsync();
+	}
+}
+
+
+

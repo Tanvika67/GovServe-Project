@@ -20,8 +20,7 @@ namespace GovServe_Project.Extensions
                 IConfiguration configuration)
             {
 
-
-            services.AddDbContext<GovServe_ProjectContext>(options =>
+           services.AddDbContext<GovServe_ProjectContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("GovServe_ProjectContext") ??
            throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
@@ -30,27 +29,32 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
-            services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
+            //services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<ISLADayRepository, SLADayRepository>();
+			services.AddScoped<ICaseRepository, CaseRepository>();
+		    services.AddScoped<IEscalationRepository, EscalationRepository>();
+			services.AddScoped<INotificationRepository, NotificationRepository>();
+			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+			services.AddScoped<IAppealRepository, AppealRepository>();
+
+			
 
 
 
-
-
-
-            //Services
-            services.AddScoped<IDepartmentService, DepartmentService>();
+			//Services
+			services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
-            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+            //services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<ISLADayService, SLADayService>();
+			services.AddScoped<ICaseService, CaseService>();
+			services.AddScoped<IEscalationService, EscalationService>();
+			services.AddScoped<INotificationService, NotificationService>();
+			services.AddScoped<IGrievanceService, GrievanceService>();
+			services.AddScoped<IAppealService, AppealService>();
 
             return services;
         }
