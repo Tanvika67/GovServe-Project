@@ -13,9 +13,8 @@ namespace GovServe_Project.Models.AdminModels
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SLARecordID { get; set; }
 
-        [Required(ErrorMessage = "CaseID is required.")]
-        [StringLength(100, MinimumLength = 1, ErrorMessage = "CaseID must be between 1 and 100 characters.")]
-        public int CaseID { get; set; } = default!;
+        [Required]
+        public int CaseID { get; set; } 
 
         [Required(ErrorMessage = "StageID is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "StageID must be a positive number.")]

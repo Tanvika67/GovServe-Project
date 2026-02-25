@@ -4,19 +4,12 @@ using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Repository.Repository_Implentation;
-
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
-using GovServe_Project.Services;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
-using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
+
 namespace GovServe_Project.Extensions
 {
     public static class ServiceRegistration
@@ -36,7 +29,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
-            //services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
+           // services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
 		
@@ -46,7 +39,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
-            //services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+           // services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
 			

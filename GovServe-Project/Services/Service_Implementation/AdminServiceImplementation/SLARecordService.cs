@@ -1,5 +1,6 @@
 ﻿
 using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
@@ -53,8 +54,28 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
             };
         }
+		public async Task<string> CheckAndUpdateSLAAsync()
+		{
+			var records = await _repository.GetActiveSLAAsync();
 
-        public async Task<SLARecordResponseDTO> CreateAsync(SLARecordDTO dto)
+			foreach (var sla in records)
+			{
+				// calculate breach time
+				var breachTime = sla.StartDate.AddHours(sla.SlaHours);
+
+				if (DateTime.Now > breachTime && sla.Status != SLAStatus.Breached)
+				{
+					sla.Status = SLAStatus.Breached;
+					sla.EndDate = DateTime.Now;
+
+					await _repository.UpdateAsync(sla);
+				}
+			}
+
+			return "SLA updated successfully";
+		}
+
+		public async Task<SLARecordResponseDTO> CreateAsync(SLARecordDTO dto)
         {
             var record = new SLARecord
             {
