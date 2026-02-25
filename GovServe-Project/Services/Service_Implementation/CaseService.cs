@@ -58,7 +58,7 @@ namespace GovServe_Project.Services.Service_Implementation
 			if (caseData == null)
 				return "Case not found";
 
-			if (caseData.DepartmentId != officerDeptId)
+			if (caseData.DepartmentID != officerDeptId)
 				return "Department mismatch - cannot assign";
 
 			caseData.AssignedOfficerId = officerId;

@@ -23,7 +23,7 @@ namespace GovServe_Project.Models
 
 		[Required]
 		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
-		public int DepartmentId { get; set; }
+		public int DepartmentID { get; set; }
 		public virtual Department Department { get; set; }
 
 		[Required]
