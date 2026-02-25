@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.CitizenModels;
 
 
 namespace GovServe_Project.Models
@@ -21,7 +22,7 @@ namespace GovServe_Project.Models
 		[ForeignKey("SupervisorId")]
 		public int AssignedOfficerId { get; set; }
 		[ForeignKey("AssignedOfficerId")]
-		public virtual User AssignedOfficer { get; set; }
+		public virtual Users AssignedOfficer { get; set; }
 		[Required]
 		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
 		public int DepartmentID { get; set; }

@@ -1,12 +1,12 @@
-﻿using GovServe_Project.Data;
-using GovServe_Project.DTOs;
-using GovServe_Project.Models;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implentation;
-using GovServe_Project.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Data;
+using GovServe_Project.Services.Interfaces.CitizenService_Interface;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
+using GovServe_Project.DTOs.CitizenDTO;
+using GovServe_Project.Models.CitizenModels;
+using GovServe_Project.DTOs.CitizenDTO;
 
-namespace GovServe_Project.Services.Service_Implementation
+namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implementation
 {
 	public class ApplicationService : IApplicationService
 	{
@@ -35,6 +35,9 @@ namespace GovServe_Project.Services.Service_Implementation
 				ServiceID = service.ServiceID,   // ✅ now works
 				Description = dto.Description,
 				UserId = dto.UserId,
+			//	ServiceID = dto.ServiceID,
+				ServiceName = dto.ServiceName,
+			//	Description = dto.Description,
 				ApplicationStatus = "Submitted",
 				SubmittedDate = DateTime.Now
 			};
@@ -50,23 +53,24 @@ namespace GovServe_Project.Services.Service_Implementation
 			
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-			
+			// Entity → DTO mapping
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				UserId = a.UserId,
 				ServiceName = a.Service.ServiceName,
+				ServiceID = a.ServiceID,
+				//ServiceName = a.ServiceName,
 				ApplicationStatus = a.ApplicationStatus,
-			    SubmittedDate = a.SubmittedDate
+				SubmittedDate = a.SubmittedDate
 			}).ToList();
 
 			return result;
 		}
 
-		
 		// Application Status
-		public async Task<string> GetApplicationStatusAsync(int applicationId)
+		public async Task<string> GetApplicationStatusAsync(int ApplicationId)
 		{
-			var application = await _applicationRepository.GetByIdAsync(applicationId);
+			var application = await _applicationRepository.GetByIdAsync(ApplicationId);
 
 			if (application == null)
 				return null;
@@ -74,11 +78,10 @@ namespace GovServe_Project.Services.Service_Implementation
 			return application.ApplicationStatus;
 		}
 
-		
 		// Delete Application
-		public async Task<bool> DeleteApplicationAsync(int applicationId)
+		public async Task<bool> DeleteApplicationAsync(int ApplicationId)
 		{
-			var application = await _applicationRepository.GetByIdAsync(applicationId);
+			var application = await _applicationRepository.GetByIdAsync(ApplicationId);
 
 			if (application == null)
 				return false;

@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
 using GovServe_Project.Data;
 using GovServe_Project.Models;
 using GovServe_Project.Repository.Interface;
-namespace GovServe_Project.Repository.Repository_Implentation
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Models.CitizenModels;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
+
+namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_Implementation
 {
 	public class ApplicationRepository : IApplicationRepository
 	{
@@ -13,7 +17,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context = context;
 		}
 
-
+	
 		// Create Application
 		public async Task CreateAsync(Application application)
 		{
@@ -23,9 +27,9 @@ namespace GovServe_Project.Repository.Repository_Implentation
 
 
 		// Get By Id
-		public async Task<Application> GetByIdAsync(int id)
+		public async Task<Application> GetByIdAsync(int ApplicationId)
 		{
-			return await _context.Application.FindAsync(id);
+			return await _context.Application.FindAsync(ApplicationId);
 		}
 
 		// Get By UserId
@@ -37,9 +41,9 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		}
 
 		// Delete Application
-		public async Task DeleteAsync(Application application)
+		public async Task DeleteAsync(Application ApplicationId)
 		{
-			_context.Application.Remove(application);
+			_context.Application.Remove(ApplicationId);
 			await _context.SaveChangesAsync();
 		}
 	}

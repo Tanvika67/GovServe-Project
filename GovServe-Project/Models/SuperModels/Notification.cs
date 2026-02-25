@@ -4,9 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GovServe_Project.Models
 {
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-
 	public class Notification
 	{
 		[Key]
@@ -16,7 +13,7 @@ namespace GovServe_Project.Models
 		[Required]
 		[ForeignKey("User")]
 		public int UserId { get; set; }
-		public virtual User User { get; set; }
+		public virtual Users User { get; set; }
 		[Required]
 		[ForeignKey("Case")]
 		public int CaseId { get; set; }

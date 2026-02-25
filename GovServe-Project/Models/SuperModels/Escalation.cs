@@ -15,7 +15,7 @@ namespace GovServe_Project.Models
 		public virtual Case Case { get; set; }
 		[ForeignKey("User")]
 		public int EscalatedByUserId { get; set; }
-		public virtual User EscalatedByUser{ get; set; }
+		public virtual Users EscalatedByUser{ get; set; }
 
 		public int PreviousOfficerId { get; set; }
 

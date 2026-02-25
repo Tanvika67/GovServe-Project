@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Models.AdminModels;
+
 
 namespace GovServe_Project.Models
 {
-    public class User
-    {
+	public class Users
+	{
 		[Key]
 		public int UserId { get; set; }
 
@@ -26,19 +29,18 @@ namespace GovServe_Project.Models
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
 		ErrorMessage = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.")]
 		public string Password { get; set; }
-
-		[Required]
-		public string Role { get; set; }
-		[Required]
-		[ForeignKey("Department")]
-		public int DepartmentId { get; set; }
-
 		public virtual Department Department { get; set; }
-		
+		[Required]
+		public string RoleID { get; set; }
+		//[ForeignKey("RoleID")]
+		//public virtual Role Role { get; set; }
+		public string RoleName { get; set; }
+
 
 		// Navigation Property
-		//public virtual ICollection<Application> Applications { get; set; }
+		public virtual ICollection<Application> Applications { get; set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }
-		//public virtual ICollection<Appeal> Appeals { get; set; }
+		//public virtual ICollection<Appeal>Appeals { get; set; }
+
 	}
 }

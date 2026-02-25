@@ -4,10 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Repository.Interface;
 namespace GovServe_Project.Repository.Repository_Implentation
 {
-	using GovServe_Project.Data;
-	using GovServe_Project.Models;
-	using Microsoft.EntityFrameworkCore;
-
 	public class NotificationRepository : INotificationRepository
 	{
 		private readonly GovServe_ProjectContext _context;
