@@ -2,14 +2,14 @@
 
 namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
 {
-     public interface ISLARecordRepository
-     {
+    public interface ISLARecordRepository
+    {
         Task<IEnumerable<SLARecord>> GetAllAsync();
         Task<SLARecord?> GetByIdAsync(int id);
         Task AddAsync(SLARecord record);
-        Task UpdateAsync(SLARecord record);
-        Task DeleteAsync(SLARecord record);
-       
-      }
+        void Update(SLARecord record);
+        void Delete(SLARecord record);
+        Task SaveAsync();
+    }
 
 }

@@ -1,92 +1,107 @@
 ﻿using GovServe_Project.DTOs;
+using GovServe_Project.DTOs.Admin;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
-using GovServe_Project.Repositories;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
-namespace GovServe_Project.Services
+namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
 {
-    public class WorkflowStageService : IWorkflowStageService
-    {
-        private readonly IWorkflowStageRepository _repository;
-
-        public WorkflowStageService(IWorkflowStageRepository repository)
+        public class WorkflowStageService : IWorkflowStageService
         {
-            _repository = repository;
-        }
+            private readonly IWorkflowStageRepository _repository;
+            private readonly ISLADayRepository _slaDayRepository;
 
-        public async Task<IEnumerable<WorkflowStageResponseDTO>> GetAllAsync()
-        {
-            var stages = await _repository.GetAllAsync();
-
-            return stages.Select(s => new WorkflowStageResponseDTO
+            public WorkflowStageService(
+                IWorkflowStageRepository repository,
+                ISLADayRepository slaDayRepository)
             {
-                StageID = s.StageID,
-                ServiceID = s.ServiceID,
-                ResponsibleRole = s.ResponsibleRole,
-                SequenceNumber = s.SequenceNumber,
-                SLA_Days = s.SLA_Days
-            });
-        }
+                _repository = repository;
+                _slaDayRepository = slaDayRepository;
+            }
 
-        public async Task<WorkflowStageResponseDTO> GetByIdAsync(int id)
-        {
-            var stage = await _repository.GetByIdAsync(id);
-
-            if (stage == null)
-                throw new NotFoundException("Workflow stage not found.");
-
-            return new WorkflowStageResponseDTO
+            public async Task<IEnumerable<WorkflowStageResponseDto>> GetAllAsync()
             {
-                StageID = stage.StageID,
-                ServiceID = stage.ServiceID,
-                ResponsibleRole = stage.ResponsibleRole,
-                SequenceNumber = stage.SequenceNumber,
-                SLA_Days = stage.SLA_Days
-            };
-        }
+                var stages = await _repository.GetAllAsync();
 
-        public async Task<WorkflowStageResponseDTO> CreateAsync(WorkflowStageDTO dto)
-        {
-            var stage = new WorkflowStage
+                return stages.Select(MapToDto);
+            }
+
+            public async Task<IEnumerable<WorkflowStageResponseDto>> GetByServiceAsync(int serviceId)
             {
-                ServiceID = dto.ServiceID,
-                ResponsibleRole = dto.ResponsibleRole,
-                SequenceNumber = dto.SequenceNumber,
-                SLA_Days = dto.SLA_Days
-            };
+                var stages = await _repository.GetByServiceAsync(serviceId);
 
-            await _repository.AddAsync(stage);
+                return stages.Select(MapToDto);
+            }
 
-            return await GetByIdAsync(stage.StageID);
+            public async Task<WorkflowStageResponseDto> GetByIdAsync(int id)
+            {
+                var stage = await _repository.GetByIdAsync(id)
+                    ?? throw new NotFoundException("Workflow stage not found");
+
+                return MapToDto(stage);
+            }
+
+            public async Task<WorkflowStageResponseDto> CreateAsync(WorkflowStageCreateDto dto)
+            {
+                // Fetch SLA days from SLADays table
+                var slaConfig = await _slaDayRepository.GetByRoleAsync(dto.ResponsibleRole);
+
+                if (slaConfig == null)
+                    throw new NotFoundException("SLA not configured for this role");
+
+                var stage = new WorkflowStage
+                {
+                    ServiceID = dto.ServiceID,
+                    ResponsibleRole = dto.ResponsibleRole,
+                    SequenceNumber = dto.SequenceNumber,
+                    SLA_Days = slaConfig.Days   // Auto assign
+                };
+
+                await _repository.AddAsync(stage);
+
+                return MapToDto(stage);
+            }
+
+            public async Task UpdateAsync(int id, WorkflowStageCreateDto dto)
+            {
+                var stage = await _repository.GetByIdAsync(id)
+                    ?? throw new NotFoundException("Workflow stage not found");
+
+                var slaConfig = await _slaDayRepository.GetByRoleAsync(dto.ResponsibleRole)
+                    ?? throw new NotFoundException("SLA not configured for this role");
+
+                stage.ServiceID = dto.ServiceID;
+                stage.ResponsibleRole = dto.ResponsibleRole;
+                stage.SequenceNumber = dto.SequenceNumber;
+                stage.SLA_Days = slaConfig.Days;
+
+                await _repository.UpdateAsync(stage);
+            }
+
+            public async Task DeleteAsync(int id)
+            {
+                var stage = await _repository.GetByIdAsync(id)
+                    ?? throw new NotFoundException("Workflow stage not found");
+
+                await _repository.DeleteAsync(stage);
+            }
+
+            private static WorkflowStageResponseDto MapToDto(WorkflowStage stage)
+            {
+                return new WorkflowStageResponseDto
+                {
+                    StageID = stage.StageID,
+                    ServiceID = stage.ServiceID,
+                    ResponsibleRole = stage.ResponsibleRole,
+                    SequenceNumber = stage.SequenceNumber,
+                    SLA_Days = stage.SLA_Days
+                };
+            }
         }
+   }
 
-        public async Task<WorkflowStageResponseDTO> UpdateAsync(int id, WorkflowStageDTO dto)
-        {
-            var stage = await _repository.GetByIdAsync(id);
 
-            if (stage == null)
-                throw new NotFoundException("Workflow stage not found.");
 
-            stage.ServiceID = dto.ServiceID;
-            stage.ResponsibleRole = dto.ResponsibleRole;
-            stage.SequenceNumber = dto.SequenceNumber;
-            stage.SLA_Days = dto.SLA_Days;
 
-            await _repository.UpdateAsync(stage);
-
-            return await GetByIdAsync(id);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var stage = await _repository.GetByIdAsync(id);
-
-            if (stage == null)
-                throw new NotFoundException("Workflow stage not found.");
-
-            await _repository.DeleteAsync(stage);
-        }
-    }
-}

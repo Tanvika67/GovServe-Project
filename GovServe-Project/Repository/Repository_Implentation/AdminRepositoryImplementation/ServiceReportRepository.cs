@@ -43,10 +43,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             }
 
             var list = await Application.ToListAsync();
+            var slaList = await SLARecords.ToListAsync();
 
             int total = list.Count;
             int approved = list.Count(a => a.ApplicationStatus == "Approved");
-            int slaBreached = list.Count(a => a.ApplicationStatus== "Breached");
+            int slaBreached = slaList.Count(a=> a.Status== SLAStatus.Breached);
 
             double approvalRate = total == 0 ? 0 :
                 (double)approved / total * 100;
@@ -69,7 +70,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             };
         }
     }
-
 
 }
 

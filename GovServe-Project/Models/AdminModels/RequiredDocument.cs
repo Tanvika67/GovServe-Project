@@ -29,6 +29,6 @@ namespace GovServe_Project.Models.AdminModels
         [ForeignKey(nameof(ServiceID))]
         public Service? Service { get; set; }
 
-		public virtual ICollection<Application> Application { get; set; }
+		//public virtual ICollection<Application> Application { get; set; }
 	}
 }

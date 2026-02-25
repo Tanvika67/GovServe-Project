@@ -2,13 +2,10 @@
 
 namespace GovServe_Project.DTOs.AdminDTO
 {
-    public class SLARecordResponseDto
+    public class SLARecordCreateDto
     {
-        public int SLARecordID { get; set; }
         public int CaseID { get; set; } 
         public int StageID { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public SLAStatus Status { get; set; }
     }
 }

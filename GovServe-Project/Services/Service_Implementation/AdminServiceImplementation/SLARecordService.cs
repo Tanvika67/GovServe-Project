@@ -1,103 +1,107 @@
 ﻿
 using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
 namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
-{ 
-  public class SLARecordService : ISLARecordService
+{
+    public class SLARecordService : ISLARecordService
     {
         private readonly ISLARecordRepository _repository;
+        private readonly IWorkflowStageRepository _stageRepository;
 
-        public SLARecordService(ISLARecordRepository repository)
+        public SLARecordService(
+            ISLARecordRepository repository,
+            IWorkflowStageRepository stageRepository)
         {
             _repository = repository;
+            _stageRepository = stageRepository;
         }
 
-        public async Task<IEnumerable<SLARecordResponseDTO>> GetAllAsync()
+        public async Task<IEnumerable<SLARecordResponseDto>> GetAllAsync()
         {
-            var record = await _repository.GetAllAsync();
+            var records = await _repository.GetAllAsync();
 
-            return record.Select(s => new SLARecordResponseDTO
+            // Auto check status
+            foreach (var record in records)
             {
-        
-                  SLARecordID=s.SLARecordID,
-                  CaseID=s.CaseID,
-                  StageID=s.StageID,
-                  StartDate = s.StartDate,
-                  EndDate = s.EndDate,
-                  Status = s.Status
+                UpdateStatus(record);
+            }
 
+            await _repository.SaveAsync();
 
-            });
+            return records.Select(MapToDto);
         }
 
-        public async Task<SLARecordResponseDTO> GetByIdAsync(int id)
+        public async Task<SLARecordResponseDto> GetByIdAsync(int id)
         {
-            var record = await _repository.GetByIdAsync(id);
+            var record = await _repository.GetByIdAsync(id)
+                ?? throw new NotFoundException("SLA record not found");
 
-                if(record==null)
-                 throw new NotFoundException("SLARecord not found");
+            UpdateStatus(record);
+            await _repository.SaveAsync();
 
-            return new SLARecordResponseDTO
+            return MapToDto(record);
+        }
+
+        public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
+        {
+            // 1️⃣ Get workflow stage to fetch SLA days
+            var stage = await _stageRepository.GetByIdAsync(dto.StageID)
+                ?? throw new NotFoundException("Workflow stage not found");
+
+            // 2️⃣ Calculate EndDate automatically
+            var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
+
+            var record = new SLARecord
             {
+                CaseID = dto.CaseID,
+                StageID = dto.StageID,
+                StartDate = dto.StartDate,
+                EndDate = calculatedEndDate
+            };
 
+            // 3️⃣ Calculate Status
+            UpdateStatus(record);
+
+            await _repository.AddAsync(record);
+            await _repository.SaveAsync();
+
+            return MapToDto(record);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var record = await _repository.GetByIdAsync(id)
+                ?? throw new NotFoundException("SLA record not found");
+
+            _repository.Delete(record);
+            await _repository.SaveAsync();
+        }
+
+        //  Automatic Status updated
+        private void UpdateStatus(SLARecord record)
+        {
+            if (DateTime.UtcNow > record.EndDate)
+                record.Status = SLAStatus.Breached;
+            else
+                record.Status = SLAStatus.OnTime;
+        }
+
+        private static SLARecordResponseDto MapToDto(SLARecord record)
+        {
+            return new SLARecordResponseDto
+            {
                 SLARecordID = record.SLARecordID,
                 CaseID = record.CaseID,
                 StageID = record.StageID,
                 StartDate = record.StartDate,
                 EndDate = record.EndDate,
                 Status = record.Status
-
             };
-        }
-
-        public async Task<SLARecordResponseDTO> CreateAsync(SLARecordDTO dto)
-        {
-            var record = new SLARecord
-            {
-                CaseID = dto.CaseID,
-                StageID = dto.StageID,
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate,
-                Status = dto.Status
-            };
-
-            await _repository.AddAsync(record);
-
-            return await GetByIdAsync(record.SLARecordID);
-
-            
-        }
-
-        public async Task<SLARecordResponseDTO> UpdateAsync(int id, SLARecordDTO dto)
-        {
-            var record = await _repository.GetByIdAsync(id);
-            if(record==null)
-             throw new NotFoundException("SLARecord not found");
-
-            record.CaseID = dto.CaseID;
-            record.StageID = dto.StageID;
-            record.StartDate = dto.StartDate;
-            record.EndDate = dto.EndDate;
-            record.Status = dto.Status;
-
-
-            await _repository.UpdateAsync(record);
-
-            return await GetByIdAsync(id);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var record = await _repository.GetByIdAsync(id);
-            if(record==null)
-            throw new NotFoundException("SLARecord not found");
-
-           // _repository.Delete(record);
-            await _repository.DeleteAsync(record);
         }
     }
 

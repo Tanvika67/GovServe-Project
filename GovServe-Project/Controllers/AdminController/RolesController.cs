@@ -1,4 +1,4 @@
-﻿
+﻿using GovServe_Project.DTOs;
 using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +7,11 @@ namespace GovServe_Project.Controllers.AdminController
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SLARecordsController : ControllerBase
+    public class RolesController : ControllerBase
     {
-        private readonly ISLARecordService _service;
+        private readonly IRoleService _service;
 
-        public SLARecordsController(ISLARecordService service)
+        public RolesController(IRoleService service)
         {
             _service = service;
         }
@@ -25,13 +25,19 @@ namespace GovServe_Project.Controllers.AdminController
             => Ok(await _service.GetByIdAsync(id));
 
         [HttpPost]
-        public async Task<IActionResult> Create(SLARecordCreateDto dto)
+        public async Task<IActionResult> Create(RoleCreateDto dto)
         {
             var result = await _service.CreateAsync(dto);
 
             return CreatedAtAction(nameof(Get),
-                new { id = result.SLARecordID },
-                result);
+                new { id = result.RoleID }, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, RoleCreateDto dto)
+        {
+            await _service.UpdateAsync(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
