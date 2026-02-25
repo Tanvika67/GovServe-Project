@@ -4,6 +4,7 @@ using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Models.CitizenModels;
 
 
 namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation

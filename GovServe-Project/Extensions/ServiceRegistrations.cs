@@ -27,8 +27,7 @@ namespace GovServe_Project.Extensions
                 IConfiguration configuration)
             {
 
-
-            services.AddDbContext<GovServe_ProjectContext>(options =>
+           services.AddDbContext<GovServe_ProjectContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("GovServe_ProjectContext") ??
            throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
@@ -40,15 +39,7 @@ namespace GovServe_Project.Extensions
             //services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
-			services.AddScoped<ICaseRepository, CaseRepository>();
-		    services.AddScoped<IEscalationRepository, EscalationRepository>();
-			services.AddScoped<INotificationRepository, NotificationRepository>();
-			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
-			services.AddScoped<IAppealRepository, AppealRepository>();
-
-			
-
-
+		
 
 			//Services
 			services.AddScoped<IDepartmentService, DepartmentService>();
@@ -58,11 +49,7 @@ namespace GovServe_Project.Extensions
             //services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
-			services.AddScoped<ICaseService, CaseService>();
-			services.AddScoped<IEscalationService, EscalationService>();
-			services.AddScoped<INotificationService, NotificationService>();
-			services.AddScoped<IGrievanceService, GrievanceService>();
-			services.AddScoped<IAppealService, AppealService>();
+			
 
 			return services;
         }
