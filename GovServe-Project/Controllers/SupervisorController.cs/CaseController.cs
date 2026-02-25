@@ -1,4 +1,5 @@
-﻿using GovServe_Project.Models;
+﻿using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Models;
 using GovServe_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +17,12 @@ namespace GovServe_Project.Controllers
 		}
 
 		[HttpPost("create")]
-		public async Task<IActionResult> Create([FromBody] Case model)
+		public async Task<IActionResult> Create([FromBody] CreateCaseDto dto)
 		{
-			if (model == null)
+			if (dto == null)
 				return BadRequest("Invalid data");
 
-			var result = await _service.CreateCaseAsync(model);
+			var result = await _service.CreateCaseAsync(dto);
 			return Ok(result);
 		}
 

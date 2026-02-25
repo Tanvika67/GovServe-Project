@@ -31,7 +31,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
            // services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
-            services.AddScoped<ISLARecordRepository, SLARecordRepository>();
+           // services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
 			services.AddScoped<ICaseRepository, CaseRepository>();
 		    services.AddScoped<IEscalationRepository, EscalationRepository>();
@@ -49,7 +49,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
            // services.AddScoped<IWorkflowStageService, WorkflowStageService>();
-            services.AddScoped<ISLARecordService, SLARecordService>();
+           // services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IEscalationService, EscalationService>();

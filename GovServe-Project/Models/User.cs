@@ -34,6 +34,7 @@ namespace GovServe_Project.Models
 		public int DepartmentId { get; set; }
 
 		public virtual Department Department { get; set; }
+		
 
 		// Navigation Property
 		//public virtual ICollection<Application> Applications { get; set; }

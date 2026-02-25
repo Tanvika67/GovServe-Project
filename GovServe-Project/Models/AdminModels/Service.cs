@@ -38,10 +38,10 @@ namespace GovServe_Project.Models.AdminModels
         // Navigation
         [ForeignKey(nameof(DepartmentID))]
         public Department? Department { get; set; }
+		public ICollection<Application> Applications { get; set; } = new List<Application>();
 
-        public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
+		public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
         public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
         public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
-        public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
     }
 }

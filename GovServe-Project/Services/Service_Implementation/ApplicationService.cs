@@ -2,6 +2,7 @@
 using GovServe_Project.DTOs;
 using GovServe_Project.Models;
 using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,25 +10,31 @@ namespace GovServe_Project.Services.Service_Implementation
 {
 	public class ApplicationService : IApplicationService
 	{
+		private readonly GovServe_ProjectContext _context;
 		private readonly IApplicationRepository _applicationRepository;
 
-		public ApplicationService(IApplicationRepository applicationRepository)
+		public ApplicationService(IApplicationRepository applicationRepository,GovServe_ProjectContext context)
 		{
 			_applicationRepository = applicationRepository;
+			_context = context;
 		}
-
 
 		// Create Application
 		public async Task<string> CreateApplicationAsync(CreateApplicationDTO dto)
 		{
-			// DTO → Entity Mapping
+			//  Step 1: Get service from DB using name
+			var service = await _context.Services
+				.FirstOrDefaultAsync(s => s.ServiceName == dto.ServiceName);
+
+			if (service == null)
+				throw new Exception("Service not found");
+
+			//  Step 2: Create Application
 			var app = new Application()
 			{
-				ServiceName = dto.ServiceName,
+				ServiceID = service.ServiceID,   // ✅ now works
 				Description = dto.Description,
 				UserId = dto.UserId,
-
-
 				ApplicationStatus = "Submitted",
 				SubmittedDate = DateTime.Now
 			};
@@ -47,7 +54,7 @@ namespace GovServe_Project.Services.Service_Implementation
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				UserId = a.UserId,
-				ServiceName = a.ServiceName,
+				ServiceName = a.Service.ServiceName,
 				ApplicationStatus = a.ApplicationStatus,
 			    SubmittedDate = a.SubmittedDate
 			}).ToList();

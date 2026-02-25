@@ -30,5 +30,6 @@ namespace GovServe_Project.Models.AdminModels
 		// Navigation
 		//public ICollection<Service> Services { get; set; } = new List<Service>();
 		public ICollection<User> User { get; set; }
+	
 	}
 }

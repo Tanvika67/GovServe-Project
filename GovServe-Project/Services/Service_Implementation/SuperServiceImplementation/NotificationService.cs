@@ -17,13 +17,15 @@ namespace GovServe_Project.Services.Service_Implementation
 			var notification = new Notification
 			{
 				UserId = userId,
-				Message = message,
 				CaseId = caseId,
+				Message = message,
+				Category = "Update", // or Assignment/Escalation
 				CreatedDate = DateTime.Now,
 				IsRead = false
 			};
 
-			await _repo.CreateAsync(notification);
+			await _repo.AddAsync(notification);
+			await _repo.SaveAsync();
 		}
 
 		public async Task<List<Notification>> GetUserNotificationsAsync(int userId)
@@ -38,7 +40,13 @@ namespace GovServe_Project.Services.Service_Implementation
 
 		public async Task MarkAsReadAsync(int notificationId)
 		{
-			await _repo.MarkAsReadAsync(notificationId);
+			var notification = await _repo.GetByIdAsync(notificationId);
+
+			if (notification != null)
+			{
+				notification.IsRead = true;
+				await _repo.SaveAsync();
+			}
 		}
 	}
 }

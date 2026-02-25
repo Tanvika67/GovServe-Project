@@ -18,9 +18,10 @@ namespace GovServe_Project.Models
 
 		[Required]
 		public int SupervisorId { get; set; }
-		[ForeignKey("User")]
+		[ForeignKey("SupervisorId")]
 		public int AssignedOfficerId { get; set; }
-
+		[ForeignKey("AssignedOfficerId")]
+		public virtual User AssignedOfficer { get; set; }
 		[Required]
 		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
 		public int DepartmentID { get; set; }
@@ -33,13 +34,14 @@ namespace GovServe_Project.Models
 		public DateTime? AssignedDate { get; set; }
 
 		public DateTime? CompletedDate { get; set; }
+		public bool IsWarningSent { get; set; }
 
 		public bool IsEscalated { get; set; } = false;
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 
-		// SLA → 48 hours example
-		public int SlaHours { get; set; } = 48;
+		// SLA → 1 day example
+		public int Sladays { get; set; } = 1;
 	}
 
 }

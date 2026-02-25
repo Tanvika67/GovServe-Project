@@ -13,24 +13,15 @@ namespace GovServe_Project.Models
 
 		[Key]
 		public int ApplicationID { get; set; }
-
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
 		public virtual User User { get; set; }
-
 		public int ServiceID { get; set; }
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
-
-		public string ServiceName { get; set; }
-		[ForeignKey("ServiceName")]
-		public virtual Service Services { get; set; }
-
-		[Required]
 		public int DepartmentID { get; set; }
-		[ForeignKey("DepartmnetID")]
+		[ForeignKey("DepartmentID")]
 		public virtual Department Department { get; set; }
-
 		public string? Description { get; set; }
 
 		[Required]
@@ -42,6 +33,7 @@ namespace GovServe_Project.Models
 		[Required]
 		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
+
 		//public virtual ICollection<Grievance> Grievances { get; set; }
 		//public virtual ICollection<Appeal> Appeals { get; set; }
 	}
