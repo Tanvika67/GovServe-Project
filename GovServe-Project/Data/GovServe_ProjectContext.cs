@@ -4,6 +4,7 @@ using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
 using GovServe.Models;
+using GovServe_Project.Models.SuperModels;
 
 
 namespace GovServe_Project.Data
@@ -49,7 +50,7 @@ namespace GovServe_Project.Data
             modelBuilder.Entity<Case>()
                  .HasOne(c => c.Application)
                  .WithMany()
-                .HasForeignKey(c => c.ApplicationId)
+                .HasForeignKey(c => c.ApplicationID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Case>()
@@ -65,9 +66,9 @@ namespace GovServe_Project.Data
                  .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Escalation>()
-                .HasOne(e => e.EscalatedByUser)
+                .HasOne(e => e.Supervisor)
                 .WithMany()
-                .HasForeignKey(e => e.EscalatedByUserId)
+                .HasForeignKey(e => e.SupervisorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Notification>()

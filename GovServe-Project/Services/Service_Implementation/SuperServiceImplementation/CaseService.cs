@@ -1,8 +1,10 @@
-﻿using GovServe_Project.Models.SuperModels;
+﻿using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
-using GovServe_Project.Services.Interfaces.SuperServiceInterface;
-using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -36,12 +38,16 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetByStatusAsync("Escalated");
 		}
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _repo.GetSLABreachedCasesAsync();
+		}
 
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
 			var model = new Case
 			{
-				ApplicationId = dto.ApplicationId,
+				ApplicationID = dto.ApplicationId,
 				DepartmentID = dto.DepartmentId,
 				SupervisorId = dto.SupervisorId,          // track supervisor
 				AssignedOfficerId = dto.AssignedOfficerId, // actual officer
@@ -97,50 +103,47 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		public async Task<string> AutoEscalateAsync()
 		{
-			var cases = await _repo.GetAllAsync();
+			var cases = await _repo.GetSLABreachedCasesAsync();
 
 			foreach (var c in cases)
 			{
-				if (c.AssignedDate.HasValue && c.Status != "Completed")
+				if (!c.IsEscalated)
 				{
-					var days = (DateTime.Now - c.AssignedDate.Value).TotalDays;
+					int oldOfficer = c.AssignedOfficerId;
 
-					double warningThreshold = c.Sladays * 0.8;
+					c.Status = "Escalated";
+					c.IsEscalated = true;
+					c.LastUpdated = DateTime.Now;
 
-					//  SLA WARNING (80%)
-					if (days >= warningThreshold && !c.IsWarningSent)
-					{
-						await _notificationService.SendNotificationAsync(
-							c.AssignedOfficerId,
-							" SLA is about to breach. Please take action.",
-							c.CaseId
-						);
+					_repo.Update(c);
 
-						c.IsWarningSent = true;
-						_repo.Update(c);
-					}
+					// Notify Supervisor
+					await _notificationService.SendNotificationAsync(
+						c.SupervisorId,
+						"Case escalated due to SLA breach",
+						c.CaseId
+					);
 
-					//  SLA BREACH (100%)
-					if (days > c.Sladays)
-					{
-						c.Status = "Escalated";
-						c.IsEscalated = true;
-						c.LastUpdated = DateTime.Now;
+					// Notify Citizen
+					await _notificationService.SendNotificationAsync(
+						c.UserId,
+						"Your application was delayed and escalated",
+						c.CaseId
+					);
 
-						_repo.Update(c);
-
-						await _notificationService.SendNotificationAsync(
-							c.SupervisorId,
-							" Case escalated due to SLA breach",
-							  c.CaseId
-				);
-					}
+					// Notify Old Officer
+					await _notificationService.SendNotificationAsync(
+						oldOfficer,
+						"Case escalated due to SLA breach",
+						c.CaseId
+					);
 				}
 			}
 
 			await _repo.SaveAsync();
-			return "SLA Check Completed";
-	    }
+			return "SLA escalation completed";
+		}
+
 		public async Task<object> GetDashboardAsync()
 		{
 			var all = await _repo.GetAllAsync();

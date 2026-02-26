@@ -14,8 +14,12 @@ namespace GovServe_Project.Models.SuperModels
 
 		[Required]
 		[ForeignKey("Application")]
-		public int ApplicationId { get; set; }
+		public int ApplicationID { get; set; }
 		public virtual Application Application { get; set; }
+		[Required]
+		[ForeignKey("User")]
+		public int UserId {  get; set; }
+		public virtual Users User { get; set; }
 
 		[Required]
 		public int SupervisorId { get; set; }
@@ -40,9 +44,6 @@ namespace GovServe_Project.Models.SuperModels
 		public bool IsEscalated { get; set; } = false;
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
-
-		// SLA → 1 day example
-		public int Sladays { get; set; } = 1;
 	}
 
 }

@@ -25,11 +25,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task<IEnumerable<WorkflowStage>> GetByServiceAsync(int serviceId)
         {
-            var service= await _context.WorkflowStages
+            var service = await _context.WorkflowStages
                 .Where(x => x.ServiceID == serviceId)
                 .OrderBy(x => x.SequenceNumber)
                 .ToListAsync();
-
             return service;
 
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Enum;
 using GovServe_Project.Data;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
@@ -26,7 +27,17 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				.Where(x => x.Status == status)
 				.ToListAsync();
 		}
-
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _context.Case
+				.Join(_context.SLARecords,
+					c => c.CaseId,
+					s => s.CaseID,
+					(c, s) => new { c, s })
+				.Where(x => x.s.Status == SLAStatus.Breached)
+				.Select(x => x.c)
+				.ToListAsync();
+		}
 		public async Task<Case> GetByIdAsync(int id)
 		{
 			return await _context.Case.FindAsync(id);

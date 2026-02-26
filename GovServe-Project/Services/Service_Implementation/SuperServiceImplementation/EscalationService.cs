@@ -33,7 +33,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			var escalation = new Escalation
 			{
 				CaseId = caseId,
-				EscalatedByUserId = supervisorId,
+				SupervisorId = supervisorId,
 				PreviousOfficerId = c.AssignedOfficerId,
 				NewOfficerId = newOfficerId,
 				Reason = reason,

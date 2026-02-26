@@ -21,7 +21,7 @@ namespace GovServe_Project.Models.SuperModels
 
 		[Required]
 		public string Message { get; set; }
-		[RegularExpression("Assignment|Escalation|Update", ErrorMessage = "Invalid category")]
+		[RegularExpression("Assignment|Escalation|Update|In-Progress|Rejected|Completed", ErrorMessage = "Invalid category")]
 		public string Category { get; set; }
 		[RegularExpression("Unread|Read", ErrorMessage = "Invalid notification status")]
 		public string Status { get; set; } = "Unread";

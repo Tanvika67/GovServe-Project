@@ -2,9 +2,9 @@
 {
 	public enum CaseStatus
 	{
-		Pending,
-		Assigned,
-		Escalated,
-		Completed
+		Pending=0,
+		Assigned=1,
+		Escalated=2,
+		Completed=3
 	}
 }

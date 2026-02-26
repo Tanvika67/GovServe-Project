@@ -8,6 +8,7 @@ namespace GovServe_Project.Services.Interfaces
 		Task<IEnumerable<Case>> GetPendingCasesAsync();
 		Task<IEnumerable<Case>> GetActiveCasesAsync();
 		Task<IEnumerable<Case>> GetEscalatedCasesAsync();
+		Task<List<Case>> GetSLABreachedCasesAsync();
 		Task<object> GetDashboardAsync();
 
 		Task<string> CreateCaseAsync(CreateCaseDto dto);
