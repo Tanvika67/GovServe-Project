@@ -10,5 +10,6 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task<Department> AddAsync(Department department);
         Task<Department?> UpdateAsync(Department department);
         Task<bool> DeleteAsync(int id);
-    }
+
+        Task<int> GetTotalCountAsync();    }
 }

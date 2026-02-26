@@ -21,7 +21,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         public async Task<ServiceReportMetricsDTO> GenerateMetricsAsync(ReportFilterRequest request)
         {
             IQueryable<Application> Application = _context.Application;
-           // IQueryable<SLARecord> SLARecords = _context.SLARecords;
+            IQueryable<SLARecord> SLARecords = _context.SLARecords;
 
 
             // Apply Filters
@@ -44,19 +44,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             }
 
             var list = await Application.ToListAsync();
+            var slaList = await SLARecords.ToListAsync();
 
             int total = list.Count;
             int approved = list.Count(a => a.ApplicationStatus == "Approved");
-            int slaBreached = list.Count(a => a.ApplicationStatus== "Breached");
+            int slaBreached = slaList.Count(a=> a.Status== SLAStatus.Breached);
 
             double approvalRate = total == 0 ? 0 :
                 (double)approved / total * 100;
 
-            //double avgTurnaround = list
-            //    .Where(a => a.CompletedDate != null)
-            //    .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
-            //    .DefaultIfEmpty(0)
-            //    .Average();
+            double avgTurnaround = list
+                .Where(a => a.CompletedDate != null)
+                .Select(a => (a.CompletedDate.Value - a.SubmittedDate).TotalDays)
+                .DefaultIfEmpty(0)
+                .Average();
 
             double slaRate = total == 0 ? 0 :
                 (double)slaBreached / total * 100;
@@ -65,12 +66,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             {
                 ApplicationsCount = total,
                 ApprovalRate = Math.Round(approvalRate, 2),
-               // AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
+                AvgTurnaroundDays = Math.Round(avgTurnaround, 2),
                 SLABreachRate = Math.Round(slaRate, 2)
             };
         }
     }
-
 
 }
 

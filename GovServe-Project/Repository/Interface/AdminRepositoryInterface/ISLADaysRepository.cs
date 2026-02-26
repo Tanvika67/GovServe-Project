@@ -1,0 +1,15 @@
+﻿using GovServe_Project.Models.AdminModels;
+
+namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
+{
+    public interface ISLADayRepository
+    {
+        Task<IEnumerable<SLADays>> GetAllAsync();
+        Task<SLADays?> GetByIdAsync(int id);
+        Task<SLADays?> GetByRoleAsync(string roleName);
+        Task AddAsync(SLADays slaDay);
+        void Update(SLADays slaDay);
+        void Delete(SLADays slaDay);
+        Task SaveAsync();
+    }
+}
