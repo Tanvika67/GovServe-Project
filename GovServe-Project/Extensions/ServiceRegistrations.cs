@@ -29,14 +29,14 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IEligibilityRuleRepository, EligibilityRuleRepository>();
             services.AddScoped<IRequiredDocumentRepository, RequiredDocumentRepository>();
-            //services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
+            services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
 			services.AddScoped<ICaseRepository, CaseRepository>();
 		    services.AddScoped<IEscalationRepository, EscalationRepository>();
 			services.AddScoped<INotificationRepository, NotificationRepository>();
-			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
-			services.AddScoped<IAppealRepository, AppealRepository>();
+			//services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+		//	services.AddScoped<IAppealRepository, AppealRepository>();
 
 			
 
@@ -47,14 +47,14 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
-            //services.AddScoped<IWorkflowStageService, WorkflowStageService>();
+            services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IEscalationService, EscalationService>();
 			services.AddScoped<INotificationService, NotificationService>();
-			services.AddScoped<IGrievanceService, GrievanceService>();
-			services.AddScoped<IAppealService, AppealService>();
+		//	services.AddScoped<IGrievanceService, GrievanceService>();
+		//	services.AddScoped<IAppealService, AppealService>();
 
             return services;
         }
