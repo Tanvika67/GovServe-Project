@@ -1,6 +1,6 @@
 ﻿
 using GovServe_Project.Models.AdminModels;
-
+using Microsoft.EntityFrameworkCore;
 namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
 {
     public interface IWorkflowStageRepository
