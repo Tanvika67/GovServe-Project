@@ -4,6 +4,7 @@ using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
+using GovServe.Models;
 
 
 namespace GovServe_Project.Data
@@ -110,15 +111,14 @@ namespace GovServe_Project.Data
         public DbSet<Users> User { get; set; } = default!;
         public DbSet<Escalation> Escalation { get; set; } = default!;
         public DbSet<Notification> Notification { get; set; } = default!;
-        //public DbSet<Grievance> Grievance { get; set; } = default!;
+		
+
+		public DbSet<Grievance> Grievance { get; set; } = default!;
+        public DbSet<Appeal> Appeal { get; set; } = default!;
 
 
 
-        //public DbSet<Appeal> Appeal { get; set; } = default!;
-
-
-
-        internal async Task SaveChaangesAsync(Service service)
+		internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
         }
