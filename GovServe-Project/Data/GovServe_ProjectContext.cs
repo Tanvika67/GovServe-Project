@@ -1,9 +1,9 @@
 ﻿
-
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
+using GovServe.Models;
 
 
 namespace GovServe_Project.Data
@@ -15,9 +15,9 @@ namespace GovServe_Project.Data
         {
         }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
 			// Application → User
 			modelBuilder.Entity<Application>()
@@ -77,18 +77,20 @@ namespace GovServe_Project.Data
 	            .HasForeignKey(n => n.UserId)
 	            .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Notification>()
-				.HasOne(n => n.Case)
-				.WithMany()
-				.HasForeignKey(n => n.CaseId)
-				.OnDelete(DeleteBehavior.Restrict);
-			// In DbContext.OnModelCreating
-			modelBuilder.Entity<SLARecord>()
-				 .HasOne(r => r.Stage)
-				 .WithMany()
-				 .HasForeignKey(r => r.StageID)
-				 .OnDelete(DeleteBehavior.Restrict); // EF Core 5+; use Restrict on EF Core <5 if needed
-		}
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Case)
+                .WithMany()
+                .HasForeignKey(n => n.CaseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // In DbContext.OnModelCreating
+            modelBuilder.Entity<SLARecord>()
+                .HasOne(r => r.Stage)
+                .WithMany()
+                .HasForeignKey(r => r.StageID)
+                .OnDelete(DeleteBehavior.Restrict); // EF Core 5+; use Restrict on EF Core <5 if needed
+
+        }
 
 
         public DbSet<Case> Case { get; set; } = default!;
@@ -104,9 +106,18 @@ namespace GovServe_Project.Data
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
         public DbSet<Application> Application { get; set; } = default!;
         public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
-		public DbSet<Escalation> Escalation { get; set; } = default!;
-		public DbSet<Notification> Notification { get; set; } = default!;
-		public DbSet<Users> Users { get; set; } = default!;
+
+        public DbSet<Users> User { get; set; } = default!;
+        public DbSet<Escalation> Escalation { get; set; } = default!;
+        public DbSet<Notification> Notification { get; set; } = default!;
+        //public DbSet<Grievance> Grievance { get; set; } = default!;
+
+
+
+        //public DbSet<Appeal> Appeal { get; set; } = default!;
+
+
+
         internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
