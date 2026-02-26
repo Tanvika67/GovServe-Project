@@ -45,7 +45,7 @@ namespace GovServe_Project.Models.AdminModels
         public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
         public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
        // public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
-        public  ICollection<Application> Application { get; set; } = new List<Application>();
+    
 
     }
 }

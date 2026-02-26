@@ -21,7 +21,6 @@ namespace GovServe_Project.Controllers.CitizenController
 	{
 		private readonly IApplicationService _applicationService;
 
-		
 		public ApplicationController(IApplicationService applicationService)
 		{
 			_applicationService = applicationService;
