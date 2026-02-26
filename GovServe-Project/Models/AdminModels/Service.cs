@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Enum;
-using GovServe_Project.Models.CitizenModels;
 
 namespace GovServe_Project.Models.AdminModels
 {
@@ -39,13 +38,12 @@ namespace GovServe_Project.Models.AdminModels
         // Navigation
         [ForeignKey(nameof(DepartmentID))]
         public Department? Department { get; set; }
-		public ICollection<Application> Applications { get; set; } = new List<Application>();
 
-		public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
+        public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
         public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
         public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
-       // public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
-        public  ICollection<Application> Application { get; set; } = new List<Application>();
+        public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
+        //public ICollection<Application> Applications { get; set; } = new List<Application>();       
 
     }
 }

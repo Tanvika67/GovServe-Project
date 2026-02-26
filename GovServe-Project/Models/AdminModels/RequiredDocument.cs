@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GovServe_Project.Models.CitizenModels;
 
 namespace GovServe_Project.Models.AdminModels
 {
@@ -29,7 +28,7 @@ namespace GovServe_Project.Models.AdminModels
         // Navigation
         [ForeignKey(nameof(ServiceID))]
         public Service? Service { get; set; }
-		public virtual ICollection<Application> Application { get; set; }
-		
+
+		//public virtual ICollection<Application> Application { get; set; }
 	}
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using GovServe_Project.Models.CitizenModels;
-
 
 namespace GovServe_Project.Models.AdminModels
 {
@@ -31,9 +29,6 @@ namespace GovServe_Project.Models.AdminModels
 
 		// Navigation
 		//public ICollection<Service> Services { get; set; } = new List<Service>();
-		public ICollection<Users> User { get; set; }
-	
-        public ICollection<Application> Applications { get; set; }
-
+		//public ICollection<User> User { get; set; }
 	}
 }

@@ -1,13 +1,16 @@
 ﻿using GovServe_Project.DTOs;
+using GovServe_Project.DTOs.Admin;
 
-namespace GovServe_Project.Services
+namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
 {
     public interface IWorkflowStageService
     {
-        Task<IEnumerable<WorkflowStageResponseDTO>> GetAllAsync();
-        Task<WorkflowStageResponseDTO> GetByIdAsync(int id);
-        Task<WorkflowStageResponseDTO> CreateAsync(WorkflowStageDTO dto);
-        Task<WorkflowStageResponseDTO> UpdateAsync(int id, WorkflowStageDTO dto);
+        Task<IEnumerable<WorkflowStageResponseDto>> GetAllAsync();
+        Task<IEnumerable<WorkflowStageResponseDto>> GetByServiceAsync(int serviceId);
+        Task<WorkflowStageResponseDto> GetByIdAsync(int id);
+        Task<WorkflowStageResponseDto> CreateAsync(WorkflowStageCreateDto dto);
+        Task UpdateAsync(int id, WorkflowStageCreateDto dto);
         Task DeleteAsync(int id);
     }
+
 }

@@ -84,6 +84,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             await _repository.DeleteAsync(rule);
         }
 
+        //Search eligibility rules by service name
         public async Task<IEnumerable<EligibilityRuleResponseDTO>> SearchByServiceNameAsync(string serviceName)
         {
             var rules = await _repository.GetByServiceNameAsync(serviceName);

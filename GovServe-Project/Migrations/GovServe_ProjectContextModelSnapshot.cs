@@ -22,72 +22,133 @@ namespace GovServe_Project.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
-            modelBuilder.Entity("GovServe.Models.Appeal", b =>
+            modelBuilder.Entity("GovServe.Models.Case", b =>
                 {
-                    b.Property<int>("AppealID")
+                    b.Property<int>("CaseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppealID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseId"));
 
-                    b.Property<DateTime>("AppealDate")
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AssignedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("AppealStatus")
+                    b.Property<int>("AssignedOfficerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CitizenID")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CompletedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("GrievanceID")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsAssigned")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Remarks")
+                    b.Property<bool>("IsEscalated")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("AppealID");
+                    b.Property<int>("SupervisorId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("GrievanceID");
+                    b.HasKey("CaseId");
 
-                    b.ToTable("Appeal");
+                    b.ToTable("Case");
                 });
 
-            modelBuilder.Entity("GovServe.Models.Grievance", b =>
+            modelBuilder.Entity("GovServe_Project.Models.Application", b =>
                 {
-                    b.Property<int>("GrievanceID")
+                    b.Property<int>("ApplicationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GrievanceID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationID"));
 
-                    b.Property<int>("CitizenID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FiledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ForwardedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Remarks")
+                    b.Property<string>("ApplicationStatus")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
-                    b.HasKey("GrievanceID");
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Grievance");
+                    b.Property<int>("DepartmneName")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepartmnetID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RequiredDocumentDocumentID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationID");
+
+                    b.HasIndex("DepartmneName");
+
+                    b.HasIndex("DepartmnetID");
+
+                    b.HasIndex("RequiredDocumentDocumentID");
+
+                    b.HasIndex("ServiceID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Application");
                 });
 
-=======
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
-            modelBuilder.Entity("GovServe_Project.Models.AdminModels.Department", b =>
+            modelBuilder.Entity("GovServe_Project.Models.CitizenDocument", b =>
+                {
+                    b.Property<int>("CitizenDocumentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CitizenDocumentID"));
+
+                    b.Property<int>("ApplicationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DocumentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UploadedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VerificationStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CitizenDocumentID");
+
+                    b.HasIndex("ApplicationID");
+
+                    b.ToTable("CitizenDocument");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.Department", b =>
                 {
                     b.Property<int>("DepartmentID")
                         .ValueGeneratedOnAdd()
@@ -159,10 +220,40 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ServiceID1")
+                    b.HasKey("DocumentID");
+
+                    b.HasIndex("ServiceID");
+
+                    b.ToTable("RequiredDocuments");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.AdminModels.SLARecord", b =>
+                {
+                    b.Property<int>("SLARecordID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SLARecordID"));
+
+                    b.Property<int>("CaseID")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ServiceID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StageID")
                         .HasColumnType("int");
 
                     b.HasKey("DocumentID");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("SLARecordID");
 
                     b.HasIndex("ServiceID");
 
@@ -204,7 +295,120 @@ namespace GovServe_Project.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("GovServe_Project.Models.AdminModels.WorkflowStage", b =>
+            modelBuilder.Entity("GovServe_Project.Models.Application", b =>
+                {
+                    b.Property<int>("ApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"));
+
+                    b.Property<string>("ApplicationStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SubmittedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationId");
+
+                    b.ToTable("Application");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.Case", b =>
+                {
+                    b.Property<int>("CaseID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseID"));
+
+                    b.HasKey("CaseID");
+
+                    b.ToTable("Case");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.Escalation", b =>
+                {
+                    b.Property<int>("EscalationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EscalationId"));
+
+                    b.Property<int>("CaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EscalatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EscalationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EscalationLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewOfficerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PreviousOfficerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResolvedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EscalationId");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("Escalation");
+                });
+
+            modelBuilder.Entity("ServiceReport", b =>
+                {
+                    b.Property<int>("ReportID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportID"));
+
+                    b.Property<DateTime>("GeneratedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Scope")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportID");
+
+                    b.ToTable("ServiceReports");
+                });
+
+            modelBuilder.Entity("WorkflowStage", b =>
                 {
                     b.Property<int>("StageID")
                         .ValueGeneratedOnAdd()
@@ -214,8 +418,10 @@ namespace GovServe_Project.Migrations
 
                     b.Property<string>("ResponsibleRole")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleID")
+                        .HasColumnType("int");
 
                     b.Property<int>("SLA_Days")
                         .HasColumnType("int");
@@ -227,6 +433,8 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("StageID");
+
+                    b.HasIndex("RoleID");
 
                     b.HasIndex("ServiceID");
 
@@ -368,201 +576,11 @@ namespace GovServe_Project.Migrations
                     b.ToTable("Case");
                 });
 
-            modelBuilder.Entity("GovServe_Project.Models.CitizenDocument", b =>
+            modelBuilder.Entity("GovServe_Project.Models.EligibilityRule", b =>
                 {
-                    b.Property<int>("CitizenDocumentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CitizenDocumentID"));
-
-                    b.Property<int>("ApplicationID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UploadedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VerificationStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CitizenDocumentID");
-
-                    b.HasIndex("ApplicationID");
-
-                    b.ToTable("CitizenDocument");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.Escalation", b =>
-                {
-                    b.Property<int>("EscalationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EscalationId"));
-
-                    b.Property<int>("CaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EscalatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EscalationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("EscalationLevel")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NewOfficerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PreviousOfficerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ResolvedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EscalationId");
-
-                    b.HasIndex("CaseId");
-
-<<<<<<< HEAD
-                    b.HasIndex("EscalatedByUserId");
-
-=======
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
-                    b.ToTable("Escalation");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.Notification", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
-
-                    b.Property<int>("CaseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-<<<<<<< HEAD
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-=======
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("NotificationId");
-
-                    b.HasIndex("CaseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Notification");
-                });
-
-<<<<<<< HEAD
-            modelBuilder.Entity("GovServe_Project.Models.User", b =>
-=======
-            modelBuilder.Entity("GovServe_Project.Models.Users", b =>
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("ServiceReport", b =>
-                {
-                    b.Property<int>("ReportID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportID"));
-
-                    b.Property<DateTime>("GeneratedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Scope")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportID");
-
-                    b.ToTable("ServiceReports");
-                });
-
-<<<<<<< HEAD
-            modelBuilder.Entity("GovServe.Models.Appeal", b =>
-                {
-                    b.HasOne("GovServe.Models.Grievance", "Grievance")
-                        .WithMany("Appeals")
-                        .HasForeignKey("GrievanceID")
+                    b.HasOne("GovServe_Project.Models.Service", "Service")
+                        .WithMany("EligibilityRules")
+                        .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -584,17 +602,17 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.RequiredDocument", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
+                    b.HasOne("GovServe_Project.Models.AdminModels.Service", null)
+                        .WithMany("SLARecords")
+                        .HasForeignKey("ServiceID");
+
+                    b.HasOne("GovServe_Project.Models.AdminModels.WorkflowStage", "Stage")
                         .WithMany()
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("GovServe_Project.Models.AdminModels.Service", null)
-                        .WithMany("RequiredDocuments")
-                        .HasForeignKey("ServiceID1");
-
-                    b.Navigation("Service");
+                    b.Navigation("Stage");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Service", b =>
@@ -621,16 +639,16 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.Application", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
-<<<<<<< HEAD
+                    b.HasOne("GovServe_Project.Models.AdminModels.Department", "Departments")
                         .WithMany()
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Restrict)
-=======
-                        .WithMany("Applications")
-                        .HasForeignKey("DepartmentID")
+                        .HasForeignKey("DepartmneName")
                         .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmnetID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.AdminModels.RequiredDocument", null)
@@ -638,26 +656,20 @@ namespace GovServe_Project.Migrations
                         .HasForeignKey("RequiredDocumentDocumentID");
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
-                        .WithMany("Applications")
+                        .WithMany()
                         .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<< HEAD
-                    b.HasOne("GovServe_Project.Models.AdminModels.Service", null)
-                        .WithMany("Applications")
-                        .HasForeignKey("ServiceID1");
-
                     b.HasOne("GovServe_Project.Models.User", "User")
-=======
-                    b.HasOne("GovServe_Project.Models.Users", "User")
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Department");
+
+                    b.Navigation("Departments");
 
                     b.Navigation("Service");
 
@@ -666,35 +678,12 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.Case", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("GovServe_Project.Models.User", "AssignedOfficer")
-                        .WithMany()
-                        .HasForeignKey("AssignedOfficerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-=======
-                        .OnDelete(DeleteBehavior.Cascade)
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
-                        .IsRequired();
-
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentID")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Application");
-
-<<<<<<< HEAD
-                    b.Navigation("AssignedOfficer");
-
-=======
->>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48
                     b.Navigation("Department");
                 });
 
@@ -728,26 +717,24 @@ namespace GovServe_Project.Migrations
                     b.Navigation("EscalatedByUser");
                 });
 
-            modelBuilder.Entity("GovServe_Project.Models.Notification", b =>
+            modelBuilder.Entity("WorkflowStage", b =>
                 {
                     b.HasOne("GovServe_Project.Models.Case", "Case")
                         .WithMany()
                         .HasForeignKey("CaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GovServe_Project.Models.Users", "User")
+                    b.HasOne("GovServe_Project.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Case");
-
-                    b.Navigation("User");
+                    b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("GovServe_Project.Models.Users", b =>
+            modelBuilder.Entity("GovServe_Project.Models.User", b =>
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany("User")
@@ -758,10 +745,13 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("GovServe.Models.Grievance", b =>
+                {
+                    b.Navigation("Appeals");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Department", b =>
                 {
-                    b.Navigation("Applications");
-
                     b.Navigation("User");
                 });
 
@@ -779,11 +769,6 @@ namespace GovServe_Project.Migrations
                     b.Navigation("RequiredDocuments");
 
                     b.Navigation("WorkflowStages");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.Application", b =>
-                {
-                    b.Navigation("CitizenDocuments");
                 });
 #pragma warning restore 612, 618
         }
