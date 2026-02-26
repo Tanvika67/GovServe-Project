@@ -6,11 +6,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
-    public partial class supervisor : Migration
-========
-    public partial class p : Migration
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
+    public partial class supervisor : Migration { 
+        public partial class p : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +28,6 @@ namespace GovServe_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                 name: "Grievance",
                 columns: table => new
                 {
@@ -49,8 +45,6 @@ namespace GovServe_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-========
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                 name: "ServiceReports",
                 columns: table => new
                 {
@@ -109,7 +103,6 @@ namespace GovServe_Project.Migrations
                         principalTable: "Departments",
                         principalColumn: "DepartmentID",
                         onDelete: ReferentialAction.Cascade);
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -133,8 +126,6 @@ namespace GovServe_Project.Migrations
                         principalTable: "Grievance",
                         principalColumn: "GrievanceID",
                         onDelete: ReferentialAction.Cascade);
-========
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -216,19 +207,16 @@ namespace GovServe_Project.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ServiceID = table.Column<int>(type: "int", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ApplicationStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequiredDocumentDocumentID = table.Column<int>(type: "int", nullable: true),
                     ServiceID1 = table.Column<int>(type: "int", nullable: true)
-========
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RequiredDocumentDocumentID = table.Column<int>(type: "int", nullable: true)
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                 },
                 constraints: table =>
                 {
@@ -269,7 +257,6 @@ namespace GovServe_Project.Migrations
                 {
                     CaseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
                     SupervisorId = table.Column<int>(type: "int", nullable: false),
                     AssignedOfficerId = table.Column<int>(type: "int", nullable: false),
@@ -281,14 +268,12 @@ namespace GovServe_Project.Migrations
                     IsEscalated = table.Column<bool>(type: "bit", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Sladays = table.Column<int>(type: "int", nullable: false)
-========
                     CaseID = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     StageID = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ServiceID = table.Column<int>(type: "int", nullable: true)
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                 },
                 constraints: table =>
                 {
@@ -394,7 +379,6 @@ namespace GovServe_Project.Migrations
                         column: x => x.CaseId,
                         principalTable: "Case",
                         principalColumn: "CaseId",
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Escalation_User_EscalatedByUserId",
@@ -402,9 +386,7 @@ namespace GovServe_Project.Migrations
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
-========
                         onDelete: ReferentialAction.Cascade);
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -418,10 +400,7 @@ namespace GovServe_Project.Migrations
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
-========
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -432,11 +411,8 @@ namespace GovServe_Project.Migrations
                         column: x => x.CaseId,
                         principalTable: "Case",
                         principalColumn: "CaseId",
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260225141901_supervisor.cs
                         onDelete: ReferentialAction.Restrict);
-========
                         onDelete: ReferentialAction.Cascade);
->>>>>>>> 4f27f3ebb5d0a396421aee5dc4c6651122ec8e48:GovServe-Project/Migrations/20260224124537_p.cs
                     table.ForeignKey(
                         name: "FK_Notification_User_UserId",
                         column: x => x.UserId,
