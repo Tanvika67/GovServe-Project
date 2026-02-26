@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Data;
-using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 
-namespace GovServe_Project.Repository.Repository_Implentation
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
 	public class CaseRepository : ICaseRepository
 	{

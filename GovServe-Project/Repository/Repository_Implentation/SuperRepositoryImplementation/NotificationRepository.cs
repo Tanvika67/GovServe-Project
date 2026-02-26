@@ -1,8 +1,8 @@
 ﻿using GovServe_Project.Data;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Repository.Interface;
-namespace GovServe_Project.Repository.Repository_Implentation
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
 	public class NotificationRepository : INotificationRepository
 	{

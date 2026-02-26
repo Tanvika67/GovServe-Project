@@ -1,6 +1,6 @@
-﻿using GovServe_Project.Models;
+﻿using GovServe_Project.Models.SuperModels;
 
-namespace GovServe_Project.Services.Interfaces
+namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 {
 	public interface IEscalationService
 	{

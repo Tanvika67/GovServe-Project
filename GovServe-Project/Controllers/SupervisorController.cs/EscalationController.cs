@@ -3,8 +3,9 @@ using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 
-namespace GovServe_Project.Controllers
+namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]

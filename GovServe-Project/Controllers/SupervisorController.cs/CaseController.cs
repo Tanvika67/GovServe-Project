@@ -1,9 +1,9 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GovServe_Project.Controllers
+namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]

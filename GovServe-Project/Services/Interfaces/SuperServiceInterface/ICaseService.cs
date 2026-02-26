@@ -1,10 +1,7 @@
-﻿using GovServe_Project.Models;
-
+﻿using GovServe_Project.Models.SuperModels;
+using GovServe_Project.DTOs.SupervisorDTO;
 namespace GovServe_Project.Services.Interfaces
 {
-	using GovServe_Project.DTOs.SupervisorDTO;
-	using GovServe_Project.Models;
-
 	public interface ICaseService
 	{
 		Task<IEnumerable<Case>> GetAllCasesAsync();

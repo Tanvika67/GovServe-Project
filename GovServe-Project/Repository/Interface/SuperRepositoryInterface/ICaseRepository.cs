@@ -1,7 +1,7 @@
-﻿using GovServe_Project.Models;
+﻿using GovServe_Project.Models.SuperModels;
 
 
-namespace GovServe_Project.Repository.Interface
+namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 {
 	public interface ICaseRepository
 	{

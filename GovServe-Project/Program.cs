@@ -1,11 +1,7 @@
-
-using GovServe_Project.Data;
 using GovServe_Project.Extensions;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implentation;
-using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Service_Implementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Data;
 
 
 

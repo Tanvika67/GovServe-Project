@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Enum;
+using GovServe_Project.Models.SuperModels;
 
 namespace GovServe_Project.Models.AdminModels
 {

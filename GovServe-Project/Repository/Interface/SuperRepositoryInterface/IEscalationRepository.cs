@@ -1,5 +1,5 @@
-﻿using GovServe_Project.Models;
-namespace GovServe_Project.Repository.Interface
+﻿using GovServe_Project.Models.SuperModels;
+namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 {
 	public interface IEscalationRepository
 	{

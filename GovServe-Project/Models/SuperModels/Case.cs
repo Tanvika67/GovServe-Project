@@ -4,7 +4,7 @@ using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.CitizenModels;
 
 
-namespace GovServe_Project.Models
+namespace GovServe_Project.Models.SuperModels
 {
 	public class Case
 	{

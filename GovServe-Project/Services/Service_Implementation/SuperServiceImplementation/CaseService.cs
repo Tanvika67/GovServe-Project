@@ -1,14 +1,11 @@
-﻿using GovServe_Project.Models;
-using GovServe_Project.Repository.Interface;
+﻿using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Services.Interfaces;
 
-namespace GovServe_Project.Services.Service_Implementation
+namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
-	using GovServe_Project.DTOs.SupervisorDTO;
-	using GovServe_Project.Models;
-	using GovServe_Project.Repository;
-	using Microsoft.CodeAnalysis.Operations;
-
 	public class CaseService : ICaseService
 	{
 		private readonly ICaseRepository _repo;

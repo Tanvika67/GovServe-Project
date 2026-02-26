@@ -10,6 +10,10 @@ using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 
 namespace GovServe_Project.Extensions
 {
