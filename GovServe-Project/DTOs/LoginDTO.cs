@@ -1,4 +1,4 @@
-﻿namespace GovServe_Project.DTOs.CitizenDTO
+﻿namespace GovServe_Project.DTOs
 {
 	public class LoginDTO
 	{

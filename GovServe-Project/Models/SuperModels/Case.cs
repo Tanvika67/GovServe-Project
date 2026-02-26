@@ -13,8 +13,8 @@ namespace GovServe_Project.Models
 		public int CaseId { get; set; }
 
 		[Required]
-		[ForeignKey("Application")]
-		public int ApplicationId { get; set; }
+		[ForeignKey("ApplicationID")]
+		public int ApplicationID { get; set; }
 		public virtual Application Application { get; set; }
 
 		[Required]
@@ -43,6 +43,8 @@ namespace GovServe_Project.Models
 
 		// SLA → 1 day example
 		public int Sladays { get; set; } = 1;
+
+		public string? RejectionReason { get; set; }
 	}
 
 }

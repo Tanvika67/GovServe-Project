@@ -50,7 +50,7 @@ namespace GovServe_Project.Data
 			modelBuilder.Entity<Case>()
 	             .HasOne(c => c.Application)
 	             .WithMany()
-	            .HasForeignKey(c => c.ApplicationId)
+	            .HasForeignKey(c => c.ApplicationID)
 	            .OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Case>()
@@ -82,6 +82,12 @@ namespace GovServe_Project.Data
 				.WithMany()
 				.HasForeignKey(n => n.CaseId)
 				.OnDelete(DeleteBehavior.Restrict);
+			// In DbContext.OnModelCreating
+			modelBuilder.Entity<SLARecord>()
+				 .HasOne(r => r.Stage)
+				 .WithMany()
+				 .HasForeignKey(r => r.StageID)
+				 .OnDelete(DeleteBehavior.Restrict); // EF Core 5+; use Restrict on EF Core <5 if needed
 		}
 
 
@@ -98,17 +104,13 @@ namespace GovServe_Project.Data
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
         public DbSet<Application> Application { get; set; } = default!;
         public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
-
-        public DbSet<Users> User { get; set; } = default!;
-     
-
+		public DbSet<Escalation> Escalation { get; set; } = default!;
+		public DbSet<Notification> Notification { get; set; } = default!;
+		public DbSet<Users> Users { get; set; } = default!;
         internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
         }
-
-
-
     }
 }
 

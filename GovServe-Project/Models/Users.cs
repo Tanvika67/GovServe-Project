@@ -31,9 +31,9 @@ namespace GovServe_Project.Models
 		public string Password { get; set; }
 		public virtual Department Department { get; set; }
 		[Required]
-		public string RoleID { get; set; }
-		//[ForeignKey("RoleID")]
-		//public virtual Role Role { get; set; }
+		public int RoleID { get; set; }
+		[ForeignKey("RoleID")]
+		public virtual Role Role { get; set; }
 		public string RoleName { get; set; }
 
 
