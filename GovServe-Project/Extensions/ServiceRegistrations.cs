@@ -20,14 +20,14 @@ namespace GovServe_Project.Extensions
     public static class ServiceRegistration
     {
 
-            public static IServiceCollection AddApplicationServices(
-                this IServiceCollection services,
-                IConfiguration configuration)
-            {
+        public static IServiceCollection AddApplicationServices(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
 
-           services.AddDbContext<GovServe_ProjectContext>(options =>
-           options.UseSqlServer(configuration.GetConnectionString("GovServe_ProjectContext") ??
-           throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
+            services.AddDbContext<GovServe_ProjectContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("GovServe_ProjectContext") ??
+            throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
             //Repository
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -37,11 +37,14 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
-			services.AddScoped<ICaseRepository, CaseRepository>();
-		    services.AddScoped<IEscalationRepository, EscalationRepository>();
-			services.AddScoped<INotificationRepository, NotificationRepository>();
-			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
-			services.AddScoped<IAppealRepository, AppealRepository>();
+            services.AddScoped<ICaseRepository, CaseRepository>();
+            services.AddScoped<IEscalationRepository, EscalationRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ISLADayRepository, SLADayRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+            services.AddScoped<IAppealRepository, AppealRepository>();
 
 
 
@@ -55,16 +58,20 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
-			services.AddScoped<ICaseService, CaseService>();
-			services.AddScoped<IEscalationService, EscalationService>();
-			services.AddScoped<INotificationService, NotificationService>();
-			services.AddScoped<IGrievanceService, GrievanceService>();
-			services.AddScoped<IAppealService, AppealService>();
+            services.AddScoped<ICaseService, CaseService>();
+            services.AddScoped<IEscalationService, EscalationService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<ISLADayService, SLADayService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGrievanceService, GrievanceService>();
+            services.AddScoped<IAppealService, AppealService>();
 
-			return services;
+            return services;
+
+
+
+
         }
     }
 }
-
-
-
