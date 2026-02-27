@@ -15,37 +15,39 @@ namespace GovServe_Project.Data
             : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Application → User
-            modelBuilder.Entity<Application>()
-                .HasOne(a => a.User)
-                .WithMany()
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+			// Application → User
+			modelBuilder.Entity<Application>()
+				.HasOne(a => a.User)
+				.WithMany()
+				.HasForeignKey(a => a.UserId)
+				.OnDelete(DeleteBehavior.Restrict);
 
-            // Application → Service
-            modelBuilder.Entity<Application>()
-                .HasOne(a => a.Service)
-                .WithMany()
-                .HasForeignKey(a => a.ServiceID)
-                .OnDelete(DeleteBehavior.Restrict);
+			// Application → Service
+			modelBuilder.Entity<Application>()
+				.HasOne(a => a.Service)
+				.WithMany()
+				.HasForeignKey(a => a.ServiceID)
+				.OnDelete(DeleteBehavior.Restrict);
 
-            // Application → Department
-            modelBuilder.Entity<Application>()
-                .HasOne(a => a.Department)
-                .WithMany()
-                .HasForeignKey(a => a.DepartmentID)
-                .OnDelete(DeleteBehavior.Restrict);
+			// Application → Department
+			modelBuilder.Entity<Application>()
+				.HasOne(a => a.Department)
+				.WithMany()
+				.HasForeignKey(a => a.DepartmentID)
+				.OnDelete(DeleteBehavior.Restrict);
 
-            // RequiredDocument → Service
-            modelBuilder.Entity<RequiredDocument>()
-                .HasOne(r => r.Service)
-                .WithMany()
-                .HasForeignKey(r => r.ServiceID)
-                .OnDelete(DeleteBehavior.Restrict);
+			// RequiredDocument → Service
+			modelBuilder.Entity<RequiredDocument>()
+				.HasOne(r => r.Service)
+				.WithMany()
+				.HasForeignKey(r => r.ServiceID)
+				.OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Case>()
                  .HasOne(c => c.Application)
@@ -53,17 +55,18 @@ namespace GovServe_Project.Data
                 .HasForeignKey(c => c.ApplicationID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Case>()
-                .HasOne(c => c.AssignedOfficer)
-                .WithMany()
-                .HasForeignKey(c => c.AssignedOfficerId)
-                .OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<Case>()
+				.HasOne(c => c.AssignedOfficer)
+				.WithMany()
+				.HasForeignKey(c => c.AssignedOfficerId)
+				.OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Escalation>()
+			modelBuilder.Entity<Escalation>()
                  .HasOne(e => e.Case)
-                 .WithMany()
-                 .HasForeignKey(e => e.CaseId)
-                 .OnDelete(DeleteBehavior.Restrict);
+	             .WithMany()
+	             .HasForeignKey(e => e.CaseId)
+	             .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Escalation>()
                 .HasOne(e => e.Supervisor)
@@ -71,11 +74,11 @@ namespace GovServe_Project.Data
                 .HasForeignKey(e => e.SupervisorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Notification>()
-                .HasOne(n => n.User)
-                .WithMany()
-                .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<Notification>()
+	            .HasOne(n => n.User)
+	            .WithMany()
+	            .HasForeignKey(n => n.UserId)
+	            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.Case)
@@ -83,20 +86,13 @@ namespace GovServe_Project.Data
                 .HasForeignKey(n => n.CaseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             // In DbContext.OnModelCreating
             modelBuilder.Entity<SLARecord>()
-                 .HasOne(r => r.Stage)
-                 .WithMany()
-                 .HasForeignKey(r => r.StageID)
-                 .OnDelete(DeleteBehavior.Restrict); // EF Core 5+; use Restrict on EF Core <5 if needed
+                .HasOne(r => r.Stage)
+                .WithMany()
+                .HasForeignKey(r => r.StageID)
+                .OnDelete(DeleteBehavior.Restrict); // EF Core 5+; use Restrict on EF Core <5 if needed
 
-            // In DbContext.OnModelCreating
-            modelBuilder.Entity<Application>()
-                .HasOne(a => a.Service)
-                .WithMany()        // or .WithMany() if you don't have the collection
-                .HasForeignKey(a => a.ServiceID)
-                .OnDelete(DeleteBehavior.Restrict);   // EF Core 5+ (Restrict in older EF Core)
         }
 
 
@@ -113,23 +109,18 @@ namespace GovServe_Project.Data
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
         public DbSet<Application> Application { get; set; } = default!;
         public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
-		
 
         public DbSet<Users> User { get; set; } = default!;
         public DbSet<Escalation> Escalation { get; set; } = default!;
         public DbSet<Notification> Notification { get; set; } = default!;
         public DbSet<Grievance> Grievance { get; set; } = default!;
-         public DbSet<Appeal> Appeal { get; set; } = default!;
 
-
+        public DbSet<Appeal> Appeal { get; set; } = default!;
 
         internal async Task SaveChaangesAsync(Service service)
         {
             throw new NotImplementedException();
         }
-
-
-
     }
 }
 

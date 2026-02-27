@@ -5,6 +5,7 @@ using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.DTOs.OfficerDTO;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -157,7 +158,72 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				Completed = all.Count(x => x.Status == "Completed")
 			};
 		}
+
+		//officer work
+
+		public async Task<List<Case>> ViewAssignedCases(int officerId)
+		{
+			return await _repo.GetAssignedCases(officerId);
+		}
+
+		// Officer opens case → InProgress
+		public async Task<string> OpenCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "InProgress";
+			await _repo.UpdateCase(caseObj);
+
+			return "Case marked as In Progress";
+		}
+
+		public async Task<string> ApproveCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "Approved";
+			caseObj.RejectionReason = null;
+
+			await _repo.UpdateCase(caseObj);
+
+			return "Case Approved Successfully";
+		}
+
+		public async Task<string> Reject(int caseId, string reason)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason;
+
+			await _repo.UpdateCase(caseObj);
+
+			return "Case Rejected with reason: ";
+
+			//add notification
+
+		}
+
+
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			return await _repo.GetDashboardCountsAsync(departmentId);
+		}
+
+		private readonly INotificationService notificationService;
+
+
 	}
 }
+
 
  

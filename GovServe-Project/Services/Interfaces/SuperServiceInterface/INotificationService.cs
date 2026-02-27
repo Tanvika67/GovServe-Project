@@ -10,5 +10,7 @@ namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 		Task<int> GetUnreadCountAsync(int userId);
 
 		Task MarkAsReadAsync(int notificationId);
+
+		
 	}
 }

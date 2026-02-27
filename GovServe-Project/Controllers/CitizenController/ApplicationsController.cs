@@ -13,6 +13,7 @@ using GovServe_Project.Services.Service_Implementation.CitizenService_Implementa
 using GovServe_Project.Services.Interfaces.CitizenService_Interface;
 using GovServe_Project.DTOs.CitizenDTO;
 
+
 namespace GovServe_Project.Controllers.CitizenController
 {
 	[Route("api/[controller]")]   
@@ -21,13 +22,12 @@ namespace GovServe_Project.Controllers.CitizenController
 	{
 		private readonly IApplicationService _applicationService;
 
-		
 		public ApplicationController(IApplicationService applicationService)
 		{
 			_applicationService = applicationService;
 		}
 
-		// 1. Create Application
+		// Create Application
 		[HttpPost("create")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
@@ -37,7 +37,7 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(result);
 		}
 
-		// 2. My Applications (Citizen Dashboard)
+		// My Applications (Citizen Dashboard)
 		[HttpGet("my")]
 		public async Task<IActionResult> MyApplications(int userId)
 		{
@@ -48,7 +48,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		
-		// 3. Application Status
+		// Application Status
 		[HttpGet("status/{id}")]
 		public async Task<IActionResult> ApplicationStatus(int ApplicationId)
 		{
@@ -61,7 +61,7 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(status);
 		}
 
-		// 4. Delete Application
+		//  Delete Application
 		[HttpDelete("delete/{id}")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
 		{
@@ -72,6 +72,55 @@ namespace GovServe_Project.Controllers.CitizenController
 				return NotFound("Application not found");
 
 			return Ok("Application Deleted Successfully");
+		}
+
+		//Assigned application
+
+		[HttpGet("assigned/{officerId}")]
+
+		public async Task<IActionResult> GetAssignedCases(int officerId) //method created
+		{
+			var result = await _applicationService.GetAssignedCases(officerId);
+			return Ok(result);
+		}
+
+		//Approved cases
+
+		[HttpGet("approved /{officerId}")]
+		public async Task<IActionResult> GetApproved(int officerId)
+		{
+			var result = await _applicationService.GetApprovedCases(officerId);
+			return Ok(result);
+
+		}
+
+		//pending cases
+
+		[HttpGet("pending /{officerId}")]
+		public async Task<IActionResult> GetPending(int officerId)
+		{
+			var result = await _applicationService.GetPendingCases(officerId);
+			return Ok(result);
+
+		}
+
+		//rejected cases
+
+		[HttpGet("Reject /{officerId}")]
+		public async Task<IActionResult> GetRejected(int officerId)
+		{
+			var result = await _applicationService.GetRejectedCases(officerId);
+			return Ok(result);
+
+		}
+		//resubmitted cases
+
+		[HttpGet("resubmitted /{officerId}")]
+		public async Task<IActionResult> GetResubmitted(int officerId)
+		{
+			var result = await _applicationService.GetResubmittedCases(officerId);
+			return Ok(result);
+
 		}
 	}
 }

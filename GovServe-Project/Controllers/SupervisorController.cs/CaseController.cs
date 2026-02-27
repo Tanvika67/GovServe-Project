@@ -3,6 +3,7 @@ using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Mvc;
+using GovServe_Project.DTOs.OfficerDTO;
 
 namespace GovServe_Project.Controllers.SupervisorController.cs
 {
@@ -84,5 +85,48 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		{
 			return Ok(await _service.GetDashboardAsync());
 		}
+
+		//officer work
+
+		//  GET - View assigned cases
+		[HttpGet("assigned/{officerId}")]
+		public async Task<IActionResult> GetAssignedCases(int officerId)
+		{
+			var cases = await _service.ViewAssignedCases(officerId);
+			return Ok(cases);
+		}
+
+		//  PUT - Open case (InProgress)
+		[HttpPut("open/{caseId}")]
+		public async Task<IActionResult> OpenCase(int caseId)
+		{
+			var result = await _service.OpenCase(caseId);
+			return Ok(result);
+		}
+
+		//  PUT - Approve case
+		[HttpPut("approve/{caseId}")]
+		public async Task<IActionResult> ApproveCase(int caseId)
+		{
+			var result = await _service.ApproveCase(caseId);
+			return Ok(result);
+		}
+
+		//  PUT - Reject case//used for notification also
+		[HttpPut("reject/{caseId}")]
+		public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
+		{
+			var result = await _service.Reject(caseId, reason);
+			return Ok(result);
+		}
+
+		//for getting application count on dashboard
+		[HttpGet("dashboard/{departmentId}")]
+		public async Task<IActionResult> DashboardCounts(int departmentId)
+		{
+			var result = await _service.GetDashboardCountsAsync(departmentId);
+			return Ok(result);
+		}
+
 	}
 }

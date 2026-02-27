@@ -13,8 +13,8 @@ namespace GovServe_Project.Models.SuperModels
 		public int CaseId { get; set; }
 
 		[Required]
-		[ForeignKey("Application")]
-		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+        public int ApplicationID { get; set; }
 		public virtual Application Application { get; set; }
 		[Required]
 		[ForeignKey("User")]
@@ -44,6 +44,9 @@ namespace GovServe_Project.Models.SuperModels
 		public bool IsEscalated { get; set; } = false;
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
+
+		public string? RejectionReason { get; set; }
+
 	}
 
 }

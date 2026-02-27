@@ -8,6 +8,8 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<int> GetUnreadCountAsync(int userId);
 		Task<Notification> GetByIdAsync(int id);
 		Task SaveAsync();
+
+		
 	}
 
 }

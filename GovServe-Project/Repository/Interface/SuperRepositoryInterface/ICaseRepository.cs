@@ -1,4 +1,7 @@
 ﻿using GovServe_Project.Models.SuperModels;
+﻿using GovServe_Project.Models;
+using GovServe_Project.DTOs.OfficerDTO;
+
 
 namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 {
@@ -13,6 +16,15 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		void Update(Case c);
 
 		Task SaveAsync();
+
+		//officer work
+		Task<List<Case>> GetAssignedCases(int officerId);
+		Task<Case?> GetCaseById(int caseId);
+
+		Task UpdateCase(Case caseObj);
+		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+
+		Task<string> Reject(int caseId, string reason);
 	}
 }
 

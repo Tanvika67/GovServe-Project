@@ -4,6 +4,8 @@ using GovServe_Project.Enum;
 using GovServe_Project.Data;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.DTOs.OfficerDTO;
 
 namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
@@ -56,6 +58,86 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		public async Task SaveAsync()
 		{
 			await _context.SaveChangesAsync();
+		}
+
+		//officers work
+
+		// Get assigned cases
+		public async Task<List<Case>> GetAssignedCases(int officerId)
+		{
+			return await _context.Case
+				.Where(c => c.AssignedOfficerId == officerId)
+				.ToListAsync();
+		}
+
+		// Get single case
+
+		public async Task<Case?> GetCaseById(int caseId)
+		{
+			return await _context.Case.FindAsync(caseId);
+		}
+
+		// Update case
+		public async Task UpdateCase(Case caseObj)
+		{
+			_context.Case.Update(caseObj);
+			await _context.SaveChangesAsync();
+		}
+
+		//count application for officer dashboard
+
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			var result = new DashboardCountcs();
+
+			// Assigned Cases
+			result.Assigned = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Assigned");
+
+
+			// Approved Cases
+			result.Approved = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Approved");
+
+
+			// Pending Cases
+			result.Pending = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Pending");
+
+
+			// Rejected Cases
+			result.Rejected = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Rejected");
+
+
+			// Resubmitted Cases
+			result.Resubmitted = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Resubmitted");
+
+
+			return result;
+
+
+		}
+		//notification purpose
+		public async Task<string> Reject(int caseId, string reason)
+		{
+			var caseObj = await _context.Case.FindAsync(caseId);
+
+			if (caseObj == null)
+				return "Case Not Found";
+
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason;
+
+			await _context.SaveChangesAsync();
+
+			return "Case Rejected Successfully";
 		}
 	}
 }
