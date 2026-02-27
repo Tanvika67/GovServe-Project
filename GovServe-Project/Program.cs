@@ -1,9 +1,7 @@
-
 using GovServe_Project.Extensions;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Repository_Implentation;
-using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Service_Implementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Data;
 
 
 
@@ -19,7 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-
+builder.Services.AddDbContext<GovServe_ProjectContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("GovServe_ProjectContext")));
 
 
 builder.Services.AddCors(options =>

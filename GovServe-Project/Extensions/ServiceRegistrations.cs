@@ -1,14 +1,19 @@
 ﻿
 using GovServe_Project.Data;
 using GovServe_Project.Repository.Interface;
-using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Service_Implementation;
-using GovServe_Project.Repository.Repository_Implentation;
-using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
+using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 
 namespace GovServe_Project.Extensions
 {
@@ -20,8 +25,7 @@ namespace GovServe_Project.Extensions
                 IConfiguration configuration)
             {
 
-
-            services.AddDbContext<GovServe_ProjectContext>(options =>
+           services.AddDbContext<GovServe_ProjectContext>(options =>
            options.UseSqlServer(configuration.GetConnectionString("GovServe_ProjectContext") ??
            throw new InvalidOperationException("Connection string 'GovServe_ProjectContext' not found.")));
 
@@ -33,9 +37,11 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IWorkflowStageRepository, WorkflowStageRepository>();
             services.AddScoped<ISLARecordRepository, SLARecordRepository>();
             services.AddScoped<IServiceReportRepository, ServiceReportRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<ISLADayRepository, SLADayRepository>();
-
+			services.AddScoped<ICaseRepository, CaseRepository>();
+		    services.AddScoped<IEscalationRepository, EscalationRepository>();
+			services.AddScoped<INotificationRepository, NotificationRepository>();
+			services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+			services.AddScoped<IAppealRepository, AppealRepository>();
 
 
 
@@ -49,10 +55,13 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IWorkflowStageService, WorkflowStageService>();
             services.AddScoped<ISLARecordService, SLARecordService>();
             services.AddScoped<IServiceReportService, ServiceReportService>();
-            services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<ISLADayService, SLADayService>();
+			services.AddScoped<ICaseService, CaseService>();
+			services.AddScoped<IEscalationService, EscalationService>();
+			services.AddScoped<INotificationService, NotificationService>();
+			services.AddScoped<IGrievanceService, GrievanceService>();
+			services.AddScoped<IAppealService, AppealService>();
 
-            return services;
+			return services;
         }
     }
 }
