@@ -47,9 +47,14 @@ namespace GovServe_Project.Data
 				.WithMany()
 				.HasForeignKey(r => r.ServiceID)
 				.OnDelete(DeleteBehavior.Restrict);
+			modelBuilder.Entity<Case>()
+	.HasOne(c => c.User)
+	.WithMany()
+	.HasForeignKey(c => c.UserId)
+	.OnDelete(DeleteBehavior.Restrict);
 
 
-            modelBuilder.Entity<Case>()
+			modelBuilder.Entity<Case>()
                  .HasOne(c => c.Application)
                  .WithMany()
                 .HasForeignKey(c => c.ApplicationID)
