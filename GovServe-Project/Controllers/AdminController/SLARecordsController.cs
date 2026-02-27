@@ -18,11 +18,33 @@ namespace GovServe_Project.Controllers.AdminController
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok(await _service.GetAllAsync());
+        {
+           return Ok(await _service.GetAllAsync());
+
+        }
+            
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
-            => Ok(await _service.GetByIdAsync(id));
+        {
+           return Ok(await _service.GetByIdAsync(id));
+
+        }
+           
+
+        [HttpGet("breached")]
+        public async Task<IActionResult> GetBreachedCases()
+        {
+            var result = await _service.GetBreachedCasesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ontime")]
+        public async Task<IActionResult> GetOnTimeCases()
+        {
+            var result = await _service.GetOnTimeCasesAsync();
+            return Ok(result);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(SLARecordCreateDto dto)

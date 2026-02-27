@@ -11,6 +11,8 @@ namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 
 		Task MarkAsReadAsync(int notificationId);
 
-		
+		Task SendNotification(int userId, string message);
+
+
 	}
 }

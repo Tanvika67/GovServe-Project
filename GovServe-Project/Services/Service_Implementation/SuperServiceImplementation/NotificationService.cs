@@ -52,6 +52,16 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			}
 		}
 
+		public async Task SendNotification(int userId, string message) {
+			Notification n = new Notification();
+			n.UserId = userId;
+			n.Message = message;
+			n.CreatedDate = DateTime.Now;
+
+			await _repo.AddAsync(n);
+
+		}
+
 		
 	}
 }

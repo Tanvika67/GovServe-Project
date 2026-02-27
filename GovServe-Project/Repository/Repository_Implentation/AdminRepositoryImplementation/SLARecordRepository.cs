@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Data;
+using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task<SLARecord?> GetByIdAsync(int id)
             => await _context.SLARecords.FindAsync(id);
+
+        public async Task<IEnumerable<SLARecord>> GetByStatusAsync(SLAStatus status)
+        {
+            return await _context.SLARecords
+                .Include(x => x.Case)
+                .Where(x => x.Status == status)
+                .ToListAsync(); // List internally 
+        }
 
         public async Task AddAsync(SLARecord record)
             => await _context.SLARecords.AddAsync(record);

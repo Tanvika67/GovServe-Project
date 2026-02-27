@@ -42,6 +42,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			await _context.SaveChangesAsync();
 		}
 
-		
+		public async Task SendNotification(Notification notification)
+		{
+			await _context.Notification.AddAsync(notification);
+			await _context.SaveChangesAsync();
+
+
+		}
 	}
 }
