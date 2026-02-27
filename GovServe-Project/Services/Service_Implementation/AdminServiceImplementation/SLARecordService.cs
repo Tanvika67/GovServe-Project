@@ -1,5 +1,4 @@
-﻿
-using GovServe_Project.DTOs.AdminDTO;
+﻿using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
@@ -25,12 +24,13 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         {
             var records = await _repository.GetAllAsync();
 
-            // Auto check status
+            // Auto-check status (if you truly want to update on read)
             foreach (var record in records)
             {
                 UpdateStatus(record);
             }
 
+            // ⚠ Consider removing this save for "query" methods to avoid side effects.
             await _repository.SaveAsync();
 
             return records.Select(MapToDto);
@@ -41,30 +41,48 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var record = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA record not found");
 
+            // Auto-check status (if you truly want to update on read)
             UpdateStatus(record);
+
+            // ⚠ Consider removing this save for "query" methods to avoid side effects.
             await _repository.SaveAsync();
 
             return MapToDto(record);
         }
 
+        public async Task<IEnumerable<SLARecordResponseDto>> GetBreachedCasesAsync()
+        {
+            // Assumes repository returns up-to-date statuses.
+            // If not, you'd need a refresh step before this query.
+            var records = await _repository.GetByStatusAsync(SLAStatus.Breached);
+            return records.Select(MapToDto);
+        }
+
+        public async Task<IEnumerable<SLARecordResponseDto>> GetOnTimeCasesAsync()
+        {
+            // Assumes repository returns up-to-date statuses.
+            var records = await _repository.GetByStatusAsync(SLAStatus.OnTime);
+            return records.Select(MapToDto);
+        }
+
         public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
         {
-            // 1️⃣ Get workflow stage to fetch SLA days
+            // 1) Get workflow stage to fetch SLA days
             var stage = await _stageRepository.GetByIdAsync(dto.StageID)
                 ?? throw new NotFoundException("Workflow stage not found");
 
-            // 2️⃣ Calculate EndDate automatically
+            // 2) Calculate EndDate automatically (this is actually a SLA due date)
             var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
 
-            var record = new SLARecord
+            var record = new SLARecords
             {
-                CaseID = dto.CaseID,
+                CaseId = dto.CaseID,
                 StageID = dto.StageID,
                 StartDate = dto.StartDate,
                 EndDate = calculatedEndDate
             };
 
-            // 3️⃣ Calculate Status
+            // 3) Calculate Status
             UpdateStatus(record);
 
             await _repository.AddAsync(record);
@@ -82,21 +100,24 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             await _repository.SaveAsync();
         }
 
-        //  Automatic Status updated
-        private void UpdateStatus(SLARecord record)
+        // Automatic status update: Breached if now > EndDate (SLA target), else OnTime.
+        private void UpdateStatus(SLARecords record)
         {
+            // If EndDate is a nullable target, guard for null:
+            // if (record.EndDate == null) { record.Status = SLAStatus.OnTime; return; }
+
             if (DateTime.UtcNow > record.EndDate)
                 record.Status = SLAStatus.Breached;
             else
                 record.Status = SLAStatus.OnTime;
         }
 
-        private static SLARecordResponseDto MapToDto(SLARecord record)
+        private static SLARecordResponseDto MapToDto(SLARecords record)
         {
             return new SLARecordResponseDto
             {
                 SLARecordID = record.SLARecordID,
-                CaseID = record.CaseID,
+                CaseID = record.CaseId,
                 StageID = record.StageID,
                 StartDate = record.StartDate,
                 EndDate = record.EndDate,
@@ -104,6 +125,4 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
     }
-
-
 }

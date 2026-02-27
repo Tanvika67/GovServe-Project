@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace GovServe_Project.Models
+namespace GovServe_Project.Models.SuperModels
 {
 	public class Escalation
 	{
@@ -14,8 +14,8 @@ namespace GovServe_Project.Models
 		public int CaseId { get; set; }
 		public virtual Case Case { get; set; }
 		[ForeignKey("User")]
-		public int EscalatedByUserId { get; set; }
-		public virtual Users EscalatedByUser{ get; set; }
+		public int SupervisorId { get; set; }
+		public virtual Users Supervisor{ get; set; }
 
 		public int PreviousOfficerId { get; set; }
 

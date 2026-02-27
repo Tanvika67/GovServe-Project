@@ -1,8 +1,9 @@
+﻿using GovServe_Project.Models.SuperModels;
 ﻿using GovServe_Project.Models;
 using GovServe_Project.DTOs.OfficerDTO;
 
 
-namespace GovServe_Project.Repository.Interface
+namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 {
 	public interface ICaseRepository
 	{
@@ -23,6 +24,7 @@ namespace GovServe_Project.Repository.Interface
 		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
 
 		Task<string> Reject(int caseId, string reason);
+		Task<List<Case>> GetSLABreachedCasesAsync();
 	}
 }
 

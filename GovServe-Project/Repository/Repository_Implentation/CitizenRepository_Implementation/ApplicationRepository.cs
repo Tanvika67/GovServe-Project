@@ -3,6 +3,7 @@ using GovServe_Project.Data;
 using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.Models;
 using GovServe_Project.Models.CitizenModels;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using Microsoft.EntityFrameworkCore;

@@ -2,9 +2,9 @@
 {
 	public enum NotificationCategory
 	{
-		Assignment,
-		Escalation,
-		Update
+		Assignment=0,
+		Escalation=1,
+		Update=2
 	}
 }
 

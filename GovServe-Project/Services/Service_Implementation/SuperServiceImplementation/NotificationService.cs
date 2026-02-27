@@ -1,7 +1,10 @@
-﻿using GovServe_Project.Models;
-using GovServe_Project.Repository.Interface;
+﻿using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Services.Interfaces;
-namespace GovServe_Project.Services.Service_Implementation
+
+namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
 	public class NotificationService : INotificationService
 	{
@@ -47,6 +50,16 @@ namespace GovServe_Project.Services.Service_Implementation
 				notification.IsRead = true;
 				await _repo.SaveAsync();
 			}
+		}
+
+		public async Task SendNotification(int userId, string message) {
+			Notification n = new Notification();
+			n.UserId = userId;
+			n.Message = message;
+			n.CreatedDate = DateTime.Now;
+
+			await _repo.AddAsync(n);
+
 		}
 
 		

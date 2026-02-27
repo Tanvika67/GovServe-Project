@@ -21,7 +21,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         public async Task<ServiceReportMetricsDTO> GenerateMetricsAsync(ReportFilterRequest request)
         {
             IQueryable<Application> Application = _context.Application;
-            IQueryable<SLARecord> SLARecords = _context.SLARecords;
+            IQueryable<SLARecords> SLARecords = _context.SLARecords;
 
 
             // Apply Filters

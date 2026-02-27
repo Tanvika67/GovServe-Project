@@ -6,6 +6,8 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
     {
         Task<IEnumerable<SLARecordResponseDto>> GetAllAsync();
         Task<SLARecordResponseDto> GetByIdAsync(int id);
+        Task<IEnumerable<SLARecordResponseDto>> GetBreachedCasesAsync();
+        Task<IEnumerable<SLARecordResponseDto>> GetOnTimeCasesAsync();
         Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto);
         Task DeleteAsync(int id);
     }
