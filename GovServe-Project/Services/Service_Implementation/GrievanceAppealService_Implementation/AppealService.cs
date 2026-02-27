@@ -1,75 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using GovServe.Models;
-using GovServe_Project.DTOs;
-using GovServe_Project.Enum;
-using GovServe_Project.Models;
+﻿using GovServe_Project.Models;
+using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
 
-namespace GovServe_Project.Services.Service_Implementation
+namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation
 {
-	// Implementation of Appeal workflow logic
 	public class AppealService : IAppealService
 	{
-		private readonly IAppealRepository _repo;
+		private readonly IAppealRepository _repository;
 
-		public AppealService(IAppealRepository repo)
+		// Constructor injection
+		public AppealService(IAppealRepository repository)
 		{
-			_repo = repo;
+			_repository = repository;
 		}
 
-		// Citizen files appeal
-		public async Task CreateAppealAsync(AppealCreateDTO dto)
+		// File Appeal (Citizen fills reason)
+		public async Task FileAppealAsync(Appeal appeal)
 		{
-			var entity = new Appeal
-			{
-				UserId = dto.CitizenID,
-				Reason = dto.Reason,
-				Description = dto.Description,
+			// Set default values
+			appeal.FiledDate = DateTime.Now;
+			appeal.Status = "Submitted";
 
-				Status = AppealStatus.Open,
-				FiledDate = DateTime.UtcNow
-			};
-
-			await _repo.AddAsync(entity);
+			await _repository.AddAsync(appeal);
 		}
 
-		public async Task<List<Appeal>> GetMyAppealsAsync(int citizenId)
-			=> await _repo.GetByCitizenIdAsync(citizenId);
-
-		public async Task<List<Appeal>> GetAllAppealsAsync()
-			=> await _repo.GetAllAsync();
-
-		public async Task<int> GetActiveCountAsync()
-			=> await _repo.GetActiveCountAsync();
-
-		public async Task<int> GetInactiveCountAsync()
-			=> await _repo.GetInactiveCountAsync();
-
-		// Approve appeal
-		public async Task ApproveAsync(int id, string remarks)
+		// My Appeals (by Application ID)
+		public async Task<List<Appeal>> MyAppealsAsync(int applicationId)
 		{
-			var appeal = await _repo.GetByIdAsync(id);
-
-			appeal.Status = AppealStatus.Approved;
-			appeal.Remarks = remarks;
-
-			await _repo.UpdateAsync(appeal);
+			return await _repository.GetByApplicationAsync(applicationId);
 		}
 
-		// Reject appeal
-		public async Task RejectAsync(int id, string remarks)
+		// Appeal Status (view only)
+		public async Task<Appeal?> GetAppealStatusAsync(int id)
 		{
-			var appeal = await _repo.GetByIdAsync(id);
-
-			appeal.Status = AppealStatus.Rejected;
-			appeal.Remarks = remarks;
-
-			await _repo.UpdateAsync(appeal);
+			return await _repository.GetByIdAsync(id);
 		}
 	}
 }
-

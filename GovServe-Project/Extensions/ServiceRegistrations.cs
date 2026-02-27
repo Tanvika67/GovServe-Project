@@ -1,15 +1,23 @@
 ﻿
+using System.Reflection.Emit;
+using GovServe_Project.Auth;
 using GovServe_Project.Data;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
+using GovServe_Project.Repository.Repository_Implentation.CitizenRepository_Implementation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using GovServe_Project.Services.Interfaces.CitizenService_Interface;
 using GovServe_Project.Services.Service_Implementation;
 using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
+using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
+using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRepository_implementation;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
+using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
+using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation;
 
 namespace GovServe_Project.Extensions
 {
@@ -38,16 +46,21 @@ namespace GovServe_Project.Extensions
 			services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ISLADayRepository, SLADayRepository>();
-           // services.AddScoped<IUserRepository, UserRepository>();
-            //services.AddScoped<IGrievanceRepository, GrievanceRepository>();
-            //services.AddScoped<IAppealRepository, AppealRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGrievanceRepository, GrievanceRepository>();
+            services.AddScoped<IAppealRepository, AppealRepository>();
+            services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            services.AddScoped<IApplicationService, ApplicationService>();
 
 
 
 
 
-            //Services
-            services.AddScoped<IDepartmentService, DepartmentService>();
+
+			//Services
+			services.AddScoped<IAuthService, AuthService>();
+
+			services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();
             services.AddScoped<IRequiredDocumentService, RequiredDocumentService>();
@@ -59,9 +72,9 @@ namespace GovServe_Project.Extensions
 			services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ISLADayService, SLADayService>();
-            //services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<IGrievanceService, GrievanceService>();
-            //services.AddScoped<IAppealService, AppealService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGrievanceService, GrievanceService>();
+           
 
             return services;
 

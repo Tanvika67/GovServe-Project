@@ -1,95 +1,63 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using GovServe.Models;
-using GovServe_Project.DTOs;
+using GovServe_Project.Data;
+using GovServe_Project.Models;
+using GovServe_Project.Models.GrievanceAppealModel;
+using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRepository_implementation;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Controllers
 {
-	// API endpoints for Grievance module
+	// API Controller for Citizen Grievance
 	[Route("api/[controller]")]
 	[ApiController]
 	public class GrievanceController : ControllerBase
 	{
 		private readonly IGrievanceService _service;
 
+		// Constructor injection
 		public GrievanceController(IGrievanceService service)
 		{
 			_service = service;
 		}
 
-		// Citizen raises grievance
+		// Raise Grievance (Citizen fills grievance form)
 		[HttpPost]
-		public async Task<IActionResult> Create(GrievanceCreateDTO dto)
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> RaiseGrievance(Grievance grievance)
 		{
-			await _service.CreateGrievanceAsync(dto);
-			return Ok("Grievance Raised Successfully");
+			await _service.RaiseGrievanceAsync(grievance);
+			return Ok("Grievance submitted successfully");
 		}
 
-		// Citizen dashboard (remarks visible here)
-		[HttpGet("my/{citizenId}")]
-		public async Task<IActionResult> My(int citizenId)
+		// View My Grievances
+		[HttpGet("user/{citizenId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> MyGrievances(int citizenId)
 		{
-			return Ok(await _service.GetMyGrievancesAsync(citizenId));
+			var data = await _service.MyGrievancesAsync(citizenId);
+			return Ok(data);
 		}
 
-		// Officer pending list
-		[HttpGet("pending")]
-		public async Task<IActionResult> Pending()
+		// View Grievance Details / Status
+		[HttpGet("{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GrievanceStatus(int id)
 		{
-			return Ok(await _service.GetPendingGrievancesAsync());
-		}
+			var data = await _service.GrievanceStatusAsync(id);
 
-		// Supervisor forwarded list
-		[HttpGet("forwarded")]
-		public async Task<IActionResult> Forwarded()
-		{
-			return Ok(await _service.GetForwardedGrievancesAsync());
-		}
+			if (data == null)
+				return NotFound("Grievance not found");
 
-		// All list
-		[HttpGet("all")]
-		public async Task<IActionResult> All()
-		{
-			return Ok(await _service.GetAllGrievancesAsync());
-		}
-
-		// Dashboard counts
-		[HttpGet("active-count")]
-		public async Task<IActionResult> Active()
-		{
-			return Ok(await _service.GetActiveCountAsync());
-		}
-
-		[HttpGet("inactive-count")]
-		public async Task<IActionResult> Inactive()
-		{
-			return Ok(await _service.GetInactiveCountAsync());
-		}
-
-		// Resolve grievance
-		[HttpPut("{id}/resolve")]
-		public async Task<IActionResult> Resolve(int id, GrievanceActionDTO dto)
-		{
-			await _service.ResolveAsync(id, dto.Remarks);
-			return Ok("Resolved Successfully");
-		}
-
-		// Reject grie vance
-		[HttpPut("{id}/reject")]
-		public async Task<IActionResult> Reject(int id, GrievanceActionDTO dto)
-		{
-			await _service.RejectAsync(id, dto.Remarks);
-			return Ok("Rejected Successfully");
-		}
-
-		// Forward grievance
-		[HttpPut("{id}/forward")]
-		public async Task<IActionResult> Forward(int id, GrievanceActionDTO dto)
-		{
-			await _service.ForwardAsync(id, dto.Remarks);
-			return Ok("Forwarded To Supervisor");
+			return Ok(data);
 		}
 	}
-	}
+
+}

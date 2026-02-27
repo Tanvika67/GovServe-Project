@@ -8,5 +8,9 @@ namespace GovServe_Project.Repository.Interface
 		Task AddAsync(Users user);
 
 		Task<Users> GetByEmailAsync(string email);
+		Task<Users> GetByIdAsync(int id);
+		Task<List<Users>> GetAllAsync();
+		Task UpdateAsync(Users user);
+		Task DeleteAsync(Users user);
 	}
 }

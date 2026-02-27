@@ -17,13 +17,39 @@ namespace GovServe_Project.Repository.Repository_Implentation
 
 		public async Task AddAsync(Users user)
 		{
-			await _context.Users.AddAsync(user);
+			await _context.User.AddAsync(user);
 			await _context.SaveChangesAsync();
 		}
 
 		public async Task<Users> GetByEmailAsync(string email)
 		{
-			return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
+			return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
+		}
+
+		// Get user by Id
+		public async Task<Users> GetByIdAsync(int id)
+		{
+			return await _context.User.FindAsync(id);
+		}
+
+		// Get all users (Admin)
+		public async Task<List<Users>> GetAllAsync()
+		{
+			return await _context.User.ToListAsync();
+		}
+
+		// Update user
+		public async Task UpdateAsync(Users user)
+		{
+			_context.User.Update(user);
+			await _context.SaveChangesAsync();
+		}
+
+		// Delete user
+		public async Task DeleteAsync(Users user)
+		{
+			_context.User.Remove(user);
+			await _context.SaveChangesAsync();
 		}
 	}
 }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.GrievanceAppealModel;
+
 
 namespace GovServe_Project.Models.CitizenModels
 {
@@ -31,10 +33,6 @@ namespace GovServe_Project.Models.CitizenModels
 		[Required]
 		public string ServiceName { get; set; }
 
-		[Required]
-		public string Description { get; set; }
-
-		[Required]
 		public int DepartmentID { get; set; }
 		[ForeignKey("DepartmentID")]
 		public virtual Department Department { get; set; }
@@ -43,7 +41,6 @@ namespace GovServe_Project.Models.CitizenModels
 		[Required]
 		public DateTime SubmittedDate { get; set; }
 
-		[Required]
 		public DateTime? CompletedDate { get; set; }
 
 
@@ -51,8 +48,8 @@ namespace GovServe_Project.Models.CitizenModels
 		[MaxLength(50)]
 		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
-		//public virtual ICollection<Grievance> Grievances { get; set; }
-		//public virtual ICollection<Appeal> Appeals { get; set; }
+		public virtual ICollection<Grievance> Grievances { get; set; }
+		public virtual ICollection<Appeal> Appeals { get; set; }
 	}
 
 }

@@ -34,12 +34,9 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			//  Step 2: Create Application
 			var app = new Application()
 			{
-				ServiceID = service.ServiceID,   // ✅ now works
-				Description = dto.Description,
+				ServiceID = service.ServiceID,   
 				UserId = dto.UserId,
-			//	ServiceID = dto.ServiceID,
 				ServiceName = dto.ServiceName,
-			//	Description = dto.Description,
 				ApplicationStatus = "Submitted",
 				SubmittedDate = DateTime.Now
 			};
