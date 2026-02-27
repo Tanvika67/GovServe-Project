@@ -5,6 +5,7 @@ using GovServe_Project.Services.Service_Implementation.SuperServiceImplementatio
 using Microsoft.AspNetCore.Mvc;
 using GovServe_Project.DTOs.OfficerDTO;
 
+
 namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
@@ -18,16 +19,12 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
-		[HttpPost("create")]
-		public async Task<IActionResult> Create([FromBody] CreateCaseDto dto)
+		[HttpPost]
+		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
-			if (dto == null)
-				return BadRequest("Invalid data");
-
 			var result = await _service.CreateCaseAsync(dto);
 			return Ok(result);
 		}
-
 
 		[HttpGet("all")]
 		public async Task<IActionResult> GetAll()
@@ -35,29 +32,15 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
-		[HttpGet("pending")]
-		public async Task<IActionResult> GetPending()
-		{
-			return Ok(await _service.GetPendingCasesAsync());
-		}
-
 		[HttpGet("active")]
 		public async Task<IActionResult> GetActive()
 		{
 			return Ok(await _service.GetActiveCasesAsync());
 		}
-
-		[HttpGet("escalated")]
-		public async Task<IActionResult> GetEscalated()
+		[HttpPut("update-status")]
+		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusDto dto)
 		{
-			return Ok(await _service.GetEscalatedCasesAsync());
-		}
-
-
-		[HttpPost("assign")]
-		public async Task<IActionResult> Assign(int caseId, int officerId, int officerDeptId)
-		{
-			var result = await _service.AssignCaseAsync(caseId, officerId, officerDeptId);
+			var result = await _service.UpdateCaseStatus(dto.CaseId, dto.Status);
 			return Ok(result);
 		}
 		[HttpGet("sla-breached")]
@@ -66,17 +49,10 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			var result = await _service.GetSLABreachedCasesAsync();
 			return Ok(result);
 		}
-		[HttpPost("reassign")]
-		public async Task<IActionResult> Reassign(int caseId, int newOfficerId)
+		[HttpPost("reassign-escalated")]
+		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
 		{
-			var result = await _service.ReassignCaseAsync(caseId, newOfficerId);
-			return Ok(result);
-		}
-
-		[HttpPost("auto-escalate")]
-		public async Task<IActionResult> AutoEscalate()
-		{
-			var result = await _service.AutoEscalateAsync();
+			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
 			return Ok(result);
 		}
 

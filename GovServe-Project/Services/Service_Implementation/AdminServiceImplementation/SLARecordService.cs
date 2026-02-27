@@ -74,9 +74,9 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             // 2) Calculate EndDate automatically (this is actually a SLA due date)
             var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
 
-            var record = new SLARecord
+            var record = new SLARecords
             {
-                CaseID = dto.CaseID,
+                CaseId = dto.CaseID,
                 StageID = dto.StageID,
                 StartDate = dto.StartDate,
                 EndDate = calculatedEndDate
@@ -101,7 +101,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         }
 
         // Automatic status update: Breached if now > EndDate (SLA target), else OnTime.
-        private void UpdateStatus(SLARecord record)
+        private void UpdateStatus(SLARecords record)
         {
             // If EndDate is a nullable target, guard for null:
             // if (record.EndDate == null) { record.Status = SLAStatus.OnTime; return; }
@@ -112,12 +112,12 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 record.Status = SLAStatus.OnTime;
         }
 
-        private static SLARecordResponseDto MapToDto(SLARecord record)
+        private static SLARecordResponseDto MapToDto(SLARecords record)
         {
             return new SLARecordResponseDto
             {
                 SLARecordID = record.SLARecordID,
-                CaseID = record.CaseID,
+                CaseID = record.CaseId,
                 StageID = record.StageID,
                 StartDate = record.StartDate,
                 EndDate = record.EndDate,

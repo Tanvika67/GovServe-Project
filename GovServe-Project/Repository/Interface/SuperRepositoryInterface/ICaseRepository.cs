@@ -10,7 +10,6 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<IEnumerable<Case>> GetAllAsync();
 		Task<IEnumerable<Case>> GetByStatusAsync(string status);
 		Task<Case> GetByIdAsync(int id);
-		Task<List<Case>> GetSLABreachedCasesAsync();
 
 		Task AddAsync(Case c);
 		void Update(Case c);
@@ -25,6 +24,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
 
 		Task<string> Reject(int caseId, string reason);
+		Task<List<Case>> GetSLABreachedCasesAsync();
 	}
 }
 

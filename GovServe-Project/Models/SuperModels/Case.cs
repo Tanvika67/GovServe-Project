@@ -34,7 +34,7 @@ namespace GovServe_Project.Models.SuperModels
 
 		[Required]
 		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
-		public string Status { get; set; } = "Pending";
+		public string Status { get; set; } = "Assigned";
 
 		public DateTime? AssignedDate { get; set; }
 

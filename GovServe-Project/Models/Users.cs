@@ -39,6 +39,7 @@ namespace GovServe_Project.Models
 
 		// Navigation Property
 		public virtual ICollection<Application> Applications { get; set; }
+		public int DepartmentID { get; internal set; }
 		//public virtual ICollection<Grievance> Grievances { get; set; }
 		//public virtual ICollection<Appeal>Appeals { get; set; }
 

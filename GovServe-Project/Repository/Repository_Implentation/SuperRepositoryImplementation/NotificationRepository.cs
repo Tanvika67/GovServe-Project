@@ -1,7 +1,8 @@
 ﻿using GovServe_Project.Data;
+using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.SuperModels;
-using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using Microsoft.EntityFrameworkCore;
 namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
 	public class NotificationRepository : INotificationRepository
@@ -41,7 +42,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			await _context.SaveChangesAsync();
 		}
-
+		public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
+		{
+			return await _context.SLARecords
+				.Where(s => s.Status.Equals("Breached"))
+				.ToListAsync();
+		}
 		public async Task SendNotification(Notification notification)
 		{
 			await _context.Notification.AddAsync(notification);

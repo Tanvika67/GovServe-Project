@@ -29,17 +29,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				.Where(x => x.Status == status)
 				.ToListAsync();
 		}
-		public async Task<List<Case>> GetSLABreachedCasesAsync()
-		{
-			return await _context.Case
-				.Join(_context.SLARecords,
-					c => c.CaseId,
-					s => s.CaseID,
-					(c, s) => new { c, s })
-				.Where(x => x.s.Status == SLAStatus.Breached)
-				.Select(x => x.c)
-				.ToListAsync();
-		}
 		public async Task<Case> GetByIdAsync(int id)
 		{
 			return await _context.Case.FindAsync(id);
@@ -138,6 +127,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			await _context.SaveChangesAsync();
 
 			return "Case Rejected Successfully";
+		}
+
+		public Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

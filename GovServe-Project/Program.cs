@@ -1,7 +1,13 @@
-using GovServe_Project.Extensions;
-using GovServe_Project.Services.Interfaces.SuperServiceInterface;
-using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Data;
+using GovServe_Project.Extensions;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation;
+using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -20,6 +26,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GovServe_ProjectContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("GovServe_ProjectContext")));
 
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICaseRepository, CaseRepository>();
+builder.Services.AddScoped<ICaseService, CaseService>();
 
 builder.Services.AddCors(options =>
 {

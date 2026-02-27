@@ -86,8 +86,6 @@ namespace GovServe_Project.Data
                 .HasForeignKey(n => n.CaseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-        
-
             modelBuilder.Entity<Case>()
                 .HasOne(c => c.User)
                 .WithMany()
@@ -101,7 +99,7 @@ namespace GovServe_Project.Data
                 .OnDelete(DeleteBehavior.NoAction); // already NoAction — keep it
         
         // In DbContext.OnModelCreating
-        modelBuilder.Entity<SLARecord>()
+        modelBuilder.Entity<SLARecords>()
                 .HasOne(r => r.Stage)
                 .WithMany()
                 .HasForeignKey(r => r.StageID)
@@ -121,7 +119,7 @@ namespace GovServe_Project.Data
         public DbSet<EligibilityRule> EligibilityRules { get; set; } = default!;
         public DbSet<RequiredDocument> RequiredDocuments { get; set; } = default!;
         public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
-        public DbSet<SLARecord> SLARecords { get; set; } = default!;
+        public DbSet<SLARecords> SLARecords { get; set; } = default!;
       
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
         public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
@@ -133,11 +131,6 @@ namespace GovServe_Project.Data
 
 		public DbSet<Appeal> Appeal { get; set; } = default!;
         public DbSet<Grievance> Grievance { get; set; } = default!;
-
-
-
-
-
 
 
         internal async Task SaveChaangesAsync(Service service)

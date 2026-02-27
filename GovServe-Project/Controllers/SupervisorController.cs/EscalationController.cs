@@ -1,9 +1,11 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Controllers.SupervisorController.cs
 {
@@ -27,6 +29,19 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 				dto.SupervisorId,
 				dto.Reason
 			));
+		}
+
+		[HttpPost("check-sla/{caseId}")]
+		public async Task<IActionResult> CheckSLA(int caseId)
+		{
+			var result = await _service.CheckSLAAndEscalateAsync(caseId);
+			return Ok(result);
+		}
+		[HttpPost("auto-escalate")]
+		public async Task<IActionResult> AutoEscalate()
+		{
+			var result = await _service.AutoEscalateAsync();
+			return Ok(result);
 		}
 
 		[HttpGet("count")]
