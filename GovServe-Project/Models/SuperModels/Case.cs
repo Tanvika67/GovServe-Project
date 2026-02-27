@@ -4,7 +4,7 @@ using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.CitizenModels;
 
 
-namespace GovServe_Project.Models
+namespace GovServe_Project.Models.SuperModels
 {
 	public class Case
 	{
@@ -14,8 +14,12 @@ namespace GovServe_Project.Models
 
 		[Required]
 		[ForeignKey("ApplicationID")]
-		public int ApplicationID { get; set; }
+        public int ApplicationID { get; set; }
 		public virtual Application Application { get; set; }
+		[Required]
+		[ForeignKey("User")]
+		public int UserId {  get; set; }
+		public virtual Users User { get; set; }
 
 		[Required]
 		public int SupervisorId { get; set; }
@@ -41,10 +45,8 @@ namespace GovServe_Project.Models
 
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 
-		// SLA → 1 day example
-		public int Sladays { get; set; } = 1;
-
 		public string? RejectionReason { get; set; }
+
 	}
 
 }

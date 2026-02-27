@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Enum;
 using GovServe_Project.Data;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.DTOs.OfficerDTO;
 
-namespace GovServe_Project.Repository.Repository_Implentation
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
 	public class CaseRepository : ICaseRepository
 	{
@@ -26,7 +29,17 @@ namespace GovServe_Project.Repository.Repository_Implentation
 				.Where(x => x.Status == status)
 				.ToListAsync();
 		}
-
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _context.Case
+				.Join(_context.SLARecords,
+					c => c.CaseId,
+					s => s.CaseID,
+					(c, s) => new { c, s })
+				.Where(x => x.s.Status == SLAStatus.Breached)
+				.Select(x => x.c)
+				.ToListAsync();
+		}
 		public async Task<Case> GetByIdAsync(int id)
 		{
 			return await _context.Case.FindAsync(id);

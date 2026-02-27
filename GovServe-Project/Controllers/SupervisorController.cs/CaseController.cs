@@ -1,10 +1,11 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Mvc;
 using GovServe_Project.DTOs.OfficerDTO;
 
-namespace GovServe_Project.Controllers
+namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]
@@ -59,7 +60,12 @@ namespace GovServe_Project.Controllers
 			var result = await _service.AssignCaseAsync(caseId, officerId, officerDeptId);
 			return Ok(result);
 		}
-
+		[HttpGet("sla-breached")]
+		public async Task<IActionResult> GetSLABreached()
+		{
+			var result = await _service.GetSLABreachedCasesAsync();
+			return Ok(result);
+		}
 		[HttpPost("reassign")]
 		public async Task<IActionResult> Reassign(int caseId, int newOfficerId)
 		{

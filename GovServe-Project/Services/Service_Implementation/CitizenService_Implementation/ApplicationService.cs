@@ -1,6 +1,6 @@
 ﻿using GovServe_Project.Data;
 using GovServe_Project.DTOs.CitizenDTO;
-using GovServe_Project.DTOs.CitizenDTO;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.Models;
 using GovServe_Project.Models.CitizenModels;
@@ -34,7 +34,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			//  Step 2: Create Application
 			var app = new Application()
 			{
-				ServiceID = service.ServiceID,   // ✅ now works
+				ServiceID = service.ServiceID,   // now works
 				Description = dto.Description,
 				UserId = dto.UserId,
 			//	ServiceID = dto.ServiceID,

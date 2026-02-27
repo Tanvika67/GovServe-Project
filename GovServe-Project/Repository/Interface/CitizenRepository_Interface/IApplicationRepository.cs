@@ -1,6 +1,7 @@
 ﻿using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.Models;
 using GovServe_Project.Models.CitizenModels;
+using GovServe_Project.Models.SuperModels;
 namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 {
 	public interface IApplicationRepository
