@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Data;
+using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
@@ -15,43 +16,33 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         }
 
         public async Task<IEnumerable<SLARecord>> GetAllAsync()
-        {
-           return await _context.SLARecords.ToListAsync();
-
-        }
-          
+            => await _context.SLARecords.ToListAsync();
 
         public async Task<SLARecord?> GetByIdAsync(int id)
-        {
-            return await _context.SLARecords.FindAsync(id);
+            => await _context.SLARecords.FindAsync(id);
 
+        public async Task<IEnumerable<SLARecord>> GetByStatusAsync(SLAStatus status)
+        {
+            return await _context.SLARecords
+                .Include(x => x.Case)
+                .Where(x => x.Status == status)
+                .ToListAsync(); // List internally 
         }
-            
 
         public async Task AddAsync(SLARecord record)
-        {
-            await _context.SLARecords.AddAsync(record);
-            await _context.SaveChangesAsync();
+            => await _context.SLARecords.AddAsync(record);
 
-        }
-           
+        public void Update(SLARecord record)
+            => _context.SLARecords.Update(record);
 
-        public async Task UpdateAsync(SLARecord record)
-        {
-            _context.SLARecords.Update(record);
-            await _context.SaveChangesAsync();
+        public void Delete(SLARecord record)
+            => _context.SLARecords.Remove(record);
 
-        }
-            
-
-        public async Task DeleteAsync(SLARecord record)
-        {
-            _context.SLARecords.Remove(record);
-            await _context.SaveChangesAsync();
-
-        }
-          
+        public async Task SaveAsync()
+            => await _context.SaveChangesAsync();
     }
+
+
 
 
 }

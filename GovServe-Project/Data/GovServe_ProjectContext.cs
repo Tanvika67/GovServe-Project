@@ -17,23 +17,20 @@ namespace GovServe_Project.Data
 
         public DbSet<Case> Case { get; set; } = default!;
         public DbSet<Department> Departments { get; set; } = default!;
+        public DbSet<Role> Roles { get; set; } = default!;
         public DbSet<Service> Services { get; set; } = default!;
         public DbSet<EligibilityRule> EligibilityRules { get; set; } = default!;
         public DbSet<RequiredDocument> RequiredDocuments { get; set; } = default!;
         public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
+        public DbSet<SLADays> SLADays { get; set; } = default!;
         public DbSet<SLARecord> SLARecords { get; set; } = default!;
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
-        public DbSet<Application> Application { get; set; } = default!;
-        public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
-
-        public DbSet<User> User { get; set; } = default!;
-        public DbSet<Escalation> Escalation { get; set; } = default!;
-        public DbSet<Notification> Notification { get; set; } = default!;
-        public DbSet<Grievance> Grievance { get; set; } = default!;
-
-		public DbSet<Appeal> Appeals { get; set; } = default!;
-		
         
+        public DbSet<Escalation> Escalation { get; set; } = default!;
+        public DbSet<Application> Application { get; set; } = default!;
+
+
+
 
 
 

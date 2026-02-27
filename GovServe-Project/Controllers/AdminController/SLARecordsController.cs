@@ -19,32 +19,50 @@ namespace GovServe_Project.Controllers.AdminController
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _service.GetAllAsync());
+           return Ok(await _service.GetAllAsync());
+
         }
+            
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok(await _service.GetByIdAsync(id));
+           return Ok(await _service.GetByIdAsync(id));
+
+        }
+           
+
+        [HttpGet("breached")]
+        public async Task<IActionResult> GetBreachedCases()
+        {
+            var result = await _service.GetBreachedCasesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ontime")]
+        public async Task<IActionResult> GetOnTimeCases()
+        {
+            var result = await _service.GetOnTimeCasesAsync();
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SLARecordDTO dto)
+        public async Task<IActionResult> Create(SLARecordCreateDto dto)
         {
-            return Ok(await _service.CreateAsync(dto));
-        }
+            var result = await _service.CreateAsync(dto);
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, SLARecordDTO dto)
-        {
-            return Ok(await _service.UpdateAsync(id, dto));
+            return CreatedAtAction(nameof(Get),
+                new { id = result.SLARecordID },
+                result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
-            return Ok("Deleted successfully.");
+            return NoContent();
         }
     }
+
+
 }

@@ -100,11 +100,12 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return true;
         }
 
-            public async Task<int> GetTotalCountAsync()
-            {
-                var count = await _repository.GetTotalCountAsync();
-                return count;
-            }
+        //Get Total Count of Departments
+        public async Task<int> GetTotalCountAsync()
+        {
+            var count = await _repository.GetTotalCountAsync();
+            return count;
+        }
 
 
         }
