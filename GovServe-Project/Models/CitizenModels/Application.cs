@@ -38,13 +38,13 @@ namespace GovServe_Project.Models.CitizenModels
 		public virtual Department Department { get; set; }
 
 
-		[Required]
+		
 		public DateTime SubmittedDate { get; set; }
 
 		public DateTime? CompletedDate { get; set; }
 
 
-		[Required]
+	
 		[MaxLength(50)]
 		public string ApplicationStatus { get; set; } = "Submitted";
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
