@@ -19,8 +19,6 @@ using GovServe_Project.Services.Service_Implementation.AdminServiceImplementatio
 using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
 using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRepository_implementation;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
-using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 
 namespace GovServe_Project.Extensions

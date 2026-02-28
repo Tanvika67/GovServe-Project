@@ -1,10 +1,10 @@
-﻿using GovServe_Project.Models;
+﻿using GovServe_Project.DTOs;
+using GovServe_Project.Models;
 using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
 
-namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation
+namespace GovServe_Project.Services.Service_Implementation
 {
 	public class AppealService : IAppealService
 	{
@@ -17,14 +17,19 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 		}
 
 		// File Appeal (Citizen fills reason)
-		public async Task FileAppealAsync(Appeal appeal)
+		public async Task FileAppealAsync(AppealDTO dto)
 		{
-			// Set default values
-			appeal.FiledDate = DateTime.Now;
-			appeal.Status = "Submitted";
+			var appeal = new Appeal
+			{
+				ApplicationID = dto.ApplicationID,
+				Reason = dto.Reason,
+				FiledDate = DateTime.Now,
+				Status = "Submitted"
+			};
 
 			await _repository.AddAsync(appeal);
 		}
+
 
 		// My Appeals (by Application ID)
 		public async Task<List<Appeal>> MyAppealsAsync(int applicationId)

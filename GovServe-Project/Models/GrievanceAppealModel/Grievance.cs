@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
+
 
 namespace GovServe_Project.Models.GrievanceAppealModel
 { 
@@ -15,12 +17,14 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 
 		
 		[Required]
-		[ForeignKey("Application")]
-		public int ApplicationId { get; set; }
-
+		[ForeignKey("ApplicationID")]
+		public int ApplicationID { get; set; }
+		public virtual Application Application { get; set; }	
 	
 		[Required]
 		public int UserId { get; set; }
+		[ForeignKey("UserId")]
+		public virtual Users User { get; set; }	
 
 		
 		[MaxLength(500)]

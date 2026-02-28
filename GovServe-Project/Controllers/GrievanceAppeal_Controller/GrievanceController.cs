@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GovServe_Project.Data;
+using GovServe_Project.DTOs;
 using GovServe_Project.Models;
-using GovServe_Project.Models.GrievanceAppealModel;
-using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRepository_implementation;
 using GovServe_Project.Services.Interfaces;
-using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,16 +27,18 @@ namespace GovServe_Project.Controllers
 
 		// Raise Grievance (Citizen fills grievance form)
 		[HttpPost]
-		[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> RaiseGrievance(Grievance grievance)
+		[HttpPost]
+		public async Task<IActionResult> RaiseGrievance([FromBody] RaiseGrievanceDTO dto)
 		{
-			await _service.RaiseGrievanceAsync(grievance);
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+			await _service.RaiseGrievanceAsync(dto);
 			return Ok("Grievance submitted successfully");
 		}
 
+
 		// View My Grievances
 		[HttpGet("user/{citizenId}")]
-		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyGrievances(int citizenId)
 		{
 			var data = await _service.MyGrievancesAsync(citizenId);
@@ -48,7 +47,6 @@ namespace GovServe_Project.Controllers
 
 		// View Grievance Details / Status
 		[HttpGet("{id}")]
-		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GrievanceStatus(int id)
 		{
 			var data = await _service.GrievanceStatusAsync(id);
