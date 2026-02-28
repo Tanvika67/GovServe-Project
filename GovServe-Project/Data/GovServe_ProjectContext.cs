@@ -55,7 +55,14 @@ namespace GovServe_Project.Data
 	            .HasForeignKey(c => c.ApplicationID)
 	            .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<Case>()
+            // table is a reserved word; keep brackets in raw SQL
+            modelBuilder.Entity<Case>()
+                      .HasOne(c => c.User)
+                      .WithMany()
+                      .HasForeignKey(c => c.UserId)
+                      .OnDelete(DeleteBehavior.Restrict); // or .NoAction() in EF Core 5+
+
+            modelBuilder.Entity<Case>()
 				.HasOne(c => c.AssignedOfficer)
 				.WithMany()
 				.HasForeignKey(c => c.AssignedOfficerId)

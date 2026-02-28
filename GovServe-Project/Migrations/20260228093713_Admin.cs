@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class Citizen : Migration
+    public partial class Admin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -100,8 +100,8 @@ namespace GovServe_Project.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentID = table.Column<int>(type: "int", nullable: false),
-                    RoleID = table.Column<int>(type: "int", nullable: false)
+                    RoleID = table.Column<int>(type: "int", nullable: false),
+                    DepartmentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,8 +251,7 @@ namespace GovServe_Project.Migrations
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApplicationID = table.Column<int>(type: "int", nullable: false),
-                    UsersUserId = table.Column<int>(type: "int", nullable: true)
+                    ApplicationID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -263,11 +262,6 @@ namespace GovServe_Project.Migrations
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Appeals_User_UsersUserId",
-                        column: x => x.UsersUserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -277,6 +271,7 @@ namespace GovServe_Project.Migrations
                     CaseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     SupervisorId = table.Column<int>(type: "int", nullable: false),
                     AssignedOfficerId = table.Column<int>(type: "int", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
@@ -286,7 +281,6 @@ namespace GovServe_Project.Migrations
                     IsWarningSent = table.Column<bool>(type: "bit", nullable: false),
                     IsEscalated = table.Column<bool>(type: "bit", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Sladays = table.Column<int>(type: "int", nullable: false),
                     RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -307,6 +301,12 @@ namespace GovServe_Project.Migrations
                     table.ForeignKey(
                         name: "FK_Case_User_AssignedOfficerId",
                         column: x => x.AssignedOfficerId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Case_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -347,8 +347,7 @@ namespace GovServe_Project.Migrations
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsersUserId = table.Column<int>(type: "int", nullable: true)
+                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -359,11 +358,6 @@ namespace GovServe_Project.Migrations
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Grievance_User_UsersUserId",
-                        column: x => x.UsersUserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -373,7 +367,7 @@ namespace GovServe_Project.Migrations
                     EscalationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CaseId = table.Column<int>(type: "int", nullable: false),
-                    EscalatedByUserId = table.Column<int>(type: "int", nullable: false),
+                    SupervisorId = table.Column<int>(type: "int", nullable: false),
                     PreviousOfficerId = table.Column<int>(type: "int", nullable: false),
                     NewOfficerId = table.Column<int>(type: "int", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -392,8 +386,8 @@ namespace GovServe_Project.Migrations
                         principalColumn: "CaseId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Escalation_User_EscalatedByUserId",
-                        column: x => x.EscalatedByUserId,
+                        name: "FK_Escalation_User_SupervisorId",
+                        column: x => x.SupervisorId,
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -436,7 +430,7 @@ namespace GovServe_Project.Migrations
                 {
                     SLARecordID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CaseID = table.Column<int>(type: "int", nullable: false),
+                    CaseId = table.Column<int>(type: "int", nullable: false),
                     StageID = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -447,8 +441,8 @@ namespace GovServe_Project.Migrations
                 {
                     table.PrimaryKey("PK_SLARecords", x => x.SLARecordID);
                     table.ForeignKey(
-                        name: "FK_SLARecords_Case_CaseID",
-                        column: x => x.CaseID,
+                        name: "FK_SLARecords_Case_CaseId",
+                        column: x => x.CaseId,
                         principalTable: "Case",
                         principalColumn: "CaseId",
                         onDelete: ReferentialAction.Cascade);
@@ -469,11 +463,6 @@ namespace GovServe_Project.Migrations
                 name: "IX_Appeals_ApplicationID",
                 table: "Appeals",
                 column: "ApplicationID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appeals_UsersUserId",
-                table: "Appeals",
-                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Application_DepartmentID",
@@ -511,6 +500,11 @@ namespace GovServe_Project.Migrations
                 column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Case_UserId",
+                table: "Case",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CitizenDocument_ApplicationID",
                 table: "CitizenDocument",
                 column: "ApplicationID");
@@ -526,19 +520,14 @@ namespace GovServe_Project.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Escalation_EscalatedByUserId",
+                name: "IX_Escalation_SupervisorId",
                 table: "Escalation",
-                column: "EscalatedByUserId");
+                column: "SupervisorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grievance_ApplicationId",
                 table: "Grievance",
                 column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Grievance_UsersUserId",
-                table: "Grievance",
-                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_CaseId",
@@ -566,9 +555,9 @@ namespace GovServe_Project.Migrations
                 column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SLARecords_CaseID",
+                name: "IX_SLARecords_CaseId",
                 table: "SLARecords",
-                column: "CaseID");
+                column: "CaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SLARecords_ServiceID",
