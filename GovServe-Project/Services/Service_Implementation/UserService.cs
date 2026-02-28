@@ -28,7 +28,8 @@ namespace GovServe_Project.Services.Service_Implementation
 				Email = dto.Email,
 				Phone = dto.Phone,
 				Password = dto.Password,
-				//Role = "Citizen"
+				RoleID = dto.RoleID,
+				DepartmentID = dto.DepartmentID
 			};
 
 			await _repository.AddAsync(user);
@@ -36,19 +37,43 @@ namespace GovServe_Project.Services.Service_Implementation
 			return "Registration Successful";
 		}
 
-
-		// Login
-		public async Task<string> LoginAsync(LoginDTO dto)
+		// Get profile
+		public async Task<Users> GetUserProfile(int id)
 		{
-			var user = await _repository.GetByEmailAsync(dto.Email);
+			return await _repository.GetByIdAsync(id);
+		}
+
+		// Get all users (Admin)
+		public async Task<List<Users>> GetAllUsers()
+		{
+			return await _repository.GetAllAsync();
+		}
+
+		// Update user
+		public async Task<bool> UpdateUser(int id, Users model)
+		{
+			var user = await _repository.GetByIdAsync(id);
 
 			if (user == null)
-				return "User not found";
+				return false;
 
-			if (user.Password != dto.Password)
-				return "Invalid Password";
+			user.FullName = model.FullName;
+			user.Email = model.Email;
 
-			return "Login Successful";
+			await _repository.UpdateAsync(user);
+			return true;
+		}
+
+		// Delete user
+		public async Task<bool> DeleteUser(int id)
+		{
+			var user = await _repository.GetByIdAsync(id);
+
+			if (user == null)
+				return false;
+
+			await _repository.DeleteAsync(user);
+			return true;
 		}
 	}
 }

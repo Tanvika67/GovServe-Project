@@ -1,24 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using GovServe.Models;
-using GovServe_Project.DTOs;
-
-namespace GovServe_Project.Services.Interfaces
+﻿using GovServe_Project.Models;
+using GovServe_Project.Models.GrievanceAppealModel;
+namespace GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface
 {
-	// Service interface for Appeal workflow
 	public interface IAppealService
 	{
-		Task CreateAppealAsync(AppealCreateDTO dto);
+		// Citizen files appeal
+		Task FileAppealAsync(Appeal appeal);
 
-		Task<List<Appeal>> GetMyAppealsAsync(int citizenId);
+		// Citizen views own appeals
+		Task<List<Appeal>> MyAppealsAsync(int applicationId);
 
-		Task<List<Appeal>> GetAllAppealsAsync();
-
-		Task<int> GetActiveCountAsync();
-		Task<int> GetInactiveCountAsync();
-
-		Task ApproveAsync(int id, string remarks);
-		Task RejectAsync(int id, string remarks);
+		// Citizen views appeal status
+		Task<Appeal?> GetAppealStatusAsync(int id);
 	}
 }

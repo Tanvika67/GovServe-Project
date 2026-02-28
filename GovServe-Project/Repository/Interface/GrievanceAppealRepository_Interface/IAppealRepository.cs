@@ -1,24 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using GovServe.Models;
-
+﻿using System;
+using GovServe_Project.Models;
+using GovServe_Project.Models.GrievanceAppealModel;
 namespace GovServe_Project.Repository.Interface
 {
 	public interface IAppealRepository
 	{
+		// Add new appeal into database
 		Task AddAsync(Appeal appeal);
-		Task<Appeal> GetByIdAsync(int id);
 
-		// Citizen dashboard
-		Task<List<Appeal>> GetByCitizenIdAsync(int citizenId);
+		// Get appeals by Application ID (Citizen My Appeals)
+		Task<List<Appeal>> GetByApplicationAsync(int applicationId);
 
-		// Admin list
-		Task<List<Appeal>> GetAllAsync();
-
-		Task<int> GetActiveCountAsync();
-		Task<int> GetInactiveCountAsync();
-
-		Task UpdateAsync(Appeal appeal);
+		// Get appeal by ID (Status view)
+		Task<Appeal?> GetByIdAsync(int id);
 	}
 }

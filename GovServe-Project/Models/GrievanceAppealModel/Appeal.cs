@@ -4,16 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
 
-namespace GovServe.Models
-{
-	// Entity representing Appeal table
+
+namespace GovServe_Project.Models.GrievanceAppealModel
+{ 
 	public class Appeal
 	{
 		[Key]
 		public int AppealID { get; set; }
-
-		
 
 		// Citizen reference
 		[Required]
@@ -32,10 +31,15 @@ namespace GovServe.Models
 		public string Remarks { get; set; }
 
 		// Workflow status
-		public AppealStatus Status { get; set; }
+		public string Status { get; set; } = "Submitted";
 
 		// Date filed
 		public DateTime FiledDate { get; set; }
+
+		[Required]
+		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+		public virtual Application Application { get; set; }
 	}
 }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    [Migration("20260226112042_d")]
-    partial class d
+    [Migration("20260227213100_Citizen")]
+    partial class Citizen
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,81 +24,6 @@ namespace GovServe_Project.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("GovServe.Models.Appeal", b =>
-                {
-                    b.Property<int>("AppealID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppealID"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("FiledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Remarks")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AppealID");
-
-                    b.ToTable("Appeal");
-                });
-
-            modelBuilder.Entity("GovServe.Models.Grievance", b =>
-                {
-                    b.Property<int>("GrievanceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GrievanceId"));
-
-                    b.Property<int>("ApplicationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("FiledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Remarks")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GrievanceId");
-
-                    b.ToTable("Grievance");
-                });
 
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Department", b =>
                 {
@@ -361,15 +286,11 @@ namespace GovServe_Project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("CompletedDate")
+                    b.Property<DateTime?>("CompletedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
@@ -479,6 +400,100 @@ namespace GovServe_Project.Migrations
                     b.ToTable("Escalation");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Appeal", b =>
+                {
+                    b.Property<int>("AppealID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppealID"));
+
+                    b.Property<int>("ApplicationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("FiledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppealID");
+
+                    b.HasIndex("ApplicationID");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("Appeals");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Grievance", b =>
+                {
+                    b.Property<int>("GrievanceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GrievanceId"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("FiledDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GrievanceId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("Grievance");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.Notification", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -551,10 +566,6 @@ namespace GovServe_Project.Migrations
 
                     b.Property<int>("RoleID")
                         .HasColumnType("int");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
@@ -669,7 +680,7 @@ namespace GovServe_Project.Migrations
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Service", b =>
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
-                        .WithMany()
+                        .WithMany("Services")
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -765,6 +776,34 @@ namespace GovServe_Project.Migrations
                     b.Navigation("EscalatedByUser");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Appeal", b =>
+                {
+                    b.HasOne("GovServe_Project.Models.CitizenModels.Application", "Application")
+                        .WithMany("Appeals")
+                        .HasForeignKey("ApplicationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany("Appeals")
+                        .HasForeignKey("UsersUserId");
+
+                    b.Navigation("Application");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Grievance", b =>
+                {
+                    b.HasOne("GovServe_Project.Models.CitizenModels.Application", null)
+                        .WithMany("Grievances")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany("Grievances")
+                        .HasForeignKey("UsersUserId");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.Notification", b =>
                 {
                     b.HasOne("GovServe_Project.Models.Case", "Case")
@@ -787,13 +826,13 @@ namespace GovServe_Project.Migrations
             modelBuilder.Entity("GovServe_Project.Models.Users", b =>
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
-                        .WithMany()
+                        .WithMany("User")
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
-                        .WithMany()
+                        .WithMany("User")
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -818,8 +857,17 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.AdminModels.Department", b =>
+                {
+                    b.Navigation("Services");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Role", b =>
                 {
+                    b.Navigation("User");
+
                     b.Navigation("WorkflowStages");
                 });
 
@@ -836,12 +884,20 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.CitizenModels.Application", b =>
                 {
+                    b.Navigation("Appeals");
+
                     b.Navigation("CitizenDocuments");
+
+                    b.Navigation("Grievances");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.Users", b =>
                 {
+                    b.Navigation("Appeals");
+
                     b.Navigation("Applications");
+
+                    b.Navigation("Grievances");
                 });
 #pragma warning restore 612, 618
         }

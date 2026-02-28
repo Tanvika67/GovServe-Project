@@ -6,29 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class d : Migration
+    public partial class Citizen : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Appeal",
-                columns: table => new
-                {
-                    AppealID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appeal", x => x.AppealID);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
@@ -42,25 +24,6 @@ namespace GovServe_Project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.DepartmentID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Grievance",
-                columns: table => new
-                {
-                    GrievanceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Grievance", x => x.GrievanceId);
                 });
 
             migrationBuilder.CreateTable(
@@ -138,8 +101,7 @@ namespace GovServe_Project.Migrations
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
-                    RoleID = table.Column<int>(type: "int", nullable: false),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RoleID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,10 +205,9 @@ namespace GovServe_Project.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ServiceID = table.Column<int>(type: "int", nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UsersUserId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -273,6 +234,37 @@ namespace GovServe_Project.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Application_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Appeals",
+                columns: table => new
+                {
+                    AppealID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApplicationID = table.Column<int>(type: "int", nullable: false),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appeals", x => x.AppealID);
+                    table.ForeignKey(
+                        name: "FK_Appeals_Application_ApplicationID",
+                        column: x => x.ApplicationID,
+                        principalTable: "Application",
+                        principalColumn: "ApplicationID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appeals_User_UsersUserId",
                         column: x => x.UsersUserId,
                         principalTable: "User",
                         principalColumn: "UserId");
@@ -341,6 +333,37 @@ namespace GovServe_Project.Migrations
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Grievance",
+                columns: table => new
+                {
+                    GrievanceId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grievance", x => x.GrievanceId);
+                    table.ForeignKey(
+                        name: "FK_Grievance_Application_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Application",
+                        principalColumn: "ApplicationID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Grievance_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -443,6 +466,16 @@ namespace GovServe_Project.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appeals_ApplicationID",
+                table: "Appeals",
+                column: "ApplicationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appeals_UsersUserId",
+                table: "Appeals",
+                column: "UsersUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Application_DepartmentID",
                 table: "Application",
                 column: "DepartmentID");
@@ -496,6 +529,16 @@ namespace GovServe_Project.Migrations
                 name: "IX_Escalation_EscalatedByUserId",
                 table: "Escalation",
                 column: "EscalatedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grievance_ApplicationId",
+                table: "Grievance",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grievance_UsersUserId",
+                table: "Grievance",
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_CaseId",
@@ -562,7 +605,7 @@ namespace GovServe_Project.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Appeal");
+                name: "Appeals");
 
             migrationBuilder.DropTable(
                 name: "CitizenDocument");

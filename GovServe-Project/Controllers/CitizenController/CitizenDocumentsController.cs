@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
 using GovServe_Project.Services.Interfaces.CitizenService_Interface;
 using GovServe_Project.DTOs.CitizenDTO;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace GovServe_Project.Controllers.CitizenController
@@ -30,6 +31,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Upload Document
 		[HttpPost("upload")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO dto)
 		{
 			var result = await _service.UploadDocumentAsync(dto);
@@ -38,6 +40,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Document Status
 		[HttpGet("status/{id}")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentStatus(int id)
 		{
 			var status = await _service.GetDocumentStatusAsync(id);
@@ -50,6 +53,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Delete Document
 		[HttpDelete("delete/{id}")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			var result = await _service.DeleteDocumentAsync(id);
