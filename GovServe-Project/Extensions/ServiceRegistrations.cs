@@ -3,7 +3,10 @@ using System.Reflection.Emit;
 using GovServe_Project.Auth;
 using GovServe_Project.Data;
 using GovServe_Project.Repository.Interface;
-using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
@@ -18,6 +21,7 @@ using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealReposit
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
 using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation;
+using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 
 namespace GovServe_Project.Extensions
 {

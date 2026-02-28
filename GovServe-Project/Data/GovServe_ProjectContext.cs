@@ -1,4 +1,4 @@
-﻿
+﻿using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
@@ -61,15 +61,15 @@ namespace GovServe_Project.Data
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Escalation>()
-                 .HasOne(e => e.Case)
+	             .HasOne(e => e.Case)
 	             .WithMany()
 	             .HasForeignKey(e => e.CaseId)
 	             .OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Escalation>()
-				.HasOne(e => e.EscalatedByUser)
+				.HasOne(e => e.Supervisor)
 				.WithMany()
-				.HasForeignKey(e => e.EscalatedByUserId)
+				.HasForeignKey(e => e.SupervisorId)
 				.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Notification>()
@@ -85,7 +85,7 @@ namespace GovServe_Project.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // In DbContext.OnModelCreating
-            modelBuilder.Entity<SLARecord>()
+            modelBuilder.Entity<SLARecords>()
                 .HasOne(r => r.Stage)
                 .WithMany()
                 .HasForeignKey(r => r.StageID)
@@ -102,7 +102,7 @@ namespace GovServe_Project.Data
         public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
       
         public DbSet<SLADays> SLADays { get; set; } = default!;
-        public DbSet<SLARecord> SLARecords { get; set; } = default!;
+        public DbSet<SLARecords> SLARecords { get; set; } = default!;
         public DbSet<Role> Roles { get; set; } = default!;
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
         public DbSet<Application> Application { get; set; } = default!;

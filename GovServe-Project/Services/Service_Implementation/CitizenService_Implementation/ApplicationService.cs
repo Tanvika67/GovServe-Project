@@ -2,7 +2,7 @@
 using GovServe_Project.DTOs.CitizenDTO;
 using GovServe_Project.DTOs.CitizenDTO;
 using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Services.Interfaces.CitizenService_Interface;
