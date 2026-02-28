@@ -20,7 +20,6 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			await _context.User.AddAsync(user);
 			await _context.SaveChangesAsync();
 		}
-
 		public async Task<Users> GetByEmailAsync(string email)
 		{
 			return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
@@ -51,18 +50,6 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Remove(user);
 			await _context.SaveChangesAsync();
 		}
-
-        public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
-        {
-            return await _context.User
-                .Where(u => u.DepartmentID == departmentId && u.Role.Equals("Officer"))
-                .ToListAsync();
-        }
-        public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
-        {
-            return await _context.Case
-                .CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Closed");
-        }
-    }
+	}
 }
 
