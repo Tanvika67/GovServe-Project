@@ -4,6 +4,7 @@ using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Models.GrievanceAppealModel;
+using GovServe_Project.Models.SuperModels;
 
 
 
@@ -85,7 +86,7 @@ namespace GovServe_Project.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // In DbContext.OnModelCreating
-            modelBuilder.Entity<SLARecord>()
+            modelBuilder.Entity<SLARecords>()
                 .HasOne(r => r.Stage)
                 .WithMany()
                 .HasForeignKey(r => r.StageID)
@@ -99,22 +100,19 @@ namespace GovServe_Project.Data
         public DbSet<Service> Services { get; set; } = default!;
         public DbSet<EligibilityRule> EligibilityRules { get; set; } = default!;
         public DbSet<RequiredDocument> RequiredDocuments { get; set; } = default!;
-        public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
-      
+		public DbSet<WorkflowStage> WorkflowStages { get; set; } = default!;
         public DbSet<SLADays> SLADays { get; set; } = default!;
-        public DbSet<SLARecord> SLARecords { get; set; } = default!;
+        public DbSet<SLARecords> SLARecords { get; set; } = default!;
         public DbSet<Role> Roles { get; set; } = default!;
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
-        public DbSet<Application> Application { get; set; } = default!;
-        public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
 
+
+        public DbSet<Application> Application { get; set; } = default!;
+		public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
         public DbSet<Users> User { get; set; } = default!;
         public DbSet<Escalation> Escalation { get; set; } = default!;
         public DbSet<Notification> Notification { get; set; } = default!;
 		public DbSet<Grievance> Grievance { get; set; } = default!;
-
-
-
 		public DbSet<Appeal> Appeals { get; set; } = default!;
 
 

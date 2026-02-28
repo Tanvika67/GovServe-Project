@@ -18,6 +18,10 @@ using GovServe_Project.Repository.Repository_Implentation.GrievanceAppealReposit
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Services.Interfaces.GrievanceAppealService_Interface;
 using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 
 namespace GovServe_Project.Extensions
 {
@@ -50,7 +54,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IGrievanceRepository, GrievanceRepository>();
             services.AddScoped<IAppealRepository, AppealRepository>();
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
-            services.AddScoped<IApplicationService, ApplicationService>();
+            
 
 
 
@@ -74,7 +78,8 @@ namespace GovServe_Project.Extensions
             services.AddScoped<ISLADayService, SLADayService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGrievanceService, GrievanceService>();
-           
+            services.AddScoped<IApplicationService, ApplicationService>();
+
 
             return services;
 
