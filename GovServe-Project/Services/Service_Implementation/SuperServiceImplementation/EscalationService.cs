@@ -101,7 +101,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				// Citizen
 				await _notificationService.SendNotificationAsync(
 					c.UserId,
-					"Your application is delayed and escalated",
+					"Your application is delayed and escalated to another officer",
 					c.CaseId
 				);
 
