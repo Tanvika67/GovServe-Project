@@ -12,14 +12,15 @@ namespace GovServe_Project.Models.SuperModels
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CaseId { get; set; }
 
-		[Required]
+		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
-        public int ApplicationID { get; set; }
 		public virtual Application Application { get; set; }
-		[Required]
-		[ForeignKey("User")]
-		public int UserId {  get; set; }
+
+
+		public int UserId { get; set; }
+		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }
+
 
 		[Required]
 		public int SupervisorId { get; set; }

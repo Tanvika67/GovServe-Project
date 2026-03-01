@@ -26,8 +26,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<string> Reject(int caseId, string reason);
 		Task<List<Case>> GetSLABreachedCasesAsync();
 
-		Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId);
-		Task<int> GetActiveCaseCountByOfficerAsync(int officerId);
+		
 	}
 }
 
