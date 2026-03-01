@@ -32,7 +32,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpGet("all")]
-		[Authorize(Roles = "Supervisor")]
+		[Authorize(Roles = "Supervisor")]               //admin also needs
 
 		public async Task<IActionResult> GetAll()
 		{

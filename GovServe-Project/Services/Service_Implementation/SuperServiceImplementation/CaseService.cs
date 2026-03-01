@@ -146,13 +146,13 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			//  Notifications
 			await _notificationService.SendNotificationAsync(
 				newOfficerId,
-				"New case assigned after escalation",
+				"New case assigned to you after escalation",
 				caseId
 			);
 
 			await _notificationService.SendNotificationAsync(
 				oldOfficerId,
-				"Case reassigned due to delay",
+				"This case was reassigned due to SLA breach",
 				caseId
 			);
 
