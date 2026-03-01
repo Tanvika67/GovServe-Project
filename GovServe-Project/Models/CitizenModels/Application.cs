@@ -6,6 +6,7 @@ using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.GrievanceAppealModel;
+using GovServe_Project.Models.SuperModels;
 
 
 namespace GovServe_Project.Models.CitizenModels
@@ -50,6 +51,7 @@ namespace GovServe_Project.Models.CitizenModels
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		public virtual ICollection<Grievance> Grievances { get; set; }
 		public virtual ICollection<Appeal> Appeals { get; set; }
+		public virtual Case Case { get; set; }
 	}
 
 }
