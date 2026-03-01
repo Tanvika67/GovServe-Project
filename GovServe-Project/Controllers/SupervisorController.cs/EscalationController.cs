@@ -3,6 +3,7 @@ using GovServe_Project.Repository.Interface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpPost("escalate")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> Escalate([FromBody] EscalateCaseDto dto)            //Tells json and convert it into DTO
 		{
 			return Ok(await _service.EscalateCaseAsync(
@@ -32,6 +35,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpPost("check-sla/{caseId}")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> CheckSLA(int caseId)
 		{
 			var result = await _service.CheckSLAAndEscalateAsync(caseId);
@@ -45,6 +50,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpGet("count")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> Count()
 		{
 			return Ok(await _service.GetEscalationCountAsync());

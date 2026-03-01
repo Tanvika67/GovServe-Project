@@ -1,7 +1,7 @@
 ﻿using GovServe_Project.DTOs;
-using GovServe_Project.DTOs.Admin;
+using GovServe_Project.DTOs.Admin.GovServe_Project.DTOs;
 
-namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
+namespace GovServe_Project.Services_Interfaces_AdminServiceInterface
 {
     public interface IWorkflowStageService
     {
@@ -11,6 +11,6 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<WorkflowStageResponseDto> CreateAsync(WorkflowStageCreateDto dto);
         Task UpdateAsync(int id, WorkflowStageCreateDto dto);
         Task DeleteAsync(int id);
+        Task<WorkflowStageResponseDto> ReassignAsync(int stageId, WorkflowStageReassignDto dto);
     }
-
 }

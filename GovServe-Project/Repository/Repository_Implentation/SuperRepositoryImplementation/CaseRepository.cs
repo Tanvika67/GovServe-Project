@@ -6,6 +6,7 @@ using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.Models;
 
 namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
@@ -133,5 +134,15 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
