@@ -30,6 +30,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				.Where(x => x.Status == status)
 				.ToListAsync();
 		}
+		public async Task<List<Case>> GetActiveCasesAsync()
+		{
+			return await _context.Case
+				.Where(c => c.Status != "Closed") // or your logic
+				.ToListAsync();
+		}
 		public async Task<Case> GetByIdAsync(int id)
 		{
 			return await _context.Case.FindAsync(id);

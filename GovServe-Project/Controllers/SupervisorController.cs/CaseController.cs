@@ -4,12 +4,15 @@ using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Mvc;
 using GovServe_Project.DTOs.OfficerDTO;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize(Roles = "Supervisor")]
+
 	public class CaseController : ControllerBase
 	{
 		private readonly ICaseService _service;
@@ -20,6 +23,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
@@ -27,29 +32,39 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpGet("all")]
+		[Authorize(Roles = "Supervisor")]               //admin also needs
+
 		public async Task<IActionResult> GetAll()
 		{
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
 		[HttpGet("active")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> GetActive()
 		{
 			return Ok(await _service.GetActiveCasesAsync());
 		}
 		[HttpPut("update-status")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusDto dto)
 		{
 			var result = await _service.UpdateCaseStatus(dto.CaseId, dto.Status);
 			return Ok(result);
 		}
 		[HttpGet("sla-breached")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> GetSLABreached()
 		{
 			var result = await _service.GetSLABreachedCasesAsync();
 			return Ok(result);
 		}
 		[HttpPost("reassign-escalated")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
 		{
 			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
@@ -57,6 +72,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		[HttpGet("dashboard")]
+		[Authorize(Roles = "Supervisor")]
+
 		public async Task<IActionResult> Dashboard()
 		{
 			return Ok(await _service.GetDashboardAsync());

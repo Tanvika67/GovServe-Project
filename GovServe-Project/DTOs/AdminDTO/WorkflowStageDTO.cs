@@ -2,11 +2,16 @@
 
 namespace GovServe_Project.DTOs.Admin
 {
-    public class WorkflowStageCreateDto
+    namespace GovServe_Project.DTOs
     {
-        public int ServiceID { get; set; }
-        public string ResponsibleRole { get; set; } = string.Empty;
-        public int SequenceNumber { get; set; }
+        public class WorkflowStageCreateDto
+        {
+            public int ServiceID { get; set; }
+            public string ResponsibleRole { get; set; } = string.Empty;
+            public int SequenceNumber { get; set; }
+            // ✅ SLA_Days is not here because we fetch automatically
+        }
     }
+
 
 }

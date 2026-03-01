@@ -2,6 +2,7 @@
 using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 

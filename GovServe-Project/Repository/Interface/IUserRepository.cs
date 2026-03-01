@@ -15,4 +15,5 @@ namespace GovServe_Project.Repository.Interface
 		Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId);
 		Task<int> GetActiveCaseCountByOfficerAsync(int officerId);
 	}
+
 }

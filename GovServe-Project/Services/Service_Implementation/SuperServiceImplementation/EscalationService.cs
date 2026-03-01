@@ -1,6 +1,7 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
@@ -13,60 +14,42 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly IEscalationRepository _repo;
 		private readonly ICaseRepository _caseRepo;
 		private readonly INotificationService _notificationService;
+		private readonly ISLARecordRepository _slaRepo;
 
-		public EscalationService(
-			IEscalationRepository repo,
-			ICaseRepository caseRepo,
-			INotificationService notificationService)
+		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo)   
 		{
 			_repo = repo;
 			_caseRepo = caseRepo;
 			_notificationService = notificationService;
+			_slaRepo = slaRepo; 
 		}
 
-		public async Task<string> EscalateCaseAsync(int caseId, int newOfficerId, int supervisorId, string reason)
+		public async Task SendSLAWarningsAsync()
 		{
-			var c = await _caseRepo.GetByIdAsync(caseId);
+			var activeCases = await _caseRepo.GetActiveCasesAsync();
 
-			if (c == null)
-				return "Case Not Found";
-
-			//  Save escalation history
-			var escalation = new Escalation
+			foreach (var c in activeCases)
 			{
-				CaseId = caseId,
-				SupervisorId = supervisorId,
-				PreviousOfficerId = c.AssignedOfficerId,
-				NewOfficerId = newOfficerId,
-				Reason = reason,
-				Status = "Open",
-				EscalationDate = DateTime.Now,
-				EscalationLevel = c.IsEscalated ? 2 : 1
-			};
+				if (c.AssignedOfficerId == 0) continue; // safety check
 
-			await _repo.CreateAsync(escalation);
+				var sla = await _slaRepo.GetByCaseIdAsync(c.CaseId);
+				if (sla == null) continue;
 
-			// Update case
-			c.AssignedOfficerId = newOfficerId;
-			c.Status = "Escalated";
-			c.IsEscalated = true;
-			c.LastUpdated = DateTime.Now;
+				var breachTime = sla.EndDate;
+				var warningTime = breachTime.AddMinutes(-30);
 
-			_caseRepo.Update(c);
-			await _caseRepo.SaveAsync();
-
-			// Notify new officer
-			await _notificationService.SendNotificationAsync(
-				newOfficerId,
-				" Case escalated and assigned to you",
-				caseId
-			);
-
-			return "Case Escalated Successfully";
+				if (DateTime.Now >= warningTime && DateTime.Now < breachTime)
+				{
+					await _notificationService.SendNotificationAsync(
+						c.AssignedOfficerId,
+						"SLA is about to breach. Please take action",
+						c.CaseId
+					);
+				}
+			}
 		}
 		public async Task<string> AutoEscalateAsync()
 		{
-			// Step 1: Get SLA breached cases from repository
 			var breachedCases = await _repo.GetSLABreachedCasesAsync();
 
 			foreach (var sla in breachedCases)
@@ -76,36 +59,47 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				if (c == null)
 					continue;
 
-				// Step 2: Avoid re-escalation
+				// Avoid duplicate escalation
 				if (c.IsEscalated)
 					continue;
 
 				int oldOfficerId = c.AssignedOfficerId;
 
-				// Step 3: Update case
+				//  (IMPORTANT)
+				var escalation = new Escalation
+				{
+					CaseId = c.CaseId,
+					SupervisorId = c.SupervisorId,
+					PreviousOfficerId = oldOfficerId,
+					NewOfficerId = 0, // not assigned yet
+					Reason = "Auto escalation due to SLA breach",
+					Status = "Open",
+					EscalationDate = DateTime.Now,
+					EscalationLevel = c.IsEscalated ? 2 : 1
+				};
+
+				await _repo.CreateAsync(escalation);
+
+				// THEN update case
 				c.Status = "Escalated";
 				c.IsEscalated = true;
 				c.LastUpdated = DateTime.Now;
 
 				_caseRepo.Update(c);
 
-				// Step 4: Notifications
-
-				// Supervisor
+				// Notifications 
 				await _notificationService.SendNotificationAsync(
 					c.SupervisorId,
 					"Case escalated due to SLA breach",
 					c.CaseId
 				);
 
-				// Citizen
 				await _notificationService.SendNotificationAsync(
 					c.UserId,
-					"Your application is delayed and escalated to another officer",
+					"Your application is delayed and escalated",
 					c.CaseId
 				);
 
-				// Old Officer
 				await _notificationService.SendNotificationAsync(
 					oldOfficerId,
 					"Case escalated due to delay",

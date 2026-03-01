@@ -16,8 +16,8 @@ namespace GovServe_Project.Services.Interfaces
 	    Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId);
 		Task<string> UpdateCaseStatus(int caseId, string status);
 		Task<List<Case>> ViewAssignedCases(int officerId);
-
-		Task<string> OpenCase(int caseId);
+        
+        Task<string> OpenCase(int caseId);
 		Task<string> ApproveCase(int caseId);
 		Task<string> Reject(int caseId, string reason);
 		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);

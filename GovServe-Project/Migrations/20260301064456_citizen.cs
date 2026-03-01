@@ -101,7 +101,6 @@ namespace GovServe_Project.Migrations
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleID = table.Column<int>(type: "int", nullable: false),
-                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -289,7 +288,8 @@ namespace GovServe_Project.Migrations
                     IsEscalated = table.Column<bool>(type: "bit", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApplicationID1 = table.Column<int>(type: "int", nullable: true)
+                    ApplicationID1 = table.Column<int>(type: "int", nullable: true),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -322,7 +322,12 @@ namespace GovServe_Project.Migrations
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Case_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -534,6 +539,11 @@ namespace GovServe_Project.Migrations
                 name: "IX_Case_UserId",
                 table: "Case",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Case_UsersUserId",
+                table: "Case",
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CitizenDocument_ApplicationID",
