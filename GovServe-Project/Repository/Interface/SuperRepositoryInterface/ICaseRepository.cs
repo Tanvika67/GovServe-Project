@@ -10,7 +10,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<IEnumerable<Case>> GetAllAsync();
 		Task<IEnumerable<Case>> GetByStatusAsync(string status);
 		Task<Case> GetByIdAsync(int id);
-
+		Task<List<Case>> GetActiveCasesAsync();
 		Task AddAsync(Case c);
 		void Update(Case c);
 

@@ -21,19 +21,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
-		[HttpPost("escalate")]
-		[Authorize(Roles = "Supervisor")]
-
-		public async Task<IActionResult> Escalate([FromBody] EscalateCaseDto dto)            //Tells json and convert it into DTO
-		{
-			return Ok(await _service.EscalateCaseAsync(
-				dto.CaseId,
-				dto.NewOfficerId,
-				dto.SupervisorId,
-				dto.Reason
-			));
-		}
-
 		[HttpPost("check-sla/{caseId}")]
 		[Authorize(Roles = "Supervisor")]
 
