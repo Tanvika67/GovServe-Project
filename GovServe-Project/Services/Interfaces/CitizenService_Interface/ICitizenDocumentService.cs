@@ -10,5 +10,8 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 		Task<string> GetDocumentStatusAsync(int documentId);
 
 		Task<bool> DeleteDocumentAsync(int documentId);
+
+		Task<string> ApproveDocument(int CitizenDocumentID);
+		Task<string> RejectDocument(int CitizenDocumentID);
 	}
 }

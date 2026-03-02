@@ -63,5 +63,21 @@ namespace GovServe_Project.Controllers.CitizenController
 
 			return Ok("Document Deleted Successfully");
 		}
+
+		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ApproveDocument(int id)
+		{
+			var result = await _service.ApproveDocument(id);
+			return Ok(result);
+		}
+
+		[HttpPut("RejectDocument/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectDocument(int id)
+		{
+			var result = await _service.RejectDocument(id);
+			return Ok(result);
+		}
 	}
 }
