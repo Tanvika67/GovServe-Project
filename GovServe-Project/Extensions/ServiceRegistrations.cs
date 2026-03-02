@@ -55,15 +55,8 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IAppealRepository, AppealRepository>();
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
             
-
-
-
-
-
-
 			//Services
 			services.AddScoped<IAuthService, AuthService>();
-
 			services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IEligibilityRuleService, EligibilityRuleService>();

@@ -50,7 +50,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Remove(user);
 			await _context.SaveChangesAsync();
 		}
-		//Available officer
+		//Available officer by dept
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User

@@ -16,7 +16,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
-		// Get all notifications of a user
+		// Get all notifications from the user
 		[HttpGet("{userId}")]
 		[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> Get(int userId)
@@ -33,7 +33,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(await _service.GetUnreadCountAsync(userId));
 		}
 
-		//Mark notification as read
+		//Mark notification as read when I see the message
 		[HttpPut("mark-read/{notificationId}")]
 		[Authorize(Roles = "Supervisor")]
 
