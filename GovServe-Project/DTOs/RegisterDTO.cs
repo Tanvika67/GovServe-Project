@@ -11,6 +11,7 @@
 		public string Password { get; set; }
 
 		public int RoleID { get; set;}
+		public string RoleName { get; set; }
 
 		public int DepartmentID { get; set; }
 	}	

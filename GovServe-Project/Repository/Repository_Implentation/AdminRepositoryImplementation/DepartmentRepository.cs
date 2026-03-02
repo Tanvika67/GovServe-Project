@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Data;
+using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         {
             return await _context.Departments.FindAsync(id);
         }
+
+        public async Task<IEnumerable<Department>> GetActiveAsync()
+        {
+            return await _context.Departments
+                .Where(d => d.Status == DepartmentStatus.Active)
+                .ToListAsync();
+        }
+
 
         public async Task<Department> AddAsync(Department department)
         {
