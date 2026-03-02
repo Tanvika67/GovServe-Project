@@ -8,7 +8,7 @@ using GovServe_Project.Models.CitizenModels;
 
 
 namespace GovServe_Project.Models.GrievanceAppealModel
-{ 
+{
 	public class Appeal
 	{
 		[Key]
@@ -31,7 +31,7 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 		public string Remarks { get; set; }
 
 		// Workflow status
-		public string Status { get; set; } = "Submitted";
+		public AppealStatus Status { get; set; } = AppealStatus.Approved;
 
 		// Date filed
 		public DateTime FiledDate { get; set; }

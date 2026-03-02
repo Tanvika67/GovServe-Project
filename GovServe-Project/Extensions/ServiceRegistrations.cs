@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
 using GovServe_Project.Services_Interfaces_AdminServiceInterface;
+using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation.GovServe_Project.Services.Service_Implementation;
 
 namespace GovServe_Project.Extensions
 {

@@ -13,5 +13,21 @@ namespace GovServe_Project.Repository.Interface
 
 		// Get grievance by ID
 		Task<Grievance?> GetByIdAsync(int id);
+
+
+		// Officer Methods
+
+
+		// Get all grievances
+		Task<List<Grievance>> GetAllAsync();
+
+		// Update grievance 
+		Task UpdateAsync(Grievance grievance);
+
+		Task<int> GetPendingGrievanceCountAsync();
+
+		Task<int> GetResolvedGrievanceCountAsync();
+
+
 	}
 }

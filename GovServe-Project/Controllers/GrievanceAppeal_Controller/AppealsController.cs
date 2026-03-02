@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GovServe_Project.Data;
 using GovServe_Project.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using GovServe_Project.Models;
 using GovServe_Project.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -59,5 +60,47 @@ namespace GovServe_Project.Controllers
 				data.Status
 			});
 		}
+		// Officer - View Submitted Appeals
+		[HttpGet("submitted")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> SubmittedAppeals()
+		{
+			var data = await _service.GetAllSubmittedAppealsAsync();
+			return Ok(data);
+		}
+
+		// Officer - Approve Appeal
+		[HttpPut("approve")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> ApproveAppeal(AppealActionDTO dto)
+		{
+			await _service.ApproveAppealAsync(dto);
+			return Ok("Appeal Approved Successfully");
+		}
+
+		// Officer - Reject Appeal
+		[HttpPut("reject")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> RejectAppeal(AppealActionDTO dto)
+		{
+			await _service.RejectAppealAsync(dto);
+			return Ok("Appeal Rejected Successfully");
+		}
+
+		[HttpGet("count/pending")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> GetPendingAppeals()
+		{
+			var count = await _service.GetPendingAppealCountAsync();
+			return Ok(new { PendingAppeals = count });
+
+		}
+
+		public async Task<IActionResult> GetResolvedAppeals()
+		{
+			var count = await _service.GetResolvedAppealCountAsync();
+			return Ok(new { PendingAppeals = count });
+		}
+
 	}
 }
