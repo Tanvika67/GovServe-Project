@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:GovServe-Project/Migrations/20260302055344_Admin.cs
     public partial class Admin : Migration
+========
+    public partial class supervisor : Migration
+>>>>>>>> 476d31016cccf3dc7036a64e40871ca17d27a48b:GovServe-Project/Migrations/20260302065927_supervisor.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

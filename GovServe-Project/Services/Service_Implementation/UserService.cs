@@ -30,7 +30,7 @@ namespace GovServe_Project.Services.Service_Implementation
 				Password = dto.Password,
 				RoleID = dto.RoleID,
 				RoleName=dto.RoleName,
-                DepartmentID = dto.DepartmentID
+				DepartmentID = dto.DepartmentID
 			};
 
 			await _repository.AddAsync(user);

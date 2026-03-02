@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
+<<<<<<<< HEAD:GovServe-Project/Migrations/20260302055344_Admin.Designer.cs
     [Migration("20260302055344_Admin")]
     partial class Admin
+========
+    [Migration("20260302065927_supervisor")]
+    partial class supervisor
+>>>>>>>> 476d31016cccf3dc7036a64e40871ca17d27a48b:GovServe-Project/Migrations/20260302065927_supervisor.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

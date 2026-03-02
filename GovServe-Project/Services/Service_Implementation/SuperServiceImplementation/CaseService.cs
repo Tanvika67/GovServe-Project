@@ -40,19 +40,19 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
-			// Step 1: Get available officer automatically
+			// Get available officer automatically
 			var officerId = await GetAvailableOfficer(dto.DepartmentId);
 
 			if (officerId == 0)
 				return "No officer available";
 
-			// Step 2: Create case directly assigned to officer
+			// Create case directly assigned to officer
 			var model = new Case
 			{
 				ApplicationID = dto.ApplicationId,
 				DepartmentID = dto.DepartmentId,
 				AssignedOfficerId = officerId,
-				Status = "Assigned",   // Directly assigned
+				Status = "Assigned",  
 				AssignedDate = DateTime.Now,
 				LastUpdated = DateTime.Now
 			};
@@ -133,7 +133,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				return "Case is not escalated";
 
 			int oldOfficerId = c.AssignedOfficerId;
-			int citizenId = c.UserId; // assuming case has UserId
+			int citizenId = c.UserId; 
 
 			// Reassign
 			c.AssignedOfficerId = newOfficerId;
@@ -146,13 +146,13 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			//  Notifications
 			await _notificationService.SendNotificationAsync(
 				newOfficerId,
-				"New case assigned after escalation",
+				"New case assigned to you after escalation",
 				caseId
 			);
 
 			await _notificationService.SendNotificationAsync(
 				oldOfficerId,
-				"Case reassigned due to delay",
+				"This case was reassigned due to SLA breach",
 				caseId
 			);
 

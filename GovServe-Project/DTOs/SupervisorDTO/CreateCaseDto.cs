@@ -4,7 +4,5 @@
 	{
 		public int ApplicationId { get; set; }
 		public int DepartmentId { get; set; }
-		public int SupervisorId { get; set; } //who assigns
-		public int AssignedOfficerId { get; set; } //who works
 	}
 }
