@@ -36,7 +36,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		//Mark notification as read when I see the message
 		[HttpPut("mark-read/{notificationId}")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> MarkRead(int notificationId)
 		{
 			await _service.MarkAsReadAsync(notificationId);

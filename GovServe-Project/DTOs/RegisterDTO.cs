@@ -13,5 +13,7 @@
 		public int RoleID { get; set;}
 
 		public int DepartmentID { get; set; }
+
+		public string RoleName { get; set; }		
 	}	
 }

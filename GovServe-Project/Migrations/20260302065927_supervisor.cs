@@ -101,6 +101,7 @@ namespace GovServe_Project.Migrations
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoleID = table.Column<int>(type: "int", nullable: false),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -251,7 +252,8 @@ namespace GovServe_Project.Migrations
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ApplicationID = table.Column<int>(type: "int", nullable: false)
+                    ApplicationID = table.Column<int>(type: "int", nullable: false),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,6 +264,11 @@ namespace GovServe_Project.Migrations
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Appeals_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -281,7 +288,9 @@ namespace GovServe_Project.Migrations
                     IsWarningSent = table.Column<bool>(type: "bit", nullable: false),
                     IsEscalated = table.Column<bool>(type: "bit", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApplicationID1 = table.Column<int>(type: "int", nullable: true),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -292,6 +301,11 @@ namespace GovServe_Project.Migrations
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Case_Application_ApplicationID1",
+                        column: x => x.ApplicationID1,
+                        principalTable: "Application",
+                        principalColumn: "ApplicationID");
                     table.ForeignKey(
                         name: "FK_Case_Departments_DepartmentID",
                         column: x => x.DepartmentID,
@@ -310,6 +324,11 @@ namespace GovServe_Project.Migrations
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Case_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -341,7 +360,7 @@ namespace GovServe_Project.Migrations
                 {
                     GrievanceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationID = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
@@ -353,10 +372,16 @@ namespace GovServe_Project.Migrations
                 {
                     table.PrimaryKey("PK_Grievance", x => x.GrievanceId);
                     table.ForeignKey(
-                        name: "FK_Grievance_Application_ApplicationId",
-                        column: x => x.ApplicationId,
+                        name: "FK_Grievance_Application_ApplicationID",
+                        column: x => x.ApplicationID,
                         principalTable: "Application",
                         principalColumn: "ApplicationID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Grievance_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -465,6 +490,11 @@ namespace GovServe_Project.Migrations
                 column: "ApplicationID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Appeals_UsersUserId",
+                table: "Appeals",
+                column: "UsersUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Application_DepartmentID",
                 table: "Application",
                 column: "DepartmentID");
@@ -490,6 +520,13 @@ namespace GovServe_Project.Migrations
                 column: "ApplicationID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Case_ApplicationID1",
+                table: "Case",
+                column: "ApplicationID1",
+                unique: true,
+                filter: "[ApplicationID1] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Case_AssignedOfficerId",
                 table: "Case",
                 column: "AssignedOfficerId");
@@ -503,6 +540,11 @@ namespace GovServe_Project.Migrations
                 name: "IX_Case_UserId",
                 table: "Case",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Case_UsersUserId",
+                table: "Case",
+                column: "UsersUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CitizenDocument_ApplicationID",
@@ -525,9 +567,14 @@ namespace GovServe_Project.Migrations
                 column: "SupervisorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grievance_ApplicationId",
+                name: "IX_Grievance_ApplicationID",
                 table: "Grievance",
-                column: "ApplicationId");
+                column: "ApplicationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grievance_UserId",
+                table: "Grievance",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_CaseId",

@@ -15,11 +15,9 @@ namespace GovServe_Project.Models.SuperModels
 		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }
 
-
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }
-
 
 		[Required]
 		public int SupervisorId { get; set; }

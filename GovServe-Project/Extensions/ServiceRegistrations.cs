@@ -74,10 +74,7 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IApplicationService, ApplicationService>();
 
 
-            return services;
-
-
-            
+            return services;   
 
         }
     }
