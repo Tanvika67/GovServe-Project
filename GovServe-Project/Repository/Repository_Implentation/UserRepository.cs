@@ -3,6 +3,7 @@ using GovServe_Project.Models;
 using GovServe_Project.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models;
+using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Repository.Repository_Implentation
 {
@@ -50,11 +51,11 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Remove(user);
 			await _context.SaveChangesAsync();
 		}
-		//Available officer
+		//Available officer by dept
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User
-				.Where(u => u.DepartmentID == departmentId && u.Role.Equals("Officer"))
+				.Where(u => u.DepartmentID == departmentId && u.RoleName.Equals("Officer"))
 				.ToListAsync();
 		}
 		//Count of active cases

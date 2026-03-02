@@ -22,15 +22,17 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
+		//POST only I can create a case; API will create a new case in the system
+		//Case will be automatically assigned to the least busy officer
 		[HttpPost]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
 			return Ok(result);
 		}
 
+		//GET only I can see all cases;Fetches complete list of case from the database
 		[HttpGet("all")]
 		[Authorize(Roles = "Supervisor")]               //admin also needs
 
@@ -39,41 +41,44 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
+		//Returns only ongoing cases; Useful to track pending workload of officer
 		[HttpGet("active")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> GetActive()
 		{
 			return Ok(await _service.GetActiveCasesAsync());
 		}
+
+		//Used to change status like: Assigned-->Inprogress-->Completed
 		[HttpPut("update-status")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusDto dto)
 		{
 			var result = await _service.UpdateCaseStatus(dto.CaseId, dto.Status);
 			return Ok(result);
 		}
+
+		//Returns cases where SLA time has already exceeded;I can easily identify delayed cases
 		[HttpGet("sla-breached")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> GetSLABreached()
 		{
 			var result = await _service.GetSLABreachedCasesAsync();
 			return Ok(result);
 		}
+
+		//Used after system auto-escalates a case due to SLA breach and I will manually assign to another officer
 		[HttpPost("reassign-escalated")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
 		{
 			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
 			return Ok(result);
 		}
 
+		//Returns summary like Total cases;Active cases;SLA breached
 		[HttpGet("dashboard")]
 		[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> Dashboard()
 		{
 			return Ok(await _service.GetDashboardAsync());
