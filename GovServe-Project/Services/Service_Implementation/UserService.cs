@@ -29,6 +29,7 @@ namespace GovServe_Project.Services.Service_Implementation
 				Phone = dto.Phone,
 				Password = dto.Password,
 				RoleID = dto.RoleID,
+				RoleName = dto.RoleName,	
 				DepartmentID = dto.DepartmentID
 			};
 

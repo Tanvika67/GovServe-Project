@@ -37,7 +37,7 @@ namespace GovServe_Project.Auth
 			var claims = new[]
 			{
 			new Claim(ClaimTypes.Name, user.Email),
-			new Claim(ClaimTypes.Role, user.RoleID.ToString()),
+			new Claim(ClaimTypes.Role, user.RoleName.ToString()),
 			new Claim("UserId", user.UserId.ToString())
 		};
 

@@ -20,6 +20,7 @@ namespace GovServe_Project.Controllers.CitizenController
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	
 	public class CitizenDocumentController : ControllerBase
 	{
 		private readonly ICitizenDocumentService _service;
