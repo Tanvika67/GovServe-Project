@@ -1,6 +1,7 @@
 ﻿
 using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GovServe_Project.Controllers.AdminController
@@ -17,6 +18,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetAll()
         {
            return Ok(await _service.GetAllAsync());
@@ -25,6 +27,7 @@ namespace GovServe_Project.Controllers.AdminController
             
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> Get(int id)
         {
            return Ok(await _service.GetByIdAsync(id));
@@ -33,6 +36,7 @@ namespace GovServe_Project.Controllers.AdminController
            
 
         [HttpGet("breached")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetBreachedCases()
         {
             var result = await _service.GetBreachedCasesAsync();
@@ -40,6 +44,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("ontime")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetOnTimeCases()
         {
             var result = await _service.GetOnTimeCasesAsync();
@@ -47,6 +52,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(SLARecordCreateDto dto)
         {
             var result = await _service.CreateAsync(dto);
@@ -57,6 +63,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);

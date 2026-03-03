@@ -30,7 +30,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Create Application
 		[HttpPost("create")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
 
@@ -41,7 +41,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// My Applications (Citizen Dashboard)
 		[HttpGet("my")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyApplications(int userId)
 		{
 
@@ -53,7 +53,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		
 		// Application Status
 		[HttpGet("status/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> ApplicationStatus(int ApplicationId)
 		{
 
@@ -82,7 +82,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//Assigned application
 
 		[HttpGet("assigned/{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetAssignedCases(int officerId) //method created
 		{
 			var result = await _applicationService.GetAssignedCases(officerId);
@@ -92,7 +92,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//Approved cases
 
 		[HttpGet("approved /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetApproved(int officerId)
 		{
 			var result = await _applicationService.GetApprovedCases(officerId);
@@ -103,7 +103,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//pending cases
 
 		[HttpGet("pending /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetPending(int officerId)
 		{
 			var result = await _applicationService.GetPendingCases(officerId);
@@ -114,7 +114,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//rejected cases
 
 		[HttpGet("Reject /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetRejected(int officerId)
 		{
 			var result = await _applicationService.GetRejectedCases(officerId);
@@ -124,7 +124,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//resubmitted cases
 
 		[HttpGet("resubmitted /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetResubmitted(int officerId)
 		{
 			var result = await _applicationService.GetResubmittedCases(officerId);

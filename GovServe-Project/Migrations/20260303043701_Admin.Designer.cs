@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    [Migration("20260228101818_citizen")]
-    partial class citizen
+    [Migration("20260303043701_Admin")]
+    partial class Admin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -437,6 +437,9 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("int");
+
                     b.HasKey("CaseId");
 
                     b.HasIndex("ApplicationID");
@@ -450,6 +453,8 @@ namespace GovServe_Project.Migrations
                     b.HasIndex("DepartmentID");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UsersUserId");
 
                     b.ToTable("Case");
                 });
@@ -586,26 +591,7 @@ namespace GovServe_Project.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ServiceReport", b =>
-                {
-                    b.Property<int>("ReportID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportID"));
-
-                    b.Property<DateTime>("GeneratedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Scope")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportID");
-
-                    b.ToTable("ServiceReports");
-                });
-
-            modelBuilder.Entity("WorkflowStage", b =>
+            modelBuilder.Entity("GovServe_Project.Models.WorkflowStage", b =>
                 {
                     b.Property<int>("StageID")
                         .ValueGeneratedOnAdd()
@@ -636,6 +622,25 @@ namespace GovServe_Project.Migrations
                     b.HasIndex("ServiceID");
 
                     b.ToTable("WorkflowStages");
+                });
+
+            modelBuilder.Entity("ServiceReport", b =>
+                {
+                    b.Property<int>("ReportID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportID"));
+
+                    b.Property<DateTime>("GeneratedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Scope")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportID");
+
+                    b.ToTable("ServiceReports");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.EligibilityRule", b =>
@@ -676,7 +681,7 @@ namespace GovServe_Project.Migrations
                         .WithMany("SLARecords")
                         .HasForeignKey("ServiceID");
 
-                    b.HasOne("WorkflowStage", "Stage")
+                    b.HasOne("GovServe_Project.Models.WorkflowStage", "Stage")
                         .WithMany()
                         .HasForeignKey("StageID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -799,10 +804,14 @@ namespace GovServe_Project.Migrations
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.Users", "User")
-                        .WithMany("Cases")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany("Cases")
+                        .HasForeignKey("UsersUserId");
 
                     b.Navigation("Application");
 
@@ -870,7 +879,7 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("WorkflowStage", b =>
+            modelBuilder.Entity("GovServe_Project.Models.WorkflowStage", b =>
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Role", null)
                         .WithMany("WorkflowStages")

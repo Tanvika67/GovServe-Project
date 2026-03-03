@@ -10,8 +10,6 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task AddAsync(EligibilityRule rule);
         Task UpdateAsync(EligibilityRule rule);
         Task DeleteAsync(EligibilityRule rule);
-
         Task<IEnumerable<EligibilityRule>> GetByServiceNameAsync(string serviceName);
-
     }
 }

@@ -7,7 +7,7 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<IEnumerable<SLADayResponseDto>> GetAllAsync();
         Task<SLADayResponseDto> GetByIdAsync(int id);
         Task<SLADayResponseDto> CreateAsync(SLADayCreateDto dto);
-        Task UpdateAsync(int id, SLADayCreateDto dto);
+        Task<SLADayResponseDto> UpdateAsync(int id, SLADayCreateDto dto);
         Task DeleteAsync(int id);
     }
 }

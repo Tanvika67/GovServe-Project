@@ -1,7 +1,9 @@
 ﻿using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
 namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
@@ -9,10 +11,12 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
     public class EligibilityRuleService : IEligibilityRuleService
     {
         private readonly IEligibilityRuleRepository _repository;
+       
 
         public EligibilityRuleService(IEligibilityRuleRepository repository)
         {
             _repository = repository;
+            
         }
 
         public async Task<IEnumerable<EligibilityRuleResponseDTO>> GetAllAsync()
@@ -46,6 +50,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
         public async Task<EligibilityRuleResponseDTO> CreateAsync(EligibilityRuleDTO dto)
         {
+           
+
             var rule = new EligibilityRule
             {
                 ServiceID = dto.ServiceID,
