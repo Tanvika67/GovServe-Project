@@ -16,7 +16,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult>  GetAll()
         {
             return Ok(await _service.GetAllAsync());
         }
