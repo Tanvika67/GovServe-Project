@@ -7,6 +7,7 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
     {
         Task<IEnumerable<DepartmentResponseDTO>> GetAllAsync();
         Task<DepartmentResponseDTO> GetByIdAsync(int id);
+        Task<IEnumerable<DepartmentResponseDTO>> GetActiveAsync();
         Task<DepartmentResponseDTO> CreateAsync(DepartmentDTO dto);
         Task<DepartmentResponseDTO> UpdateAsync(int id, DepartmentDTO dto);
         Task<bool> DeleteAsync(int id);

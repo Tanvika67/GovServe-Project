@@ -10,9 +10,9 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task<SLARecords> GetByCaseIdAsync(int caseId);
 		Task<IEnumerable<SLARecords>> GetByStatusAsync(SLAStatus status);
         Task AddAsync(SLARecords record);
-        void Update(SLARecords record);
-        void Delete(SLARecords record);
-        Task SaveAsync();
+        Task UpdateAsync(SLARecords record);
+        Task DeleteAsync(SLARecords record);
+        
     }
 
 }

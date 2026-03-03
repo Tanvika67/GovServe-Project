@@ -6,19 +6,19 @@ using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.CitizenModels;
 
-
 namespace GovServe_Project.Models.GrievanceAppealModel
 { 
 	public class Grievance
 	{
+		internal object g;
+
 		// Primary key of the table
 		[Key]
 		public int GrievanceId { get; set; }
 
-		
 		[Required]
-		[ForeignKey("ApplicationID")]
 		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }	
 	
 		[Required]
@@ -38,10 +38,10 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 		public string Remarks { get; set; }
 
 		// Workflow status
-		public string Status { get; set; } = "Submitted";
+		public GrievanceStatus Status { get; set; }
 
 		// Date when grievance was created
-		public DateTime FiledDate { get; set; }
+		public DateTime FiledDate { get; set; } = DateTime.UtcNow;
 
 	}
 }

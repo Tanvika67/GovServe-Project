@@ -88,6 +88,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  GET - View assigned cases
 		[HttpGet("assigned/{officerId}")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetAssignedCases(int officerId)
 		{
 			var cases = await _service.ViewAssignedCases(officerId);
@@ -96,6 +97,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Open case (InProgress)
 		[HttpPut("open/{caseId}")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> OpenCase(int caseId)
 		{
 			var result = await _service.OpenCase(caseId);
@@ -104,6 +106,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Approve case
 		[HttpPut("approve/{caseId}")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> ApproveCase(int caseId)
 		{
 			var result = await _service.ApproveCase(caseId);
@@ -112,6 +115,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Reject case//used for notification also
 		[HttpPut("reject/{caseId}")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
 		{
 			var result = await _service.Reject(caseId, reason);
@@ -120,6 +124,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//for getting application count on dashboard
 		[HttpGet("dashboard/{departmentId}")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> DashboardCounts(int departmentId)
 		{
 			var result = await _service.GetDashboardCountsAsync(departmentId);

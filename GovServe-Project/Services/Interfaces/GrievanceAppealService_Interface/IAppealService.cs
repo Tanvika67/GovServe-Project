@@ -14,5 +14,15 @@ namespace GovServe_Project.Services.Interfaces
 
 		// Citizen views appeal status
 		Task<Appeal?> GetAppealStatusAsync(int id);
+
+		Task ApproveAppealAsync(AppealActionDTO dto);
+		// Officer rejects appeal
+		Task RejectAppealAsync(AppealActionDTO dto);
+
+		// Officer dashboard - view submitted appeals
+		Task<List<Appeal>> GetAllSubmittedAppealsAsync();
+		Task<int> GetPendingAppealCountAsync();
+
+		Task<int> GetResolvedAppealCountAsync();
 	}
 }

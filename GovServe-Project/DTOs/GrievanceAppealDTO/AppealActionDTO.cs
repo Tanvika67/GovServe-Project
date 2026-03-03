@@ -3,8 +3,9 @@
 	// DTO used when authority approves/rejects appeal
 	public class AppealActionDTO
 	{
-		public string Remarks { get; set; }
-	} 
+		public int AppealID { get; set; }
+		public string Remarks { get; set; } = "Null";
+	}
 
 
 }

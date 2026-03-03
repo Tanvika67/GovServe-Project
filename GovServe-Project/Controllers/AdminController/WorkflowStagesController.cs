@@ -2,6 +2,7 @@
 using GovServe_Project.DTOs.Admin.GovServe_Project.DTOs;
 using GovServe_Project.Services;
 using GovServe_Project.Services_Interfaces_AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GovServe_Project.Controllers
@@ -18,17 +19,21 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
         [HttpGet("service/{serviceId}")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetByService(int serviceId)
             => Ok(await _service.GetByServiceAsync(serviceId));
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
             => Ok(await _service.GetByIdAsync(id));
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(WorkflowStageCreateDto dto)
         {
             var result = await _service.CreateAsync(dto);
@@ -36,6 +41,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpPut("{id}")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
         {
             await _service.UpdateAsync(id, dto);
@@ -43,6 +49,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -51,6 +58,8 @@ namespace GovServe_Project.Controllers
 
         // Reassign endpoint
         [HttpPut("{id}/reassign")]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Reassign(int id, WorkflowStageReassignDto dto)
         {
             var result = await _service.ReassignAsync(id, dto);

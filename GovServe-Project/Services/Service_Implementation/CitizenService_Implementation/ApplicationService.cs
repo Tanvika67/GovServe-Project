@@ -38,6 +38,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				ServiceID = service.ServiceID,   
 				UserId = dto.UserId,
 				ServiceName = dto.ServiceName,
+				DepartmentID = dto.DepartmentID,	
 				ApplicationStatus = "Submitted",
 				SubmittedDate = DateTime.Now
 			};

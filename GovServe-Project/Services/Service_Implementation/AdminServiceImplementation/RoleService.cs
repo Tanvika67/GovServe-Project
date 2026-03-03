@@ -42,8 +42,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         public async Task<RoleResponseDto> CreateAsync(RoleCreateDto dto)
         {
             var existing = await _repository.GetByNameAsync(dto.RoleName);
-            //if (existing != null)
-            //    throw new BadRequestException("Role already exists");
+            if (existing != null)
+               throw new BadRequestException("Role already exists");
 
             var role = new Role
             {
@@ -51,7 +51,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
 
             await _repository.AddAsync(role);
-            await _repository.SaveAsync();
+            return await GetByIdAsync(role.RoleID);
 
             return new RoleResponseDto
             {
@@ -60,15 +60,15 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
 
-        public async Task UpdateAsync(int id, RoleCreateDto dto)
+        public async Task<RoleResponseDto> UpdateAsync(int id, RoleCreateDto dto)
         {
             var role = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("Role not found");
 
             role.RoleName = dto.RoleName;
 
-            _repository.Update(role);
-            await _repository.SaveAsync();
+            await _repository.UpdateAsync(role);
+             return await GetByIdAsync(id);
         }
 
         public async Task DeleteAsync(int id)
@@ -76,8 +76,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var role = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("Role not found");
 
-            _repository.Delete(role);
-            await _repository.SaveAsync();
+            await _repository.DeleteAsync(role);
         }
     }
 

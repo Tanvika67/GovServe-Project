@@ -53,7 +53,7 @@ namespace GovServe_Project.Auth
 				issuer: _config["Jwt:Issuer"],
 				audience: _config["Jwt:Audience"],
 				claims: claims,
-				expires: DateTime.Now.AddHours(2),
+				expires: DateTime.Now.AddHours(168),
 				signingCredentials: creds
 			);
 
