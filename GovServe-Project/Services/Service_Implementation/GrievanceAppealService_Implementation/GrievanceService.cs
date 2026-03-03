@@ -35,17 +35,13 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 					UserId = dto.UserId,
 					Reason = dto.Reason,
 					Description = dto.Description,
+					Remarks = "null",
 					FiledDate = DateTime.Now,
 					Status = Enum.GrievanceStatus.Submitted
 				};
 
-
-
-				//>>>>>>> e0d9f11179d53541e21ee28febc5a1b7a23cc8a6
 				await _repository.AddAsync(grievance);
-				await _notificationService.SendNotificationAsync(dto.UserId, "Your Grievance has been submitted successfully.", dto.ApplicationID);
-
-
+				
 			}
 
 

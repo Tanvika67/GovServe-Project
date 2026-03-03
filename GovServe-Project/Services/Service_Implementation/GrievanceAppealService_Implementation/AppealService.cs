@@ -38,6 +38,8 @@ namespace GovServe_Project.Services.Service_Implementation
 			{
 				ApplicationID = dto.ApplicationID,
 				Reason = dto.Reason,
+				Description = dto.Description,
+				Remarks = "null",
 				FiledDate = DateTime.Now,
 				Status = AppealStatus.Submitted,
 			};
@@ -45,9 +47,6 @@ namespace GovServe_Project.Services.Service_Implementation
 
 			await _repository.AddAsync(appeal);
 
-			await _notificationService.SendNotificationAsync(appeal.UserId,
-				"Your appeal has been submitted successfully.",
-				appeal.ApplicationID);
 		}
 
 

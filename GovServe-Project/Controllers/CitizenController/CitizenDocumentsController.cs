@@ -32,7 +32,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Upload Document
 		[HttpPost("upload")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO dto)
 		{
 			var result = await _service.UploadDocumentAsync(dto);

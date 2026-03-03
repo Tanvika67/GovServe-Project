@@ -9,5 +9,8 @@ namespace GovServe_Project.DTOs
 		[Required]
 		[StringLength(500)]
 		public string Reason { get; set; }
+
+		public string Description { get; set; }
+		public string Remarks { get; set; } = "null";
 	}
 }

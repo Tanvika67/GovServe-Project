@@ -23,6 +23,7 @@ using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
 using GovServe_Project.Services_Interfaces_AdminServiceInterface;
 using GovServe_Project.Services.Service_Implementation.GrievanceAppealService_Implementation.GovServe_Project.Services.Service_Implementation;
+using Microsoft.EntityFrameworkCore.SqlServer.Update.Internal;
 
 namespace GovServe_Project.Extensions
 {
@@ -55,7 +56,8 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IGrievanceRepository, GrievanceRepository>();
             services.AddScoped<IAppealRepository, AppealRepository>();
             services.AddScoped<IApplicationRepository, ApplicationRepository>();
-            
+            services.AddScoped<ICitizenDocumentRepository, CitizenDocumentRepository>();
+
 			//Services
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddScoped<IDepartmentService, DepartmentService>();
@@ -73,9 +75,10 @@ namespace GovServe_Project.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGrievanceService, GrievanceService>();
             services.AddScoped<IApplicationService, ApplicationService>();
+			services.AddScoped<ICitizenDocumentService, CitizenDocumentService>();
+            services.AddScoped<IAppealService, AppealService>();
 
-
-            return services;   
+			return services;   
 
         }
     }

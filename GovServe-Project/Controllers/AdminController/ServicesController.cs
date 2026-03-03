@@ -38,7 +38,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(ServiceDTO dto)
         {
             return Ok(await _service.CreateAsync(dto));

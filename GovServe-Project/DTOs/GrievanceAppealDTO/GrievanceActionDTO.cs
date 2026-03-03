@@ -4,7 +4,7 @@
 	{
 
 		public int GrievanceId { get; set; }
-		public string Remarks { get; set; }
+		public string Remarks { get; set; } = "Null";
 
 	}
 }
