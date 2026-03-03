@@ -38,6 +38,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
 			return await _context.Application
+								  .Include(a => a.Service)
 								 .Where(a => a.UserId == userId)
 								 .ToListAsync();
 		}

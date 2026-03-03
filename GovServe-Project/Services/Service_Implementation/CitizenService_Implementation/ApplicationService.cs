@@ -32,7 +32,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			if (service == null)
 				throw new Exception("Service not found");
 
-			//  Step 2: Create Application
+			//  Create Application
 			var app = new Application()
 			{
 				ServiceID = service.ServiceID,   
@@ -40,7 +40,8 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				ServiceName = dto.ServiceName,
 				DepartmentID = dto.DepartmentID,	
 				ApplicationStatus = "Submitted",
-				SubmittedDate = DateTime.Now
+				SubmittedDate = DateTime.Now,
+				CompletedDate = DateTime.Today
 			};
 
 			await _applicationRepository.CreateAsync(app);
@@ -54,7 +55,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-			// Entity → DTO mapping
+			// 
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				UserId = a.UserId,
@@ -156,7 +157,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				return false;
 
 			casedata.Status = "Approved";
-			//casedata.CompletedDate = DateTime.Now;
+			casedata.CompletedDate = DateTime.Now;
 			casedata.RejectionReason = null;
 
 			await _applicationRepository.UpdateCase(casedata);
@@ -172,7 +173,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 			casedata.Status = "Rejected";
 			casedata.RejectionReason = reason;
-			//casedata.CompletedDate = DateTime.Now;
+			casedata.CompletedDate = DateTime.Now;
 
 			await _applicationRepository.UpdateCase(casedata);
 			return true;

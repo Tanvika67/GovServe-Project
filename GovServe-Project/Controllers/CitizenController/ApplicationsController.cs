@@ -83,30 +83,30 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		[HttpGet("assigned/{officerId}")]
 		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> GetAssignedCases(int officerId) //method created
+		public async Task<IActionResult> GetAssignedCases(int AssignedOfficer) //method created
 		{
-			var result = await _applicationService.GetAssignedCases(officerId);
+			var result = await _applicationService.GetAssignedCases(AssignedOfficer);
 			return Ok(result);
 		}
 
 		//Approved cases
 
-		[HttpGet("approved /{officerId}")]
+		[HttpGet("approved /{AssignedOfficer}")]
 		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> GetApproved(int officerId)
+		public async Task<IActionResult> GetApproved(int AssignedOfficer)
 		{
-			var result = await _applicationService.GetApprovedCases(officerId);
+			var result = await _applicationService.GetApprovedCases(AssignedOfficer);
 			return Ok(result);
 
 		}
 
 		//pending cases
 
-		[HttpGet("pending /{officerId}")]
+		[HttpGet("pending /{AssignedOfficer}")]
 		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> GetPending(int officerId)
+		public async Task<IActionResult> GetPending(int AssignedOfficer)
 		{
-			var result = await _applicationService.GetPendingCases(officerId);
+			var result = await _applicationService.GetPendingCases(AssignedOfficer);
 			return Ok(result);
 
 		}
@@ -115,19 +115,19 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		[HttpGet("Reject /{officerId}")]
 		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> GetRejected(int officerId)
+		public async Task<IActionResult> GetRejected(int AssignedOfficer)
 		{
-			var result = await _applicationService.GetRejectedCases(officerId);
+			var result = await _applicationService.GetRejectedCases(AssignedOfficer);
 			return Ok(result);
 
 		}
 		//resubmitted cases
 
-		[HttpGet("resubmitted /{officerId}")]
+		[HttpGet("resubmitted /{AssignedOfficer}")]
 		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> GetResubmitted(int officerId)
+		public async Task<IActionResult> GetResubmitted(int AssignedOfficer)
 		{
-			var result = await _applicationService.GetResubmittedCases(officerId);
+			var result = await _applicationService.GetResubmittedCases(AssignedOfficer);
 			return Ok(result);
 
 		}

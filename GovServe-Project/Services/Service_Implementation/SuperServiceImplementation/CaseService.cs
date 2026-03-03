@@ -180,9 +180,9 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		//officer work
 
-		public async Task<List<Case>> ViewAssignedCases(int officerId)
+		public async Task<List<Case>> ViewAssignedCases(int AssignedOfficer)
 		{
-			return await _repo.GetAssignedCases(officerId);
+			return await _repo.GetAssignedCases(AssignedOfficer);
 		}
 
 		// Officer opens case → InProgress
@@ -228,7 +228,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return "Case Rejected with reason: ";
 
-			//add notification
+		
 
 		}
 

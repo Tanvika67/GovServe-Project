@@ -59,10 +59,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		//officers work
 
 		// Get assigned cases
-		public async Task<List<Case>> GetAssignedCases(int officerId)
+		public async Task<List<Case>> GetAssignedCases(int AssignedOfficerId)
 		{
 			return await _context.Case
-				.Where(c => c.AssignedOfficerId == officerId)
+				.Where(c => c.AssignedOfficerId == AssignedOfficerId)
 				.ToListAsync();
 		}
 
