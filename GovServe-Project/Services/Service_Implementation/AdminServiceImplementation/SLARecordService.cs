@@ -31,9 +31,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 UpdateStatus(record);
             }
 
-            // ⚠ Consider removing this save for "query" methods to avoid side effects.
-            await _repository.SaveAsync();
-
             return records.Select(MapToDto);
         }
 
@@ -44,10 +41,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
             // Auto-check status (if you truly want to update on read)
             UpdateStatus(record);
-
-            // ⚠ Consider removing this save for "query" methods to avoid side effects.
-            await _repository.SaveAsync();
-
             return MapToDto(record);
         }
 
@@ -87,7 +80,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             UpdateStatus(record);
 
             await _repository.AddAsync(record);
-            await _repository.SaveAsync();
+            //await _repository.SaveAsync();
 
             return MapToDto(record);
         }
@@ -97,8 +90,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var record = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA record not found");
 
-            _repository.Delete(record);
-            await _repository.SaveAsync();
+            await _repository.DeleteAsync(record);
         }
 
         // Automatic status update: Breached if now > EndDate (SLA target), else OnTime.

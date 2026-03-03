@@ -35,7 +35,42 @@ namespace GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRep
 		// Get grievance by ID
 		public async Task<Grievance?> GetByIdAsync(int id)
 		{
-			return await _context.Grievance.FindAsync(id);
+			return await _context.Grievance.
+				Include(g => g.Application)
+				.FirstOrDefaultAsync(g => g.GrievanceId == id);
+
+		}
+
+
+
+		// Officer: Get All Grievances
+
+		public async Task<List<Grievance>> GetAllAsync()
+		{
+			return await _context.Grievance.ToListAsync();
+		}
+
+
+		// Officer: Update Grievance
+
+		public async Task UpdateAsync(Grievance grievance)
+		{
+			_context.Grievance.Update(grievance);
+			await _context.SaveChangesAsync();
+		}
+
+		public async Task<int> GetPendingGrievanceCountAsync()
+		{
+			return await _context.Grievance
+				.Where(g => g.Status == Enum.GrievanceStatus.Submitted || g.Status == Enum.GrievanceStatus.ForwardedToSupervisor)
+				.CountAsync();
+		}
+		public async Task<int> GetResolvedGrievanceCountAsync()
+		{
+			return await _context.Grievance
+				.Where(g => g.Status == Enum.GrievanceStatus.Resolved || g.Status == Enum.GrievanceStatus.Rejected)
+				.CountAsync();
+
 		}
 	}
 }

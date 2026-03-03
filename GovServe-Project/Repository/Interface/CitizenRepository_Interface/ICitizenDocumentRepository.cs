@@ -10,5 +10,8 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 		Task<CitizenDocument> GetByIdAsync(int id);
 
 		Task DeleteAsync(CitizenDocument document);
+
+		//Task<CitizenDocument> GetById(int CitizenDocumentID);
+		Task Update(CitizenDocument document);
 	}
 }

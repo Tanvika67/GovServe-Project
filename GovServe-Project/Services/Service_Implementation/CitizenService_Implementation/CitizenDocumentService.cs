@@ -104,5 +104,33 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 			return true;
 		}
+
+		public async Task<string> ApproveDocument(int CitizenDocumentID)
+		{
+			var doc = await _repository.GetByIdAsync(CitizenDocumentID);
+
+			if (doc == null)
+				return "Document Not Found";
+
+			doc.VerificationStatus = "Approved";
+
+			await _repository.Update(doc);
+
+			return "Document Approved Successfully";
+		}
+
+		public async Task<string> RejectDocument(int CitizenDocumentID)
+		{
+			var doc = await _repository.GetByIdAsync(CitizenDocumentID);
+
+			if (doc == null)
+				return "Document Not Found";
+
+			doc.VerificationStatus = "Rejected";
+
+			await _repository.Update(doc);
+
+			return "Document Rejected Successfully";
+		}
 	}
 }

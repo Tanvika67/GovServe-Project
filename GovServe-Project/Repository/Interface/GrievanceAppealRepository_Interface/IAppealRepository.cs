@@ -1,4 +1,5 @@
 ﻿using System;
+using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.GrievanceAppealModel;
 namespace GovServe_Project.Repository.Interface
@@ -13,5 +14,14 @@ namespace GovServe_Project.Repository.Interface
 
 		// Get appeal by ID (Status view)
 		Task<Appeal?> GetByIdAsync(int id);
+
+		// Get appeals by Status (Officer dashboard)
+		Task<List<Appeal>> GetByStatusAsync(AppealStatus status);
+
+		// Update appeal (Approve/Reject)
+		Task UpdateAsync(Appeal appeal);
+
+		Task<int> GetPendingAppealCountAsync();
+		Task<int> GetResolvedAppealCountAsync();
 	}
 }

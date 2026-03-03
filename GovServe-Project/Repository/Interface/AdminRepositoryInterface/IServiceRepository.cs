@@ -7,6 +7,7 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
     {
         Task<IEnumerable<Service>> GetAllAsync();
         Task<Service?> GetByIdAsync(int id);
+        Task<IEnumerable<Service>> GetActiveAsync();
         Task AddAsync(Service service);
         Task UpdateAsync(Service service);
         Task DeleteAsync(Service service);

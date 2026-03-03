@@ -35,5 +35,13 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			_context.CitizenDocument.Remove(document);
 			await _context.SaveChangesAsync();
 		}
+
+		public async Task Update(CitizenDocument document)
+		{
+			_context.CitizenDocument.Update(document);
+			await _context.SaveChangesAsync();
+		}
+
+
 	}
 }

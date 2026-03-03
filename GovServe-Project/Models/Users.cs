@@ -31,27 +31,29 @@ namespace GovServe_Project.Models
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
 		ErrorMessage = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.")]
 		public string Password { get; set; }
-		
-		[Required]
-		public int RoleID { get; set; }
-		[ForeignKey("RoleID")]
-		public virtual Role Role { get; set; }
 
-        public int DepartmentID { get; internal set; }
+        [ForeignKey("DepartmentID")]
+        public int DepartmentID { get; set; }
         public virtual Department Department { get; set; }
-        //public string RoleName { get; set; }
 
+		[Required]
+	
+		[ForeignKey("RoleID")]
+        public int RoleID { get; set; }
+
+        public virtual Role Role { get; set; }
+		public string RoleName { get; set; }
+
+
+	
 
 
 		// Navigation Property
 		public virtual ICollection<Application> Applications { get; set; }
-	
 		public virtual ICollection<Grievance> Grievances { get; set; }
 		public virtual ICollection<Appeal> Appeals { get; set; }
 
 		public virtual ICollection<Case> Cases { get; set; }
 
-     
-
-    }
+	}
 }

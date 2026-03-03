@@ -1,5 +1,4 @@
 
-using System.Text;
 using GovServe_Project.Extensions;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Repository_Implentation;
@@ -7,18 +6,19 @@ using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-
+// builder holds the configuration and services for our app;CreateBuilder(args) → creates a builder object.
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// builder.Services → dependency injection (DI) container;builder.Configuration → provides access to configuration settings (appsettings.json)
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddSwaggerGen();
 
 // JWT Authentication Configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

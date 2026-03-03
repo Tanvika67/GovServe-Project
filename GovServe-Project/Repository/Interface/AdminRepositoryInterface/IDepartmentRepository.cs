@@ -7,9 +7,11 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
     {
         Task<IEnumerable<Department>> GetAllAsync();
         Task<Department?> GetByIdAsync(int id);
+        Task<IEnumerable<Department>> GetActiveAsync();
         Task<Department> AddAsync(Department department);
         Task<Department?> UpdateAsync(Department department);
         Task<bool> DeleteAsync(int id);
+
 
         Task<int> GetTotalCountAsync();    }
 }
