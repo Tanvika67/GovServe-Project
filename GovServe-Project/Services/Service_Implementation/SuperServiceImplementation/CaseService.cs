@@ -42,6 +42,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			// Get available officer automatically
 			var officerId = await GetAvailableOfficer(dto.DepartmentId);
+			
 
 			if (officerId == 0)
 				return "No officer available";
@@ -51,6 +52,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			{
 				ApplicationID = dto.ApplicationId,
 				DepartmentID = dto.DepartmentId,
+				UserId=4,
+				SupervisorId=2,
 				AssignedOfficerId = officerId,
 				Status = "Assigned",  
 				AssignedDate = DateTime.Now,

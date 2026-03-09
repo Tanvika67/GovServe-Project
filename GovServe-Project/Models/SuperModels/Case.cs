@@ -22,9 +22,9 @@ namespace GovServe_Project.Models.SuperModels
 		[Required]
 		public int SupervisorId { get; set; }
 		[ForeignKey("SupervisorId")]
+
 		public int AssignedOfficerId { get; set; }
-		[ForeignKey("AssignedOfficerId")]
-		public virtual Users AssignedOfficer { get; set; }
+		
 		[Required]
 		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
 		public int DepartmentID { get; set; }

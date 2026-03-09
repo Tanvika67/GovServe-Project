@@ -62,11 +62,11 @@ namespace GovServe_Project.Data
                       .HasForeignKey(c => c.UserId)
                       .OnDelete(DeleteBehavior.Restrict); // or .NoAction() in EF Core 5+
 
-            modelBuilder.Entity<Case>()
-				.HasOne(c => c.AssignedOfficer)
-				.WithMany()
-				.HasForeignKey(c => c.AssignedOfficerId)
-				.OnDelete(DeleteBehavior.Restrict);
+    //        modelBuilder.Entity<Case>()
+				//.HasOne(c => c.AssignedOfficer)
+				//.WithMany()
+				//.HasForeignKey(c => c.AssignedOfficerId)
+				//.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Escalation>()
 	             .HasOne(e => e.Case)

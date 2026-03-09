@@ -55,14 +55,14 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User
-				.Where(u => u.DepartmentID == departmentId && u.RoleName.Equals("Officer"))
+				.Where(u => u.DepartmentID == departmentId && u.RoleID==3)
 				.ToListAsync();
 		}
 		//Count of active cases
 		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
 		{
 			return await _context.Case
-				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Closed");
+				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
 	}
 }
