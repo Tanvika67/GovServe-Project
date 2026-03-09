@@ -2,6 +2,7 @@
 using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
@@ -30,9 +31,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 UpdateStatus(record);
             }
 
-            // ⚠ Consider removing this save for "query" methods to avoid side effects.
-            await _repository.SaveAsync();
-
             return records.Select(MapToDto);
         }
 
@@ -43,10 +41,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
             // Auto-check status (if you truly want to update on read)
             UpdateStatus(record);
-
-            // ⚠ Consider removing this save for "query" methods to avoid side effects.
-            await _repository.SaveAsync();
-
             return MapToDto(record);
         }
 
@@ -74,9 +68,9 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             // 2) Calculate EndDate automatically (this is actually a SLA due date)
             var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
 
-            var record = new SLARecord
+            var record = new SLARecords
             {
-                CaseID = dto.CaseID,
+                CaseId = dto.CaseID,
                 StageID = dto.StageID,
                 StartDate = dto.StartDate,
                 EndDate = calculatedEndDate
@@ -86,7 +80,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             UpdateStatus(record);
 
             await _repository.AddAsync(record);
-            await _repository.SaveAsync();
+            //await _repository.SaveAsync();
 
             return MapToDto(record);
         }
@@ -96,12 +90,11 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var record = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA record not found");
 
-            _repository.Delete(record);
-            await _repository.SaveAsync();
+            await _repository.DeleteAsync(record);
         }
 
         // Automatic status update: Breached if now > EndDate (SLA target), else OnTime.
-        private void UpdateStatus(SLARecord record)
+        private void UpdateStatus(SLARecords record)
         {
             // If EndDate is a nullable target, guard for null:
             // if (record.EndDate == null) { record.Status = SLAStatus.OnTime; return; }
@@ -112,12 +105,12 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 record.Status = SLAStatus.OnTime;
         }
 
-        private static SLARecordResponseDto MapToDto(SLARecord record)
+        private static SLARecordResponseDto MapToDto(SLARecords record)
         {
             return new SLARecordResponseDto
             {
                 SLARecordID = record.SLARecordID,
-                CaseID = record.CaseID,
+                CaseID = record.CaseId,
                 StageID = record.StageID,
                 StartDate = record.StartDate,
                 EndDate = record.EndDate,

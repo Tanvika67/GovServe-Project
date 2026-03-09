@@ -1,0 +1,59 @@
+﻿using GovServe_Project.Data;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using Microsoft.EntityFrameworkCore;
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
+{
+	public class NotificationRepository : INotificationRepository
+	{
+		private readonly GovServe_ProjectContext _context;
+
+		public NotificationRepository(GovServe_ProjectContext context)
+		{
+			_context = context;
+		}
+
+		public async Task AddAsync(Notification notification)
+		{
+			await _context.Notification.AddAsync(notification);
+		}
+
+		public async Task<List<Notification>> GetByUserIdAsync(int userId)
+		{
+			return await _context.Notification
+				.Where(n => n.UserId == userId)
+				.OrderByDescending(n => n.CreatedDate)
+				.ToListAsync();
+		}
+
+		public async Task<int> GetUnreadCountAsync(int userId)
+		{
+			return await _context.Notification
+				.CountAsync(n => n.UserId == userId && !n.IsRead);
+		}
+
+		public async Task<Notification> GetByIdAsync(int id)
+		{
+			return await _context.Notification.FindAsync(id);
+		}
+
+		public async Task SaveAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
+		public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
+		{
+			return await _context.SLARecords
+				.Where(s => s.Status.Equals("Breached"))
+				.ToListAsync();
+		}
+		public async Task SendNotification(Notification notification)
+		{
+			await _context.Notification.AddAsync(notification);
+			await _context.SaveChangesAsync();
+
+
+		}
+	}
+}

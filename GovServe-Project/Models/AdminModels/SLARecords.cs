@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Enum;
+using GovServe_Project.Models.SuperModels;
 
 namespace GovServe_Project.Models.AdminModels
 {
     [Table("SLARecords")]
-    public class SLARecord
+    public class SLARecords
     {
         [Key]
         public int SLARecordID { get; set; }
 
         [Required]
-        public int CaseID { get; set; } 
+        public int CaseId { get; set; } 
 
         [Required]
         public int StageID { get; set; }
@@ -28,7 +29,7 @@ namespace GovServe_Project.Models.AdminModels
         [ForeignKey(nameof(StageID))]
         public WorkflowStage? Stage { get; set; }
 
-        [ForeignKey(nameof(CaseID))]
+        [ForeignKey(nameof(CaseId))]
         public Case? Case { get; set; }
     }
 

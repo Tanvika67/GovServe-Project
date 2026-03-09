@@ -15,25 +15,47 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         }
 
         public async Task<IEnumerable<Role>> GetAllAsync()
-            =>await _context.Roles.ToListAsync();
-
+        {
+            return await _context.Roles.ToListAsync();
+        }
+           
         public async Task<Role?> GetByIdAsync(int id)
-            => await _context.Roles.FindAsync(id);
+        {
+           return await _context.Roles.FindAsync(id);
+
+        }
+            
 
         public async Task<Role?> GetByNameAsync(string roleName)
-            => await _context.Roles.FirstOrDefaultAsync(x => x.RoleName == roleName);
+        {
+           return await _context.Roles.FirstOrDefaultAsync(x => x.RoleName == roleName);
+        }
+            
 
         public async Task AddAsync(Role role)
-            => await _context.Roles.AddAsync(role);
+        {
+            await _context.Roles.AddAsync(role);
+            await _context.SaveChangesAsync();
 
-        public void Update(Role role)
-            => _context.Roles.Update(role);
+        }
+            
 
-        public void Delete(Role role)
-            => _context.Roles.Remove(role);
+        public async Task UpdateAsync(Role role)
+        {
+            _context.Roles.Update(role);
+            await _context.SaveChangesAsync();
 
-        public async Task SaveAsync()
-            => await _context.SaveChangesAsync();
+        }
+       
+   
+
+        public async Task DeleteAsync(Role role)
+        {
+             _context.Roles.Remove(role);
+            await _context.SaveChangesAsync();
+        }
+
+       
     }
 
 }

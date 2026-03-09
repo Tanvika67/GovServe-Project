@@ -1,49 +1,70 @@
-﻿using GovServe_Project.DTOs.Admin;
-using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+﻿using GovServe_Project.DTOs;
+using GovServe_Project.DTOs.Admin.GovServe_Project.DTOs;
+using GovServe_Project.Services;
+using GovServe_Project.Services_Interfaces_AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
-[ApiController]
-public class WorkflowStagesController : ControllerBase
+namespace GovServe_Project.Controllers
 {
-    private readonly IWorkflowStageService _service;
-
-    public WorkflowStagesController(IWorkflowStageService service)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class WorkflowStagesController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IWorkflowStageService _service;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-        => Ok(await _service.GetAllAsync());
+        public WorkflowStagesController(IWorkflowStageService service)
+        {
+            _service = service;
+        }
 
-    [HttpGet("service/{serviceId}")]
-    public async Task<IActionResult> GetByService(int serviceId)
-        => Ok(await _service.GetByServiceAsync(serviceId));
+        [HttpGet]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
-        => Ok(await _service.GetByIdAsync(id));
+        [HttpGet("service/{serviceId}")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetByService(int serviceId)
+            => Ok(await _service.GetByServiceAsync(serviceId));
 
-    [HttpPost]
-    public async Task<IActionResult> Create(WorkflowStageCreateDto dto)
-    {
-        var result = await _service.CreateAsync(dto);
-        return CreatedAtAction(nameof(Get),
-            new { id = result.StageID }, result);
-    }
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Get(int id)
+            => Ok(await _service.GetByIdAsync(id));
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
-    {
-        await _service.UpdateAsync(id, dto);
-        return NoContent();
-    }
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(WorkflowStageCreateDto dto)
+        {
+            var result = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = result.StageID }, result);
+        }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        await _service.DeleteAsync(id);
-        return NoContent();
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
+        {
+            await _service.UpdateAsync(id, dto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+
+        // Reassign endpoint
+        [HttpPut("{id}/reassign")]
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Reassign(int id, WorkflowStageReassignDto dto)
+        {
+            var result = await _service.ReassignAsync(id, dto);
+            return Ok(result);
+        }
     }
 }
+  

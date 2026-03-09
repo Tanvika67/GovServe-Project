@@ -15,26 +15,48 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         }
 
         public async Task<IEnumerable<SLADays>> GetAllAsync()
-            => await _context.SLADays.ToListAsync();
+        {
+           return await _context.SLADays.ToListAsync();
+
+        }
+            
 
         public async Task<SLADays?> GetByIdAsync(int id)
-            => await _context.SLADays.FindAsync(id);
+        {
+            return await _context.SLADays.FindAsync(id);
+
+        }
+            
 
         public async Task<SLADays?> GetByRoleAsync(string roleName)
-            => await _context.SLADays
-                .FirstOrDefaultAsync(x => x.RoleName == roleName);
+        {
+            return await _context.SLADays.FirstOrDefaultAsync(x => x.RoleName == roleName);
+        }
+           
 
         public async Task AddAsync(SLADays slaDay)
-            => await _context.SLADays.AddAsync(slaDay);
+        {
+            await _context.SLADays.AddAsync(slaDay);
+            await _context.SaveChangesAsync();
 
-        public void Update(SLADays slaDay)
-            => _context.SLADays.Update(slaDay);
+        }
+           
 
-        public void Delete(SLADays slaDay)
-            => _context.SLADays.Remove(slaDay);
+        public async Task UpdateAsync(SLADays slaDay)
+        {
+             _context.SLADays.Update(slaDay);
+            await _context.SaveChangesAsync();
 
-        public async Task SaveAsync()
-            => await _context.SaveChangesAsync();
+        }
+           
+
+        public async Task DeleteAsync(SLADays slaDay)
+        {
+             _context.SLADays.Remove(slaDay);
+            await _context.SaveChangesAsync();
+
+        }
+           
     }
 
 }

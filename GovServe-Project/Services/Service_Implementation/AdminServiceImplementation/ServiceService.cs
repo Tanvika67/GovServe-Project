@@ -1,8 +1,11 @@
 ﻿using GovServe_Project.DTOs.Admin;
+using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
 
@@ -11,10 +14,12 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
     public class ServiceService : IServiceService
     {
         private readonly IServiceRepository _repository;
+      
 
         public ServiceService(IServiceRepository repository)
         {
             _repository = repository;
+           
         }
 
         public async Task<IEnumerable<ServiceResponseDTO>> GetAllAsync()
@@ -52,8 +57,24 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
 
+        public async Task<IEnumerable<ServiceResponseDTO>> GetActiveAsync()
+        {
+            var service = await _repository.GetActiveAsync();
+
+            return service.Select(s => new ServiceResponseDTO
+            {
+                ServiceID = s.ServiceID,
+                DepartmentID = s.DepartmentID,
+                ServiceName = s.ServiceName,
+                Description = s.Description,
+                SLA_Days = s.SLA_Days,
+                Status = s.Status,
+            });
+        }
+
         public async Task<ServiceResponseDTO> CreateAsync(ServiceDTO dto)
         {
+            
             var service = new Service
             {
                 DepartmentID = dto.DepartmentID,

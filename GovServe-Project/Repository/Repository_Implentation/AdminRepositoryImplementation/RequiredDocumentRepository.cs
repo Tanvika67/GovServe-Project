@@ -41,5 +41,15 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             _context.RequiredDocuments.Remove(document);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<RequiredDocument>> GetByServiceNameAsync(string serviceName)
+        {
+            return await _context.RequiredDocuments
+                .Include(d => d.Service)
+                .Where(d => d.Service != null &&
+                            d.Service.ServiceName.ToLower()
+                            .Contains(serviceName.ToLower()))
+                .ToListAsync();
+        }
     }
 }

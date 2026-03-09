@@ -8,7 +8,7 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<IEnumerable<RoleResponseDto>> GetAllAsync();
         Task<RoleResponseDto> GetByIdAsync(int id);
         Task<RoleResponseDto> CreateAsync(RoleCreateDto dto);
-        Task UpdateAsync(int id, RoleCreateDto dto);
+        Task<RoleResponseDto> UpdateAsync(int id, RoleCreateDto dto);
         Task DeleteAsync(int id);
     }
 }
