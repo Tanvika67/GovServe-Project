@@ -29,7 +29,7 @@ namespace GovServe_Project.Auth
 			if (user == null)
 				throw new Exception("User not found");
 
-			// Password check (plain for now)
+			// Password check 
 			if (user.Password != dto.Password)
 				throw new Exception("Invalid Password");
 
@@ -39,12 +39,12 @@ namespace GovServe_Project.Auth
 			new Claim(ClaimTypes.Name, user.Email),
 			new Claim(ClaimTypes.Role, user.RoleName.ToString()),
 			new Claim("UserId", user.UserId.ToString())
-		};
+		    };
 
 			// Key
 			var key = new SymmetricSecurityKey(
 				Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-
+                                                     
 			var creds = new SigningCredentials(
 				key, SecurityAlgorithms.HmacSha256);
 
@@ -56,7 +56,7 @@ namespace GovServe_Project.Auth
 				expires: DateTime.Now.AddHours(168),
 				signingCredentials: creds
 			);
-
+        
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 	}
