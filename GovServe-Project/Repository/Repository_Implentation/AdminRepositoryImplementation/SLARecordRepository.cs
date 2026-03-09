@@ -27,7 +27,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
              return await _context.SLARecords.FindAsync(id);
 
         }
-           
+        // This fetches SLA using CaseId(FK)
+        public async Task<SLARecords> GetByCaseIdAsync(int caseId)
+        {
+            return await _context.SLARecords
+                .FirstOrDefaultAsync(x => x.CaseId == caseId);
+        }
 
         public async Task<IEnumerable<SLARecords>> GetByStatusAsync(SLAStatus status)
         {
