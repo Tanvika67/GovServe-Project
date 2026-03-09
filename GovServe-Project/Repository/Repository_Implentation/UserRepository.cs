@@ -55,7 +55,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User
-				.Where(u => u.DepartmentID == departmentId && u.RoleID==3)
+				.Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
 				.ToListAsync();
 		}
 		//Count of active cases

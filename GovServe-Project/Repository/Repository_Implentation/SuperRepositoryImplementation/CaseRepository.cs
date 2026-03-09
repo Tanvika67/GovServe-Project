@@ -40,6 +40,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			return await _context.Case.FindAsync(id);
 		}
+		public async Task<int> GetCaseCountByOfficerAsync(int officerId)
+		{
+			return await _context.Case
+				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+		}
 
 		public async Task AddAsync(Case c)
 		{
