@@ -120,7 +120,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
 
 		}
-		//notification purpose
+		//Notification purpose 
 		public async Task<string> Reject(int caseId, string reason)
 		{
 			var caseObj = await _context.Case.FindAsync(caseId);
@@ -135,10 +135,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
 			return "Case Rejected Successfully";
 		}
-
-		public Task<List<Case>> GetSLABreachedCasesAsync()
+		// It calculates the SLA Days
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
 		{
-			throw new NotImplementedException();
+			var slaLimit = DateTime.Now.AddDays(-2);  
+			return await _context.Case
+				.Where(c=>
+				c.Status !="Completed" &&
+				c.Status!="Escalated" &&
+				c.AssignedDate<=slaLimit)
+				.ToListAsync();
 		}
 
         public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)

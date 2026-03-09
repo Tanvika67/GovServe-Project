@@ -18,7 +18,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		// Get all notifications from the user
 		[HttpGet("{userId}")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> Get(int userId)
 		{
 			return Ok(await _service.GetUserNotificationsAsync(userId));
@@ -26,7 +26,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//Get only unread notifications
 		[HttpGet("unread/{userId}")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 
 		public async Task<IActionResult> GetUnread(int userId)
 		{
@@ -35,7 +35,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//Mark notification as read when I see the message
 		[HttpPut("mark-read/{notificationId}")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> MarkRead(int notificationId)
 		{
 			await _service.MarkAsReadAsync(notificationId);

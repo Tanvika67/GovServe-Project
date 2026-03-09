@@ -11,7 +11,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize(Roles = "Supervisor")]
+	//[Authorize(Roles = "Supervisor")]
 
 	public class CaseController : ControllerBase
 	{
@@ -23,9 +23,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		//POST only I can create a case; API will create a new case in the system
-		//Case will be automatically assigned to the least busy officer
 		[HttpPost]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
@@ -34,16 +33,16 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//GET only I can see all cases;Fetches complete list of case from the database
 		[HttpGet("all")]
-		[Authorize(Roles = "Supervisor")]               //admin also needs
+		//[Authorize(Roles = "Supervisor")]              
 
 		public async Task<IActionResult> GetAll()
 		{
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
-		//Returns only ongoing cases; Useful to track pending workload of officer
+		//Returns only ongoing cases
 		[HttpGet("active")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetActive()
 		{
 			return Ok(await _service.GetActiveCasesAsync());
@@ -51,7 +50,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//Used to change status like: Assigned-->Inprogress-->Completed
 		[HttpPut("update-status")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusDto dto)
 		{
 			var result = await _service.UpdateCaseStatus(dto.CaseId, dto.Status);
@@ -60,7 +59,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//Returns cases where SLA time has already exceeded;I can easily identify delayed cases
 		[HttpGet("sla-breached")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetSLABreached()
 		{
 			var result = await _service.GetSLABreachedCasesAsync();
@@ -69,26 +68,18 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//Used after system auto-escalates a case due to SLA breach and I will manually assign to another officer
 		[HttpPost("reassign-escalated")]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
 		{
 			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
 			return Ok(result);
 		}
 
-		//Returns summary like Total cases;Active cases;SLA breached
-		[HttpGet("dashboard")]
-		[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> Dashboard()
-		{
-			return Ok(await _service.GetDashboardAsync());
-		}
-
 		//officer work
 
 		//  GET - View assigned cases
 		[HttpGet("assigned/{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetAssignedCases(int officerId)
 		{
 			var cases = await _service.ViewAssignedCases(officerId);
@@ -97,7 +88,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Open case (InProgress)
 		[HttpPut("open/{caseId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> OpenCase(int caseId)
 		{
 			var result = await _service.OpenCase(caseId);
@@ -106,7 +97,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Approve case
 		[HttpPut("approve/{caseId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> ApproveCase(int caseId)
 		{
 			var result = await _service.ApproveCase(caseId);
@@ -115,7 +106,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//  PUT - Reject case//used for notification also
 		[HttpPut("reject/{caseId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
 		{
 			var result = await _service.Reject(caseId, reason);
@@ -124,7 +115,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//for getting application count on dashboard
 		[HttpGet("dashboard/{departmentId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> DashboardCounts(int departmentId)
 		{
 			var result = await _service.GetDashboardCountsAsync(departmentId);

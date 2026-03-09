@@ -27,6 +27,12 @@ namespace GovServe_Project.Data
 				.WithMany()
 				.HasForeignKey(a => a.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
+			// User   ->  Department
+			modelBuilder.Entity<Users>()
+				 .HasOne(u => u.Department)
+				 .WithMany()
+				 .HasForeignKey(u => u.DepartmentID)
+				 .OnDelete(DeleteBehavior.Restrict);
 
 			// Application → Service
 			modelBuilder.Entity<Application>()
@@ -62,11 +68,11 @@ namespace GovServe_Project.Data
                       .HasForeignKey(c => c.UserId)
                       .OnDelete(DeleteBehavior.Restrict); // or .NoAction() in EF Core 5+
 
-    //        modelBuilder.Entity<Case>()
-				//.HasOne(c => c.AssignedOfficer)
-				//.WithMany()
-				//.HasForeignKey(c => c.AssignedOfficerId)
-				//.OnDelete(DeleteBehavior.Restrict);
+			//modelBuilder.Entity<Case>()
+			//	.HasOne(c => c.AssignedOfficer)
+			//	.WithMany()
+			//	.HasForeignKey(c => c.AssignedOfficerId)
+			//	.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Escalation>()
 	             .HasOne(e => e.Case)

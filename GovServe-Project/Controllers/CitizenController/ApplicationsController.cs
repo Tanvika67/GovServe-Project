@@ -41,7 +41,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// My Applications (Citizen Dashboard)
 		[HttpGet("my")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyApplications(int userId)
 		{
 
