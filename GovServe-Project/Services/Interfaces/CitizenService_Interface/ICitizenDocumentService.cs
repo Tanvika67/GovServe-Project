@@ -1,11 +1,12 @@
 ﻿using GovServe_Project.DTOs;
-using GovServe_Project.Models;
 using GovServe_Project.DTOs.CitizenDTO;
+using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
 namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 {
 	public interface ICitizenDocumentService
 	{
-		Task<string> UploadDocumentAsync(UploadCitizenDocumentDTO dto);
+		Task<bool> UploadDocumentAsync(UploadCitizenDocumentDTO model);
 
 		Task<string> GetDocumentStatusAsync(int documentId);
 
