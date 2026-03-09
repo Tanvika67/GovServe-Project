@@ -2,8 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using GovServe_Project.Enum;
-using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Models.SuperModels;

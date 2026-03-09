@@ -4,7 +4,7 @@ using GovServe_Project.Models.AdminModels;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Models.GrievanceAppealModel;
-using GovServe_Project.Models.SuperModels;
+
 
 
 

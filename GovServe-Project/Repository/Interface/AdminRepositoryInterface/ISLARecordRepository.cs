@@ -11,7 +11,7 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task AddAsync(SLARecords record);
         Task UpdateAsync(SLARecords record);
         Task DeleteAsync(SLARecords record);
-        
+       
     }
 
 }
