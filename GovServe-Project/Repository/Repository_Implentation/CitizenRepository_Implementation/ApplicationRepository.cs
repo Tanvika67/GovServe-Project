@@ -28,21 +28,19 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		}
 
 
-		// Get By Id from user table directly we are fetching so that we can auto assign
-		public async Task<Application> GetByIdAsync(int applicationId)
+		// Get By Id
+		public async Task<Application> GetByIdAsync(int ApplicationId)
 		{
-			return await _context.Application
-				.Include(a => a.User)         
-				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+			return await _context.Application.FindAsync(ApplicationId);
 		}
 
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
 			return await _context.Application
-				.Include(a=>a.Service)
-			    .Where(a => a.UserId == userId)
-				.ToListAsync();
+				                  .Include(a => a.Service) 
+								    .Where(a => a.UserId == userId)
+								 .ToListAsync();
 		}
 
 		// Delete Application

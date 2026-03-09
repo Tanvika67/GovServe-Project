@@ -32,12 +32,17 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Upload Document
 		[HttpPost("upload")]
-		//[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO dto)
+	
+		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO model)
 		{
-			var result = await _service.UploadDocumentAsync(dto);
-			return Ok(result);
+			var result = await _service.UploadDocumentAsync(model);
+
+			if (!result)
+				return BadRequest("Upload Failed");
+
+			return Ok("Document Uploaded Successfully");
 		}
+
 
 		// Document Status
 		[HttpGet("status/{id}")]

@@ -25,14 +25,13 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		// Create Application
 		public async Task<string> CreateApplicationAsync(CreateApplicationDTO dto)
 		{
-			//  Step 1: Get service from DB using name
 			var service = await _context.Services
 				.FirstOrDefaultAsync(s => s.ServiceName == dto.ServiceName);
 
 			if (service == null)
 				throw new Exception("Service not found");
 
-			//  Step 2: Create Application
+			//   Create Application
 			var app = new Application()
 			{
 				ServiceID = service.ServiceID,   
@@ -54,13 +53,11 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-			// Entity → DTO mapping
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				UserId = a.UserId,
 				ServiceName = a.Service.ServiceName,
 				ServiceID = a.ServiceID,
-				//ServiceName = a.ServiceName,
 				ApplicationStatus = a.ApplicationStatus,
 				SubmittedDate = a.SubmittedDate
 			}).ToList();
@@ -156,7 +153,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				return false;
 
 			casedata.Status = "Approved";
-			//casedata.CompletedDate = DateTime.Now;
+			casedata.CompletedDate = DateTime.Now;
 			casedata.RejectionReason = null;
 
 			await _applicationRepository.UpdateCase(casedata);
@@ -172,7 +169,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 			casedata.Status = "Rejected";
 			casedata.RejectionReason = reason;
-			//casedata.CompletedDate = DateTime.Now;
+			casedata.CompletedDate = DateTime.Now;
 
 			await _applicationRepository.UpdateCase(casedata);
 			return true;
@@ -198,6 +195,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		{
 			throw new NotImplementedException();
 		}
+		
 		//for officer to view application details
 
 		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)

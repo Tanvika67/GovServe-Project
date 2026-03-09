@@ -25,61 +25,40 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		}
 
 		// Upload Document
-		public async Task<string> UploadDocumentAsync(UploadCitizenDocumentDTO dto)
+		public async Task<bool> UploadDocumentAsync(UploadCitizenDocumentDTO model)
 		{
-			// Validate input
-			if (dto is null) return "Invalid request.";
-			if (dto.URI is null || dto.URI.Length == 0) return "File not selected.";
-			if (dto.ApplicationID <= 0) return "Invalid ApplicationID.";
-			if (string.IsNullOrWhiteSpace(dto.DocumentName)) dto.DocumentName = "Document";
+			if (model.URI == null || model.URI.Length == 0)
+				return false;
 
-			// Always available base path (do NOT rely on WebRootPath unless you guarantee wwwroot exists)
-			var contentRoot = _env.ContentRootPath;
-			if (string.IsNullOrWhiteSpace(contentRoot))
-				throw new InvalidOperationException("ContentRootPath is not available.");
+			var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
 
-			// Build target folder: {ContentRoot}/Uploads/CitizenDocuments/{ApplicationID}
-			var baseFolder = "Uploads";
-			var entityFolder = "CitizenDocuments";
-			var targetDir = Path.Combine(contentRoot, baseFolder, entityFolder, dto.ApplicationID.ToString());
+			if (!Directory.Exists(folderPath))
+				Directory.CreateDirectory(folderPath);
 
-			// Ensure directory exists
-			Directory.CreateDirectory(targetDir);
+			var fileName = Guid.NewGuid().ToString() +
+						   Path.GetExtension(model.URI.FileName);
 
-			// Unique & safe file name (keeps extension)
-			var ext = Path.GetExtension(dto.URI.FileName);
-			// You may whitelist certain extensions if needed
-			var uniqueName = $"{Guid.NewGuid():N}{ext}";
+			var filePath = Path.Combine(folderPath, fileName);
 
-			// Full system path to save
-			var savePath = Path.Combine(targetDir, uniqueName);
-
-			// Save file to disk
-			using (var stream = new FileStream(savePath, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (var stream = new FileStream(filePath, FileMode.Create))
 			{
-				await dto.URI.CopyToAsync(stream);
+				await model.URI.CopyToAsync(stream);
 			}
 
-			// Persist a relative path (portable); or store only file name if you prefer
-			var relativePath = Path.Combine(baseFolder, entityFolder, dto.ApplicationID.ToString(), uniqueName)
-									.Replace('\\', '/');
-
-			// Create entity
 			var document = new CitizenDocument
 			{
-				ApplicationID = dto.ApplicationID,
-				DocumentName = dto.DocumentName,
-				// If you want only the file name, set URI = uniqueName.
-				// If you want a relative path to reconstruct a URL later, store relativePath.
-				URI = relativePath,
-				UploadedDate = DateTime.UtcNow,
-				VerificationStatus = "Uploaded"
+				ApplicationID = model.ApplicationID,
+				DocumentName = model.DocumentName,
+				URI = "uploads/" + fileName,
+				VerificationStatus = "Submitted",
+				UploadedDate = DateTime.Now
 			};
 
 			await _repository.AddAsync(document);
 
-			return "Document Uploaded Successfully";
+			return true;
 		}
+
 
 		// View Document Status
 		public async Task<string> GetDocumentStatusAsync(int documentId)

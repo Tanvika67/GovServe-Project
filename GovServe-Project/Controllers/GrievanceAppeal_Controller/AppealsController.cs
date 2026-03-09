@@ -38,7 +38,7 @@ namespace GovServe_Project.Controllers
 
 		// My Appeals
 		[HttpGet("application/{applicationId}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyAppeals(int applicationId)
 		{
 			var data = await _service.MyAppealsAsync(applicationId);
@@ -47,7 +47,7 @@ namespace GovServe_Project.Controllers
 
 		// Appeal Status (View Only)
 		[HttpGet("status/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> AppealStatus(int id)
 		{
 			var data = await _service.GetAppealStatusAsync(id);
