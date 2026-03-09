@@ -11,7 +11,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize(Roles = "Supervisor")]
+	//[Authorize(Roles = "Supervisor")]
 
 	public class CaseController : ControllerBase
 	{
@@ -23,9 +23,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		//POST only I can create a case; API will create a new case in the system
-		//Case will be automatically assigned to the least busy officer
 		[HttpPost]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
@@ -34,14 +33,14 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//GET only I can see all cases;Fetches complete list of case from the database
 		[HttpGet("all")]
-		//[Authorize(Roles = "Supervisor")]               //admin also needs
+		//[Authorize(Roles = "Supervisor")]              
 
 		public async Task<IActionResult> GetAll()
 		{
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
-		//Returns only ongoing cases; Useful to track pending workload of officer
+		//Returns only ongoing cases
 		[HttpGet("active")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetActive()
@@ -74,14 +73,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		{
 			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
 			return Ok(result);
-		}
-
-		//Returns summary like Total cases;Active cases;SLA breached
-		[HttpGet("dashboard")]
-		//[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> Dashboard()
-		{
-			return Ok(await _service.GetDashboardAsync());
 		}
 
 		//officer work

@@ -40,18 +40,20 @@ namespace GovServe_Project.Models
 	
 		[ForeignKey("RoleID")]
         public int RoleID { get; set; }
-        public virtual Role Role { get; set; }
 
+        public virtual Role Role { get; set; }
 		public string RoleName { get; set; }
 
 
+	
 
-        // Navigation Property
-        public virtual ICollection<Application> Applications { get; set; }
-		public virtual ICollection<Grievance> Grievances { get; set; }
-		public virtual ICollection<Appeal> Appeals { get; set; }
 
-		public virtual ICollection<Case> Cases { get; set; }
+		// Navigation Property
+		//public virtual ICollection<Application> Applications { get; set; }
+		//public virtual ICollection<Grievance> Grievances { get; set; }
+		//public virtual ICollection<Appeal> Appeals { get; set; }
+
+		//public virtual ICollection<Case> Cases { get; set; }
 
 	}
 }

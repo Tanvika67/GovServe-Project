@@ -8,12 +8,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+// builder holds the configuration and services for our app;CreateBuilder(args) → creates a builder object.
 var builder = WebApplication.CreateBuilder(args);
 
+// builder.Services → dependency injection (DI) container;builder.Configuration → provides access to configuration settings (appsettings.json)
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();
 
+//API documentation and testing endpoints
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
@@ -40,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 
-// CORS
+// CORS (cross-domain requests)
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAll",
@@ -53,7 +56,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

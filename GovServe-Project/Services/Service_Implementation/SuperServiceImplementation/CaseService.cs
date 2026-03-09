@@ -8,6 +8,7 @@ using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -16,12 +17,14 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly ICaseRepository _repo;
 		private readonly INotificationService _notificationService;
 		private readonly IUserRepository _userRepo;
+		private readonly IApplicationRepository _applicationRepo;
 
-		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo)
+		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo, IApplicationRepository applicationRepo)
 		{
 			_repo = repo;
 			_notificationService = notificationService;
 			_userRepo=userRepo;
+			_applicationRepo = applicationRepo;
 		}
 
 		public async Task<IEnumerable<Case>> GetAllCasesAsync()
@@ -40,22 +43,21 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
-			// Get available officer automatically
-			var officerId = await GetAvailableOfficer(dto.DepartmentId);
-			
+			var application = await _applicationRepo.GetByIdAsync(dto.ApplicationId);
+			if (application == null)
+				return "Application not found";
 
+			var officerId = await GetAvailableOfficer(dto.DepartmentId);
 			if (officerId == 0)
 				return "No officer available";
 
-			// Create case directly assigned to officer
 			var model = new Case
 			{
 				ApplicationID = dto.ApplicationId,
 				DepartmentID = dto.DepartmentId,
-				UserId=4,
-				SupervisorId=2,
+				UserId = application.UserId,   // citizen linked automatically from user in application
 				AssignedOfficerId = officerId,
-				Status = "Assigned",  
+				Status = "Assigned",
 				AssignedDate = DateTime.Now,
 				LastUpdated = DateTime.Now
 			};
@@ -65,6 +67,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return "Case auto-assigned successfully";
 		}
+
 		public async Task<int> GetAvailableOfficer(int departmentId)
 		{
 			var officers = await _userRepo.GetOfficersByDepartmentAsync(departmentId);
@@ -85,10 +88,14 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return selectedOfficerId;
 		}
+
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
-			var c = await _repo.GetByIdAsync(caseId);
+			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
+			if (!validStatuses.Contains(status))
+				return "Invalid status";
 
+			var c = await _repo.GetByIdAsync(caseId);
 			if (c == null)
 				return "Case not found";
 
@@ -107,10 +114,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		public async Task<string> ReassignCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null) return "Case not found";
 
-			if (c == null) return "Case Not Found";
+			int oldOfficerId = c.AssignedOfficerId;
 
 			c.AssignedOfficerId = newOfficerId;
+			c.AssignedDate = DateTime.Now;   
 			c.LastUpdated = DateTime.Now;
 
 			_repo.Update(c);
@@ -122,13 +131,18 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				caseId
 			);
 
-			return "Case Reassigned";
+			await _notificationService.SendNotificationAsync(
+				oldOfficerId,
+				"This case was reassigned",
+				caseId
+			);
+
+			return "Case reassigned";
 		}
 
 		public async Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
-
 			if (c == null)
 				return "Case not found";
 
@@ -136,7 +150,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				return "Case is not escalated";
 
 			int oldOfficerId = c.AssignedOfficerId;
-			int citizenId = c.UserId; 
+			int citizenId = c.UserId;
 
 			// Reassign
 			c.AssignedOfficerId = newOfficerId;
@@ -146,7 +160,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			_repo.Update(c);
 			await _repo.SaveAsync();
 
-			//  Notifications
+			// Notifications
 			await _notificationService.SendNotificationAsync(
 				newOfficerId,
 				"New case assigned to you after escalation",
@@ -166,7 +180,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			);
 
 			return "Case reassigned successfully";
-		}
+		}  
 		public async Task<object> GetDashboardAsync()
 		{
 			var all = await _repo.GetAllAsync();

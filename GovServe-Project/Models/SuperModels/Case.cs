@@ -15,36 +15,28 @@ namespace GovServe_Project.Models.SuperModels
 		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }
 
+		// Citizen linked automatically from Application
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }
 
-		[Required]
-		public int SupervisorId { get; set; }
-		[ForeignKey("SupervisorId")]
-
+		// Officer assigned automatically
 		public int AssignedOfficerId { get; set; }
-		
+
 		[Required]
-		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
+		[ForeignKey("Department")]
 		public int DepartmentID { get; set; }
 		public virtual Department Department { get; set; }
 
 		[Required]
 		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
 		public string Status { get; set; } = "Assigned";
-
 		public DateTime? AssignedDate { get; set; }
-
 		public DateTime? CompletedDate { get; set; }
 		public bool IsWarningSent { get; set; }
-
 		public bool IsEscalated { get; set; } = false;
-
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
-
 		public string? RejectionReason { get; set; }
-
 	}
 
 }
