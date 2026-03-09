@@ -44,10 +44,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
 			var application = await _applicationRepo.GetByIdAsync(dto.ApplicationId);
+
 			if (application == null)
 				return "Application not found";
 
 			var officerId = await GetAvailableOfficer(dto.DepartmentId);
+
 			if (officerId == 0)
 				return "No officer available";
 
@@ -55,7 +57,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			{
 				ApplicationID = dto.ApplicationId,
 				DepartmentID = dto.DepartmentId,
-				UserId = application.UserId,   // citizen linked automatically from user in application
+				UserId = application.UserId,
 				AssignedOfficerId = officerId,
 				Status = "Assigned",
 				AssignedDate = DateTime.Now,
@@ -67,17 +69,19 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return "Case auto-assigned successfully";
 		}
-
 		public async Task<int> GetAvailableOfficer(int departmentId)
 		{
 			var officers = await _userRepo.GetOfficersByDepartmentAsync(departmentId);
+
+			if (!officers.Any())
+				return 0;
 
 			int selectedOfficerId = 0;
 			int minCases = int.MaxValue;
 
 			foreach (var officer in officers)
 			{
-				var count = await _userRepo.GetActiveCaseCountByOfficerAsync(officer.UserId);
+				int count = await _repo.GetCaseCountByOfficerAsync(officer.UserId);
 
 				if (count < minCases)
 				{
@@ -88,7 +92,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return selectedOfficerId;
 		}
-
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
 			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
