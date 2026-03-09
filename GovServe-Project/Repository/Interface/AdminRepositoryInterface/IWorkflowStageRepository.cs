@@ -1,16 +1,17 @@
-﻿using GovServe_Project.Models;
+﻿
+using GovServe_Project.Models.AdminModels;
 
-namespace GovServe_Project.Repositories.Interface.AdminRepositoryInterface
+namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
 {
     public interface IWorkflowStageRepository
     {
-        Task<IEnumerable<WorkflowStage>> GetAllAsync(); // Get all workflow stages
-        Task<IEnumerable<WorkflowStage>> GetByServiceAsync(int serviceId); // Get stages for a specific service
-        Task<WorkflowStage?> GetByIdAsync(int id); // Get single stage
-        Task AddAsync(WorkflowStage stage); // Add new stage
-        void Update(WorkflowStage stage); // Update existing stage
-        void Delete(WorkflowStage stage); // Delete stage
-        Task SaveAsync(); // Save changes
+        Task<IEnumerable<WorkflowStage>> GetAllAsync();
+        Task<IEnumerable<WorkflowStage>> GetByServiceAsync(int serviceId);
+        Task<WorkflowStage?> GetByIdAsync(int id);
+        Task AddAsync(WorkflowStage stage);
+        Task UpdateAsync(WorkflowStage stage);
+        Task DeleteAsync(WorkflowStage stage);
+       // Task SaveAsync();
     }
-}
 
+}

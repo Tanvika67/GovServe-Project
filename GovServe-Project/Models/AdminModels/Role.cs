@@ -17,7 +17,6 @@ namespace GovServe_Project.Models.AdminModels
 
         // Navigation
         public ICollection<WorkflowStage>? WorkflowStages { get; set; }
-        public ICollection<Users> User { get; set;}
     }
 
 }

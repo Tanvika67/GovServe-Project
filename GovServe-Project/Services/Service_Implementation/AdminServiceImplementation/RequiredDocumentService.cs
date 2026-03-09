@@ -1,9 +1,7 @@
 ﻿using GovServe_Project.DTOs.Admin;
-using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
-using GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
 namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
@@ -15,7 +13,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         public RequiredDocumentService(IRequiredDocumentRepository repository)
         {
             _repository = repository;
-           
         }
 
         public async Task<IEnumerable<RequiredDocumentResponseDTO>> GetAllAsync()
@@ -49,7 +46,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
         public async Task<RequiredDocumentResponseDTO> CreateAsync(RequiredDocumentDTO dto)
         {
-
             var document = new RequiredDocument
             {
                 ServiceID = dto.ServiceID,
@@ -86,25 +82,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 throw new NotFoundException("Required document not found.");
 
             await _repository.DeleteAsync(document);
-        }
-
-
-        //Search Required Document by service name
-        public async Task<IEnumerable<RequiredDocumentResponseDTO>> SearchByServiceNameAsync(string serviceName)
-        {
-            var documents = await _repository.GetByServiceNameAsync(serviceName);
-
-            if (!documents.Any())
-                throw new NotFoundException("No eligibility rules found for this service.");
-
-            return documents.Select(d => new RequiredDocumentResponseDTO
-            {
-                DocumentID = d.DocumentID,
-                ServiceID = d.ServiceID,
-                DocumentName = d.DocumentName,
-                Mandatory = d.Mandatory
-            });
-
         }
     }
 }

@@ -8,8 +8,8 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task<SLADays?> GetByIdAsync(int id);
         Task<SLADays?> GetByRoleAsync(string roleName);
         Task AddAsync(SLADays slaDay);
-        Task UpdateAsync(SLADays slaDay);
-        Task DeleteAsync(SLADays slaDay);
-        
+        void Update(SLADays slaDay);
+        void Delete(SLADays slaDay);
+        Task SaveAsync();
     }
 }

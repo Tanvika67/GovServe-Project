@@ -22,6 +22,8 @@ namespace GovServe_Project.Models.AdminModels
             ErrorMessage = "Service name allows letters, numbers, spaces, and - & ( ).")]
         public string RuleDescription { get; set; } = default!;
 
+
+
         [Required(ErrorMessage = "Rule expression is required.")]
         [StringLength(4000, ErrorMessage = "Rule expression cannot exceed 4000 characters.")]
         [RegularExpression(@"^[A-Za-z0-9]+\s*(==|!=|>=|<=|>|<)\s*(true|false|\d+)(\s+(AND|OR)\s+[A-Za-z]+\s*(==|!=|>=|<=|>|<)\s*(true|false|\d+))*$",

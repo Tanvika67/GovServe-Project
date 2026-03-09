@@ -1,9 +1,9 @@
 ﻿using GovServe_Project.Data;
-using GovServe_Project.Models;
-using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
 
-namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
+namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImplementation
 {
     public class WorkflowStageRepository : IWorkflowStageRepository
     {
@@ -14,38 +14,61 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
             _context = context;
         }
 
-        // Get all stages ordered by SequenceNumber
         public async Task<IEnumerable<WorkflowStage>> GetAllAsync()
-            => await _context.WorkflowStages
+        {
+            var workflow=await _context.WorkflowStages
                 .OrderBy(x => x.SequenceNumber)
                 .ToListAsync();
+            return workflow;
+        }
+           
 
-        // Get stages for a specific service
         public async Task<IEnumerable<WorkflowStage>> GetByServiceAsync(int serviceId)
-            => await _context.WorkflowStages
+        {
+            var service= await _context.WorkflowStages
                 .Where(x => x.ServiceID == serviceId)
                 .OrderBy(x => x.SequenceNumber)
                 .ToListAsync();
 
-        // Get stage by ID
+            return service;
+
+
+        }
+        
+        
+
         public async Task<WorkflowStage?> GetByIdAsync(int id)
-            => await _context.WorkflowStages.FindAsync(id);
+        {
+            return await _context.WorkflowStages.FindAsync(id);
 
-        // Add new stage
+
+        }
+
+
+
         public async Task AddAsync(WorkflowStage stage)
-            => await _context.WorkflowStages.AddAsync(stage);
+        {
+            await _context.WorkflowStages.AddAsync(stage);
+            await _context.SaveChangesAsync();
 
-        // Update stage
-        public void Update(WorkflowStage stage)
-            => _context.WorkflowStages.Update(stage);
+        }
+            
 
-        // Delete stage
-        public void Delete(WorkflowStage stage)
-            => _context.WorkflowStages.Remove(stage);
 
-        // Save changes to database
-        public async Task SaveAsync()
-            => await _context.SaveChangesAsync();
+        public async Task UpdateAsync(WorkflowStage stage)
+        {
+            _context.WorkflowStages.Update(stage);
+            await _context.SaveChangesAsync();
+
+        }
+            
+
+        public async Task DeleteAsync(WorkflowStage stage)
+        {
+            _context.WorkflowStages.Remove(stage);
+            await _context.SaveChangesAsync();
+
+        }
+            
     }
 }
-

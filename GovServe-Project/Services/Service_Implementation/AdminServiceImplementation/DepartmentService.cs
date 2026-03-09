@@ -46,20 +46,6 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
 
-        public async Task<IEnumerable<DepartmentResponseDTO>> GetActiveAsync()
-        {
-            var departments = await _repository.GetActiveAsync();
-
-            return departments.Select(d => new DepartmentResponseDTO
-            {
-                DepartmentID = d.DepartmentID,
-                DepartmentName = d.DepartmentName,
-                Description = d.Description,
-                Status = d.Status
-            });
-        }
-
-
         public async Task<DepartmentResponseDTO> CreateAsync(DepartmentDTO dto)
         {
             var department = new Department

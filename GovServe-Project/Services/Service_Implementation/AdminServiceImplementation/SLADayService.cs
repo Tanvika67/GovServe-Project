@@ -53,7 +53,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
 
             await _repository.AddAsync(slaDay);
-            return await GetByIdAsync(slaDay.SLADayID);
+            await _repository.SaveAsync();
 
             return new SLADayResponseDto
             {
@@ -63,7 +63,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
 
-        public async Task<SLADayResponseDto> UpdateAsync(int id, SLADayCreateDto dto)
+        public async Task UpdateAsync(int id, SLADayCreateDto dto)
         {
             var slaDay = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA configuration not found");
@@ -71,8 +71,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             slaDay.RoleName = dto.RoleName;
             slaDay.Days = dto.Days;
 
-            await _repository.UpdateAsync(slaDay);
-            return await GetByIdAsync(id);
+            _repository.Update(slaDay);
+            await _repository.SaveAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -80,7 +80,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var slaDay = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA configuration not found");
 
-            await _repository.DeleteAsync(slaDay);
+            _repository.Delete(slaDay);
+            await _repository.SaveAsync();
         }
     }
 

@@ -1,5 +1,4 @@
 ﻿using GovServe_Project.DTOs.Admin;
-using GovServe_Project.DTOs.AdminDTO;
 
 namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
 {
@@ -7,8 +6,6 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
     {
         Task<IEnumerable<ServiceResponseDTO>> GetAllAsync();
         Task<ServiceResponseDTO> GetByIdAsync(int id);
-        Task<IEnumerable<ServiceResponseDTO>> GetActiveAsync();
-
         Task<ServiceResponseDTO> CreateAsync(ServiceDTO dto);
         Task<ServiceResponseDTO> UpdateAsync(int id, ServiceDTO dto);
         Task DeleteAsync(int id);

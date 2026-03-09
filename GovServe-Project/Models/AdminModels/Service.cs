@@ -12,9 +12,11 @@ namespace GovServe_Project.Models.AdminModels
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ServiceID { get; set; }
+
         [Required(ErrorMessage = "DepartmentID is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "DepartmentID must be a positive number.")]
         public int DepartmentID { get; set; }
+
         [Required(ErrorMessage = "Service name is required.")]
         [StringLength(120, MinimumLength = 2,
             ErrorMessage = "Service name must be between 2 and 120 characters.")]
@@ -31,13 +33,16 @@ namespace GovServe_Project.Models.AdminModels
 
         [Required(ErrorMessage = "Status is required.")]
         public ServiceStatus Status { get; set; } = ServiceStatus.Active;
+
+
         // Navigation
         [ForeignKey(nameof(DepartmentID))]
         public Department? Department { get; set; }
+
         public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
         public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
         public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
-        public ICollection<SLARecords> SLARecords { get; set; } = new List<SLARecords>();
+        public ICollection<SLARecord> SLARecords { get; set; } = new List<SLARecord>();
         //public ICollection<Application> Applications { get; set; } = new List<Application>();       
 
     }
