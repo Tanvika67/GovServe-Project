@@ -51,7 +51,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Remove(user);
 			await _context.SaveChangesAsync();
 		}
-		//Available officer by dept
+		//Available officer by dept to get count of active cases
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User

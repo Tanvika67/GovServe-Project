@@ -18,7 +18,6 @@ namespace GovServe_Project.Models.CitizenModels
 		[Key] 
 		public int ApplicationID { get; set; }
 
-
 		[Required]
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]

@@ -33,7 +33,13 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		{
 			return await _context.Application.FindAsync(ApplicationId);
 		}
-
+		//To Fetch citizen document I need to write this
+		public async Task<Application> GetApplicationWithDocuments(int applicationId)
+		{
+			return await _context.Application
+				.Include(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+		}
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{

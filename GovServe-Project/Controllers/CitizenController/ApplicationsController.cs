@@ -113,7 +113,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		//rejected cases
 
 		[HttpGet("Reject /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetRejected(int officerId)
 		{
 			var result = await _applicationService.GetRejectedCases(officerId);
@@ -123,12 +123,13 @@ namespace GovServe_Project.Controllers.CitizenController
 		//resubmitted cases
 
 		[HttpGet("resubmitted /{officerId}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetResubmitted(int officerId)
 		{
 			var result = await _applicationService.GetResubmittedCases(officerId);
 			return Ok(result);
 
 		}
+
 	}
 }
