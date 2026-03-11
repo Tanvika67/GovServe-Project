@@ -64,9 +64,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context.Case.Update(c);
 		}
-
+		// It calculates the SLA status of the case from slarecords
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _context.Case
+				.Where(c => c.Status == "Escalated")
+				.ToListAsync();
+		}
 		//officers work
-
 		// Get assigned cases
 		public async Task<List<Case>> GetAssignedCases(int officerId)
 		{
@@ -144,18 +149,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
 			return "Case Rejected Successfully";
 		}
-		// It calculates the SLA Days
-		public async Task<List<Case>> GetSLABreachedCasesAsync()
-		{
-			var slaLimit = DateTime.Now.AddDays(-2);  
-			return await _context.Case
-				.Where(c=>
-				c.Status !="Completed" &&
-				c.Status!="Escalated" &&
-				c.AssignedDate<=slaLimit)
-				.ToListAsync();
-		}
-
         public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
         {
             throw new NotImplementedException();

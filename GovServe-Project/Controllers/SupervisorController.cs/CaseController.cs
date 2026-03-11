@@ -31,7 +31,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 
-		//GET only I can see all cases;Fetches complete list of case from the database
+		//GET only I can see all cases
+		//Fetches complete list of case from the database
 		[HttpGet("all")]
 		//[Authorize(Roles = "Supervisor")]              
 
@@ -57,7 +58,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 
-		//Returns cases where SLA time has already exceeded;I can easily identify delayed cases
+		//Returns cases where SLA time has already exceeded
+		//I can easily identify delayed cases
 		[HttpGet("sla-breached")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetSLABreached()
@@ -73,7 +75,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(await _service.GetDashboardAsync());
 		}
 
-		//POST to reassign a case to another officer; I can easily reassign a case to another officer if needed
+		//POST to reassign a case to another officer
+		//I can easily reassign a case to another officer if needed
 		[HttpPost("reassign-escalated")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
