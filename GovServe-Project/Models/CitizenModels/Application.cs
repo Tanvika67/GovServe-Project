@@ -43,9 +43,13 @@ namespace GovServe_Project.Models.CitizenModels
 		public DateTime? CompletedDate { get; set; }
 
 		public string ApplicationStatus { get; set; } = "Submitted";
+
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
+
 		public virtual ICollection<Grievance> Grievances { get; set; }
+
 		public virtual ICollection<Appeal> Appeals { get; set; }
+
 		public virtual Case Case { get; set; }
 	}
 
