@@ -25,6 +25,21 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			await _context.SaveChangesAsync();
 		}
 
+		public async Task<List<CitizenDocument>> GetMyAllDocuments(int userId)
+		{
+			return await _context.CitizenDocument
+				.Include(d => d.Application)
+				.Where(d => d.Application.UserId == userId)
+				.ToListAsync();
+		}
+
+		public async Task<List<CitizenDocument>> GetDocumentsByApplicationId(int applicationId)
+		{
+			return await _context.CitizenDocument
+				.Where(d => d.ApplicationID == applicationId)
+				.ToListAsync();
+		}
+
 		public async Task<CitizenDocument> GetByIdAsync(int id)
 		{
 			return await _context.CitizenDocument.FindAsync(id);

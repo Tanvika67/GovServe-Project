@@ -43,6 +43,27 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok("Document Uploaded Successfully");
 		}
 
+		[HttpGet("GetMyAllDocuments/{userId}")]
+		public async Task<IActionResult> GetMyAllDocuments(int userId)
+		{
+			var result = await _service.GetMyAllDocuments(userId);
+
+			if (!result.Any())
+				return NotFound("No documents found");
+
+			return Ok(result);
+		}
+
+		[HttpGet("GetDocumentsByApplicationId/{applicationId}")]
+		public async Task<IActionResult> GetDocumentsByApplicationId(int applicationId)
+		{
+			var result = await _service.GetDocumentsByApplicationId(applicationId);
+
+			if (!result.Any())
+				return NotFound("No documents found");
+
+			return Ok(result);
+		}
 
 		// Document Status
 		[HttpGet("status/{id}")]
