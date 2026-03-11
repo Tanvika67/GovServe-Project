@@ -65,13 +65,28 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			var result = await _service.GetSLABreachedCasesAsync();
 			return Ok(result);
 		}
+		//GET Returns summary like Total cases;Active cases; SLA breached
+        [HttpGet("dashboard")]
+        //[Authorize(Roles = "Supervisor")]
+        public async Task<IActionResult> Dashboard()
+		{
+			return Ok(await _service.GetDashboardAsync());
+		}
 
-		//Used after system auto-escalates a case due to SLA breach and I will manually assign to another officer
+		//POST to reassign a case to another officer; I can easily reassign a case to another officer if needed
 		[HttpPost("reassign-escalated")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
 		{
 			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
+			return Ok(result);
+		}
+
+		//Supervisor,Officer,Grieviance needs this so I created this
+		[HttpGet("case-details/{caseId}")]
+		public async Task<IActionResult> GetCaseDetails(int caseId)
+		{
+			var result = await _service.GetCaseDetails(caseId);
 			return Ok(result);
 		}
 

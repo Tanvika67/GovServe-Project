@@ -59,6 +59,36 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return true;
 		}
 
+		public async Task<List<UploadCitizenDocumentResponseDTO>> GetMyAllDocuments(int userId)
+		{
+			var documents = await _repository.GetMyAllDocuments(userId);
+
+			return documents.Select(d => new UploadCitizenDocumentResponseDTO
+			{
+				CitizenDocumentID = d.CitizenDocumentID,
+				ApplicationID = d.ApplicationID,
+				DocumentName = d.DocumentName,
+				//URI = "uploads/" + fileName,
+				UploadedDate = d.UploadedDate,
+				VerificationStatus = d.VerificationStatus
+			}).ToList();
+		}
+
+		public async Task<List<UploadCitizenDocumentResponseDTO>> GetDocumentsByApplicationId(int applicationId)
+		{
+			var documents = await _repository.GetDocumentsByApplicationId(applicationId);
+
+			return documents.Select(d => new UploadCitizenDocumentResponseDTO
+			{
+				CitizenDocumentID = d.CitizenDocumentID,
+				ApplicationID = d.ApplicationID,
+				DocumentName = d.DocumentName,
+				//URI = "uploads/" + fileName,
+				UploadedDate = d.UploadedDate,
+				VerificationStatus = d.VerificationStatus
+			}).ToList();
+		}
+
 
 		// View Document Status
 		public async Task<string> GetDocumentStatusAsync(int documentId)

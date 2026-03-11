@@ -55,6 +55,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
+				ApplicationId = a.ApplicationID,	
 				UserId = a.UserId,
 				ServiceName = a.Service.ServiceName,
 				ServiceID = a.ServiceID,

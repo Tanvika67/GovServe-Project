@@ -130,5 +130,6 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(result);
 
 		}
+
 	}
 }

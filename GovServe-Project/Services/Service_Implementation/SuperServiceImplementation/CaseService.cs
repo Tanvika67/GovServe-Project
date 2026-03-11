@@ -31,7 +31,10 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetAllAsync();
 		}
-
+		public async Task<Case> GetCaseDetails(int caseId)
+		{
+			return await _repo.GetCaseWithDocuments(caseId);
+		} 
 		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
 		{
 			return await _repo.GetByStatusAsync("Assigned");
@@ -43,54 +46,57 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
-			var application = await _applicationRepo.GetByIdAsync(dto.ApplicationId);
+			var application = await _applicationRepo
+				.GetApplicationWithDocuments(dto.ApplicationId);
 
 			if (application == null)
 				return "Application not found";
 
-			var officerId = await GetAvailableOfficer(dto.DepartmentId);
+			int officerId = await GetAvailableOfficer(dto.DepartmentId);
 
 			if (officerId == 0)
 				return "No officer available";
 
-			var model = new Case
+			var caseModel = new Case
 			{
-				ApplicationID = dto.ApplicationId,
-				DepartmentID = dto.DepartmentId,
+				ApplicationID = application.ApplicationID,
 				UserId = application.UserId,
+				DepartmentID = dto.DepartmentId,
 				AssignedOfficerId = officerId,
 				Status = "Assigned",
 				AssignedDate = DateTime.Now,
 				LastUpdated = DateTime.Now
 			};
 
-			await _repo.AddAsync(model);
+			await _repo.AddAsync(caseModel);
 			await _repo.SaveAsync();
 
-			return "Case auto-assigned successfully";
+			return "Case assigned successfully";
 		}
 		public async Task<int> GetAvailableOfficer(int departmentId)
 		{
-			var officers = await _userRepo.GetOfficersByDepartmentAsync(departmentId);
+			var officers = await _userRepo
+				.GetOfficersByDepartmentAsync(departmentId);
 
 			if (!officers.Any())
 				return 0;
 
-			int selectedOfficerId = 0;
+			int selectedOfficer = 0;
 			int minCases = int.MaxValue;
 
 			foreach (var officer in officers)
 			{
-				int count = await _repo.GetCaseCountByOfficerAsync(officer.UserId);
+				int count = await _repo
+					.GetCaseCountByOfficerAsync(officer.UserId);
 
 				if (count < minCases)
 				{
 					minCases = count;
-					selectedOfficerId = officer.UserId;
+					selectedOfficer = officer.UserId;
 				}
 			}
 
-			return selectedOfficerId;
+			return selectedOfficer;
 		}
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{

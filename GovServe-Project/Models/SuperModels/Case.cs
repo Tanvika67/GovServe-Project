@@ -14,7 +14,7 @@ namespace GovServe_Project.Models.SuperModels
 		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }
-
+		 
 		// Citizen linked automatically from Application
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]

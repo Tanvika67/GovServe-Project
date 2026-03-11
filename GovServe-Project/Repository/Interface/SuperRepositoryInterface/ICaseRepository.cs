@@ -12,6 +12,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<Case> GetByIdAsync(int id);
 		Task<List<Case>> GetActiveCasesAsync();
 		Task<int> GetCaseCountByOfficerAsync(int officerId);
+		Task<Case> GetCaseWithDocuments(int caseId);
 		Task AddAsync(Case c);
 		void Update(Case c);
 

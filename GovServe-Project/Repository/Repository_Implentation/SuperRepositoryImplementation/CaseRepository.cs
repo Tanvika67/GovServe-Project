@@ -45,20 +45,24 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			return await _context.Case
 				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
-
+		public async Task<Case> GetCaseWithDocuments(int caseId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.ThenInclude(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+		}
 		public async Task AddAsync(Case c)
 		{
 			await _context.Case.AddAsync(c);
 		}
-
-		public void Update(Case c)
-		{
-			_context.Case.Update(c);
-		}
-
 		public async Task SaveAsync()
 		{
 			await _context.SaveChangesAsync();
+		}
+		public void Update(Case c)
+		{
+			_context.Case.Update(c);
 		}
 
 		//officers work
