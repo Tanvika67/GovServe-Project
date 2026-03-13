@@ -10,7 +10,6 @@ namespace GovServe_Project.Models.SuperModels
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CaseId { get; set; }
-
 		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }
@@ -32,9 +31,9 @@ namespace GovServe_Project.Models.SuperModels
 		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
 		public string Status { get; set; } = "Assigned";
 		public DateTime? AssignedDate { get; set; }
-		public DateTime? CompletedDate { get; set; }
 		public bool IsWarningSent { get; set; }
 		public bool IsEscalated { get; set; } = false;
+		public DateTime? CompletedDate { get; set; }
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 		public string? RejectionReason { get; set; }
 	}

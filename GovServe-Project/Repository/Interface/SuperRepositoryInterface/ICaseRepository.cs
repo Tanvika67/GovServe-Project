@@ -1,6 +1,7 @@
-﻿using GovServe_Project.Models.SuperModels;
+﻿using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 ﻿using GovServe_Project.Models;
-using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.Models.SuperModels;
 
 
 namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
@@ -13,9 +14,9 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<List<Case>> GetActiveCasesAsync();
 		Task<int> GetCaseCountByOfficerAsync(int officerId);
 		Task<Case> GetCaseWithDocuments(int caseId);
+		Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
 		Task AddAsync(Case c);
 		void Update(Case c);
-
 		Task SaveAsync();
 
 		//officer work

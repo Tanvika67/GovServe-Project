@@ -92,6 +92,13 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			var result = await _service.GetCaseDetails(caseId);
 			return Ok(result);
 		}
+		//For my dashboard I created this
+		[HttpGet("officer-statistics")]
+		public async Task<IActionResult> GetOfficerStatistics()
+		{
+			var result = await _service.GetOfficerStatisticsAsync();
+			return Ok(result);
+		}
 
 		//officer work
 
