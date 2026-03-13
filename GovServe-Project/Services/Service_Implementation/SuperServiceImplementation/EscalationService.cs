@@ -55,47 +55,34 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			foreach (var sla in breachedCases)
 			{
 				var c = await _caseRepo.GetByIdAsync(sla.CaseId);
-
-				if (c == null)
-					continue;
-
-				// Avoid duplicate escalation
-				if (c.IsEscalated)
+				if (c == null || c.IsEscalated)
 					continue;
 
 				int oldOfficerId = c.AssignedOfficerId;
+				int citizenId = c.UserId;
 
-				//  (IMPORTANT)
 				var escalation = new Escalation
 				{
 					CaseId = c.CaseId,
-					//SupervisorId = c.SupervisorId,
 					PreviousOfficerId = oldOfficerId,
-					NewOfficerId = 0, // not assigned yet
+					NewOfficerId = 0,
 					Reason = "Auto escalation due to SLA breach",
 					Status = "Open",
 					EscalationDate = DateTime.Now,
-					EscalationLevel = c.IsEscalated ? 2 : 1
+					EscalationLevel = 1
 				};
 
 				await _repo.CreateAsync(escalation);
 
-				// THEN update case
 				c.Status = "Escalated";
 				c.IsEscalated = true;
 				c.LastUpdated = DateTime.Now;
 
 				_caseRepo.Update(c);
 
-				//// Notifications 
-				//await _notificationService.SendNotificationAsync(
-				//	//c.SupervisorId,
-				//	"Case escalated due to SLA breach",
-				//	c.CaseId
-				//);
-
+				// Notifications (citizen + old officer only)
 				await _notificationService.SendNotificationAsync(
-					c.UserId,
+					citizenId,
 					"Your application is delayed and escalated",
 					c.CaseId
 				);
@@ -108,9 +95,9 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			}
 
 			await _caseRepo.SaveAsync();
-
 			return "Auto escalation completed";
 		}
+
 		public async Task<string> CheckSLAAndEscalateAsync(int caseId)
 		{
 			var c = await _caseRepo.GetByIdAsync(caseId);

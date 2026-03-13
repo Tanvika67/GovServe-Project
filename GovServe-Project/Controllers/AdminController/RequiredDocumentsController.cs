@@ -17,21 +17,21 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+       // [Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetById(int id)
         {
             return Ok(await _service.GetByIdAsync(id));
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(RequiredDocumentDTO dto)
         {
             return Ok(await _service.CreateAsync(dto));

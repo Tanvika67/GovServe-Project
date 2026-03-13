@@ -10,7 +10,7 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 		Task CreateAsync(Application application);
 
 		Task<Application> GetByIdAsync(int ApplicationId);
-
+		Task<Application> GetApplicationWithDocuments(int applicationId);
 		Task<List<Application>> GetByUserIdAsync(int userId);
 
 		Task DeleteAsync(Application ApplicationId);
@@ -23,8 +23,8 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task<List<Case>> GetRejectedCases(int officerId);
 
-		//Task<List<Case>> GetResubmittedCases(int officerId);
-
+		Task<List<Case>> GetResubmittedCases(int officerId);
+		
 		Task<Case?> GetCaseById(int CaseId);
 
 		Task UpdateCase(Case casedata);

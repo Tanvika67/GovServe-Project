@@ -25,14 +25,13 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		// Create Application
 		public async Task<string> CreateApplicationAsync(CreateApplicationDTO dto)
 		{
-			//  Step 1: Get service from DB using name
 			var service = await _context.Services
 				.FirstOrDefaultAsync(s => s.ServiceName == dto.ServiceName);
 
 			if (service == null)
 				throw new Exception("Service not found");
 
-			//  Create Application
+			//  Step 2: Create Application
 			var app = new Application()
 			{
 				ServiceID = service.ServiceID,   
@@ -55,13 +54,13 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-			// 
+			// Entity → DTO mapping
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
+				ApplicationId = a.ApplicationID,	
 				UserId = a.UserId,
 				ServiceName = a.Service.ServiceName,
 				ServiceID = a.ServiceID,
-				//ServiceName = a.ServiceName,
 				ApplicationStatus = a.ApplicationStatus,
 				SubmittedDate = a.SubmittedDate
 			}).ToList();
@@ -197,6 +196,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		{
 			throw new NotImplementedException();
 		}
+		
 		//for officer to view application details
 
 		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)

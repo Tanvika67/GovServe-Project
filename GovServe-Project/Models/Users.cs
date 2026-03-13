@@ -49,11 +49,11 @@ namespace GovServe_Project.Models
 
 
 		// Navigation Property
-		public virtual ICollection<Application> Applications { get; set; }
-		public virtual ICollection<Grievance> Grievances { get; set; }
-		public virtual ICollection<Appeal> Appeals { get; set; }
+		//public virtual ICollection<Application> Applications { get; set; }
+		//public virtual ICollection<Grievance> Grievances { get; set; }
+		//public virtual ICollection<Appeal> Appeals { get; set; }
 
-		public virtual ICollection<Case> Cases { get; set; }
+		//public virtual ICollection<Case> Cases { get; set; }
 
 	}
 }

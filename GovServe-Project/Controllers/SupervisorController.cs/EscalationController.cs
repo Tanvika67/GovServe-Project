@@ -12,7 +12,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize(Roles = "Supervisor")]
+	//[Authorize(Roles = "Supervisor")]
 	public class EscalationController : ControllerBase
 	{
 		private readonly IEscalationService _service;
@@ -22,13 +22,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
-		//API checks case has crossed SLA time; If breached it triggers auto-escalation logic
-		[HttpPost("check-sla/{caseId}")]
-		public async Task<IActionResult> CheckSLA(int caseId)
-		{
-			var result = await _service.CheckSLAAndEscalateAsync(caseId);
-			return Ok(result);
-		}
 
 		//Automatically finds and escalates them without my involvement it called by background job
 		[HttpPost("auto-escalate")]

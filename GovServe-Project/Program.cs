@@ -7,6 +7,7 @@ using GovServe_Project.Services.Service_Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,8 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 // builder.Services → dependency injection (DI) container;builder.Configuration → provides access to configuration settings (appsettings.json)
 builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.AddControllers();
+// Configure controllers and prevent JSON serializer cycles for EF navigation properties
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        // optional: keep property names as defined
+        // o.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
+//API documentation and testing endpoints
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
@@ -42,7 +51,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 
-// CORS
+// CORS (cross-domain requests)
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAll",
@@ -58,7 +67,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -67,9 +75,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAll");
-
+app.UseStaticFiles();
 app.UseAuthentication();   // JWT check
 app.UseAuthorization();    // Role check
 

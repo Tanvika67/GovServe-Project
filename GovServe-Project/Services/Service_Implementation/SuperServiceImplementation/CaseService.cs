@@ -1,14 +1,14 @@
-﻿using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.DTOs.SupervisorDTO;
+﻿using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
-using GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -17,19 +17,24 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly ICaseRepository _repo;
 		private readonly INotificationService _notificationService;
 		private readonly IUserRepository _userRepo;
+		private readonly IApplicationRepository _applicationRepo;
 
-		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo)
+		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo, IApplicationRepository applicationRepo)
 		{
 			_repo = repo;
 			_notificationService = notificationService;
 			_userRepo=userRepo;
+			_applicationRepo = applicationRepo;
 		}
 
 		public async Task<IEnumerable<Case>> GetAllCasesAsync()
 		{
 			return await _repo.GetAllAsync();
 		}
-
+		public async Task<Case> GetCaseDetails(int caseId)
+		{
+			return await _repo.GetCaseWithDocuments(caseId);
+		} 
 		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
 		{
 			return await _repo.GetByStatusAsync("Assigned");
@@ -38,58 +43,71 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetSLABreachedCasesAsync();
 		}
-
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			return await _repo.GetOfficerStatisticsAsync();
+		}
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
-			// Get available officer automatically
-			var officerId = await GetAvailableOfficer(dto.DepartmentId);
-			
+			var application = await _applicationRepo
+				.GetApplicationWithDocuments(dto.ApplicationId);
+
+			if (application == null)
+				return "Application not found";
+
+			int officerId = await GetAvailableOfficer(dto.DepartmentId);
 
 			if (officerId == 0)
 				return "No officer available";
 
-			// Create case directly assigned to officer
-			var model = new Case
+			var caseModel = new Case
 			{
-				ApplicationID = dto.ApplicationId,
+				ApplicationID = application.ApplicationID,
+				UserId = application.UserId,
 				DepartmentID = dto.DepartmentId,
-				//UserId=2,
-				//SupervisorId=3,
 				AssignedOfficerId = officerId,
-				Status = "Assigned",  
+				Status = "Assigned",
 				AssignedDate = DateTime.Now,
 				LastUpdated = DateTime.Now
 			};
 
-			await _repo.AddAsync(model);
+			await _repo.AddAsync(caseModel);
 			await _repo.SaveAsync();
 
-			return "Case auto-assigned successfully";
+			return "Case assigned successfully";
 		}
 		public async Task<int> GetAvailableOfficer(int departmentId)
 		{
-			var officers = await _userRepo.GetOfficersByDepartmentAsync(departmentId);
+			var officers = await _userRepo
+				.GetOfficersByDepartmentAsync(departmentId);
 
-			int selectedOfficerId = 0;
+			if (!officers.Any())
+				return 0;
+
+			int selectedOfficer = 0;
 			int minCases = int.MaxValue;
 
 			foreach (var officer in officers)
 			{
-				var count = await _userRepo.GetActiveCaseCountByOfficerAsync(officer.UserId);
+				int count = await _repo
+					.GetCaseCountByOfficerAsync(officer.UserId);
 
 				if (count < minCases)
 				{
 					minCases = count;
-					selectedOfficerId = officer.UserId;
+					selectedOfficer = officer.UserId;
 				}
 			}
 
-			return selectedOfficerId;
+			return selectedOfficer;
 		}
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
-			var c = await _repo.GetByIdAsync(caseId);
+			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
+			if (!validStatuses.Contains(status))
+				return "Invalid status";
 
+			var c = await _repo.GetByIdAsync(caseId);
 			if (c == null)
 				return "Case not found";
 
@@ -108,10 +126,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		public async Task<string> ReassignCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null) return "Case not found";
 
-			if (c == null) return "Case Not Found";
+			int oldOfficerId = c.AssignedOfficerId;
 
 			c.AssignedOfficerId = newOfficerId;
+			c.AssignedDate = DateTime.Now;   
 			c.LastUpdated = DateTime.Now;
 
 			_repo.Update(c);
@@ -123,13 +143,18 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				caseId
 			);
 
-			return "Case Reassigned";
+			await _notificationService.SendNotificationAsync(
+				oldOfficerId,
+				"This case was reassigned",
+				caseId
+			);
+
+			return "Case reassigned";
 		}
 
 		public async Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
-
 			if (c == null)
 				return "Case not found";
 
@@ -137,7 +162,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				return "Case is not escalated";
 
 			int oldOfficerId = c.AssignedOfficerId;
-			int citizenId = c.UserId; 
+			int citizenId = c.UserId;
 
 			// Reassign
 			c.AssignedOfficerId = newOfficerId;
@@ -147,7 +172,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			_repo.Update(c);
 			await _repo.SaveAsync();
 
-			//  Notifications
+			// Notifications
 			await _notificationService.SendNotificationAsync(
 				newOfficerId,
 				"New case assigned to you after escalation",
@@ -167,7 +192,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			);
 
 			return "Case reassigned successfully";
-		}
+		}  
 		public async Task<object> GetDashboardAsync()
 		{
 			var all = await _repo.GetAllAsync();
@@ -184,85 +209,63 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		//officer work
 
-		//public async Task<List<Case>> ViewAssignedCases(int AssignedOfficerId)
-		//{
-		//	return await _repo.GetAssignedCases(AssignedOfficerId);
-		//}
+		public async Task<List<Case>> ViewAssignedCases(int officerId)
+		{
+			return await _repo.GetAssignedCases(officerId);
+		}
 
-		//// Officer opens case → InProgress
-		//public async Task<string> OpenCase(int caseId)
-		//{
-		//	var caseObj = await _repo.GetCaseById(caseId);
+		// Officer opens case → InProgress
+		public async Task<string> OpenCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
 
-		//	if (caseObj == null)
-		//		return "Case not found";
+			if (caseObj == null)
+				return "Case not found";
 
-		//	caseObj.Status = "InProgress";
-		//	if (caseObj.Application != null)
-		//	{
-		//		caseObj.Application.ApplicationStatus = "InProgress";
-		//	}
+			caseObj.Status = "InProgress";
+			await _repo.UpdateCase(caseObj);
 
-		//	await _repo.UpdateCase(caseObj);
-		//	return "Case marked as In Progress";
-		//}
+			return "Case marked as In Progress";
+		}
 
-		//public async Task<string> ApproveCase(int caseId)
-		//{
-		//	var caseObj = await _repo.GetCaseById(caseId);
+		public async Task<string> ApproveCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
 
-		//	if (caseObj == null)
-		//		return "Case not found";
+			if (caseObj == null)
+				return "Case not found";
 
-		//	caseObj.Status = "Completed";
+			caseObj.Status = "Approved";
+			caseObj.RejectionReason = null;
 
-		//	if (caseObj.Application != null)
+			await _repo.UpdateCase(caseObj);
 
+			return "Case Approved Successfully";
+		}
 
+		public async Task<string> Reject(int caseId, string reason)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
 
-		//		caseObj.Application.ApplicationStatus = "Approved";
-		//	caseObj.RejectionReason = null;
+			if (caseObj == null)
+				return "Case not found";
 
-		//	await _repo.UpdateCase(caseObj);
-		//	await _notificationService.SendNotificationAsync(caseObj.UserId, "Your application Approved successfully.", caseId);
-		//	return "Success";
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason;
 
-		//	return "Case Approved Successfully";
-		//}
+			await _repo.UpdateCase(caseObj);
 
-		//public async Task<string> Reject(int caseId, string reason)
-		//{
-		//	var caseObj = await _repo.GetCaseById(caseId);
+			return "Case Rejected with reason: ";
 
-		//	if (caseObj == null)
-		//		return "Case not found";
-		//	caseObj.Status = "Rejected";
-		//	caseObj.RejectionReason = reason;
+			//add notification
 
-		//	if (caseObj.Application != null)
-		//		caseObj.Application.ApplicationStatus = "Rejected";
-
-		//	await _repo.UpdateCase(caseObj);
-
-		//	await _notificationService.SendNotificationAsync(caseObj.UserId, $"Your application Rejected successfully. Reason: {reason}", caseId);
-
-		//	return "Case Rejected with reason: " + reason;
+		}
 
 
-
-		//}
-
-		//public Task<List<Case>> GetResubmittedCases(int AssignedOfficerId)
-		//{
-		//	return _repo.GetResubmittedCases(AssignedOfficerId);
-		//}
-
-
-
-		//public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		//{
-		//	return await _repo.GetDashboardCountsAsync(departmentId);
-		//}
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			return await _repo.GetDashboardCountsAsync(departmentId);
+		}
 
 		public Task<string> ReassignCaseAsync()
 		{
@@ -274,44 +277,11 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			throw new NotImplementedException();
 		}
 
-		//Task ICaseService.OpenCase(int caseId)
-		//{
-		//	return OpenCase(caseId);
-		//}
-
-
-		public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
-	   => await _repo.GetAssignedCasesAsync(officerId);
-
-		public async Task<Case?> GetCaseByIdAsync(int caseId)
-			=> await _repo.GetCaseByIdAsync(caseId);
-
-		public async Task<bool> ApproveCaseAsync(int caseId, string remarks)
-			=> await _repo.ApproveCaseAsync(caseId, remarks);
-
-		public async Task<bool> RejectCaseAsync(int caseId, string reason)
-			=> await _repo.RejectCaseAsync(caseId, reason);
-
-		public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
-			=> await _repo.GetResubmittedCasesAsync(officerId);
-
-		public async Task<object> GetOfficerDashboardAsync(int officerId)
-			=> await _repo.GetOfficerDashboardAsync(officerId);
-
-
-
-
-
-
-
-
-
-
-
+		private readonly INotificationService notificationService;
 
 
 	}
-	}
+}
 
 
  

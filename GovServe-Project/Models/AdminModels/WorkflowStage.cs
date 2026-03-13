@@ -1,8 +1,6 @@
-﻿using GovServe_Project.Enum;
-using GovServe_Project.Models.AdminModels;
+﻿using GovServe_Project.Models.AdminModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

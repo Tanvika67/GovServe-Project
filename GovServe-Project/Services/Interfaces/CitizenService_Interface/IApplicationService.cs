@@ -38,14 +38,6 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 
 		Task<Case> UpdateCase(Case casedata);
 
-		
-
-
-		
-
-
-		
-
 		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
 
 	}

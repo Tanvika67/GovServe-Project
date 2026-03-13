@@ -2,6 +2,7 @@
 {
 	public class ApplicationResponseDTO
 	{
+		public int ApplicationId { get; set; }	
 		public int UserId { get; set; }
 		public int ServiceID { get; set; }
 		public string ServiceName { get; set; }

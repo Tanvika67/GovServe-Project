@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Models.SuperModels;
+﻿using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
-using GovServe_Project.Data;
+using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
-using GovServe_Project.Repository.Interface;
-using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
 {
@@ -40,24 +41,66 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			return await _context.Case.FirstOrDefaultAsync(c => c.CaseId == id);
 		}
-
+		public async Task<int> GetCaseCountByOfficerAsync(int officerId)
+		{
+			return await _context.Case
+				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+		}
+		public async Task<Case> GetCaseWithDocuments(int caseId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.ThenInclude(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+		}
 		public async Task AddAsync(Case c)
 		{
 			await _context.Case.AddAsync(c);
 		}
-
-		public void Update(Case c)
-		{
-			_context.Case.Update(c);
-		}
-
 		public async Task SaveAsync()
 		{
 			await _context.SaveChangesAsync();
 		}
+		public void Update(Case c)
+		{
+			_context.Case.Update(c);
+		}
+		// It calculates the SLA status of the case from slarecords
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _context.Case
+				.Where(c => c.Status == "Escalated")
+				.ToListAsync();
+		}
+		// For supervisor dashboard I need this
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			return await _context.User
+				.Where(u => u.Role.RoleName == "Officer")
+				.Select(u => new OfficerStatisticsDto
+				{
+					OfficerId = u.UserId,
+					OfficerName = u.FullName,
+					Department = u.Department.DepartmentName,
 
+					TotalCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId),
+
+					ActiveCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Assigned"),
+
+					PendingCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Pending"),
+
+					CompletedCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Completed"),
+
+					EscalatedCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Escalated")
+				})
+				.ToListAsync();
+		}
 		//officers work
-
 		// Get assigned cases
 		//public async Task<List<Case>> GetAssignedCases(int AssignedOfficerId)
 		//{

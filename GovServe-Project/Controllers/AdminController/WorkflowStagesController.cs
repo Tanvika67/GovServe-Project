@@ -33,7 +33,7 @@ namespace GovServe_Project.Controllers
             => Ok(await _service.GetByIdAsync(id));
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(WorkflowStageCreateDto dto)
         {
             var result = await _service.CreateAsync(dto);

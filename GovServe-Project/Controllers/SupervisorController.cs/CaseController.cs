@@ -25,25 +25,25 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		//POST only I can create a case; API will create a new case in the system
-		//Case will be automatically assigned to the least busy officer
 		[HttpPost]
-		//[Authorize(Roles = "Supervisor")]
+		[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
 			return Ok(result);
 		}
 
-		//GET only I can see all cases;Fetches complete list of case from the database
+		//GET only I can see all cases
+		//Fetches complete list of case from the database
 		[HttpGet("all")]
-		//[Authorize(Roles = "Supervisor")]               //admin also needs
+		//[Authorize(Roles = "Supervisor")]              
 
 		public async Task<IActionResult> GetAll()
 		{
 			return Ok(await _service.GetAllCasesAsync());
 		}
 
-		//Returns only ongoing cases; Useful to track pending workload of officer
+		//Returns only ongoing cases
 		[HttpGet("active")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetActive()
@@ -60,7 +60,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 
-		//Returns cases where SLA time has already exceeded;I can easily identify delayed cases
+		//Returns cases where SLA time has already exceeded
+		//I can easily identify delayed cases
 		[HttpGet("sla-breached")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetSLABreached()
@@ -68,8 +69,16 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			var result = await _service.GetSLABreachedCasesAsync();
 			return Ok(result);
 		}
+		//GET Returns summary like Total cases;Active cases; SLA breached
+        [HttpGet("dashboard")]
+        //[Authorize(Roles = "Supervisor")]
+        public async Task<IActionResult> Dashboard()
+		{
+			return Ok(await _service.GetDashboardAsync());
+		}
 
-		//Used after system auto-escalates a case due to SLA breach and I will manually assign to another officer
+		//POST to reassign a case to another officer
+		//I can easily reassign a case to another officer if needed
 		[HttpPost("reassign-escalated")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
@@ -78,12 +87,23 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 
+		//Supervisor,Officer,Grieviance needs this so I created this
+		[HttpGet("case-details/{caseId}")]
+		public async Task<IActionResult> GetCaseDetails(int caseId)
+		{
+			var result = await _service.GetCaseDetails(caseId);
+			return Ok(result);
+		}
+		//For my dashboard I created this
+		[HttpGet("officer-statistics")]
+		public async Task<IActionResult> GetOfficerStatistics()
 		//Returns summary like Total cases;Active cases;SLA breached
 		[HttpGet("dashboard")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> Dashboard()
 		{
-			return Ok(await _service.GetDashboardAsync());
+			var result = await _service.GetOfficerStatisticsAsync();
+			return Ok(result);
 		}
 
 		//	officer work

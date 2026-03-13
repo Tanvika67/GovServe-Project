@@ -8,11 +8,16 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 	{
 		Task<bool> UploadDocumentAsync(UploadCitizenDocumentDTO model);
 
+		Task<List<UploadCitizenDocumentResponseDTO>> GetMyAllDocuments(int userId);
+
+		Task<List<UploadCitizenDocumentResponseDTO>> GetDocumentsByApplicationId(int applicationId);
+
 		Task<string> GetDocumentStatusAsync(int documentId);
 
 		Task<bool> DeleteDocumentAsync(int documentId);
 
 		Task<string> ApproveDocument(int CitizenDocumentID);
+
 		Task<string> RejectDocument(int CitizenDocumentID);
 	}
 }

@@ -12,6 +12,10 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task AddAsync(CitizenDocument document);
 
+		Task<List<CitizenDocument>> GetMyAllDocuments(int userId);
+
+		Task<List<CitizenDocument>> GetDocumentsByApplicationId(int applicationId);
+
 		Task<CitizenDocument> GetByIdAsync(int id);
 
 		Task DeleteAsync(CitizenDocument document);

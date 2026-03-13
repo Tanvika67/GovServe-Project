@@ -40,7 +40,7 @@ namespace GovServe_Project.Controllers
 
 		// View My Grievances
 		[HttpGet("user/{citizenId}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyGrievances(int citizenId)
 		{
 			var data = await _service.MyGrievancesAsync(citizenId);
@@ -50,7 +50,7 @@ namespace GovServe_Project.Controllers
 		// View Grievance Details / Status
 		
 		[HttpGet("{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GrievanceStatus(int id)
 		{
 			var data = await _service.GrievanceStatusAsync(id);

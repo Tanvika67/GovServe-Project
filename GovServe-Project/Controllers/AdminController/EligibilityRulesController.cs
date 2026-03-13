@@ -17,7 +17,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetAll()
         {
             
@@ -25,7 +25,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetById(int id)
         {
            
