@@ -38,9 +38,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
 			return await _context.Application
+
 								  .Include(a => a.Service)
 								 .Where(a => a.UserId == userId)
 								 .ToListAsync();
+
 		}
 
 		// Delete Application
@@ -110,20 +112,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 
 		}
 
-		public async Task<List<Case>> GetResubmittedCases(int officerId)
+		//public async Task<List<Case>> GetResubmittedCases(int officerId)
 
-		{
+		//{
 
-			return await _context.Case
+		//	return await _context.Case
 
-				.Include(c => c.Application)
+		//		.Include(c => c.Application)
 
-				.Where(c => c.AssignedOfficerId == officerId
-		&& c.Status == "Resubmitted")
+		//		.Where(c => c.AssignedOfficerId == officerId
+		//&& c.Status == "Resubmitted")
 
-				.ToListAsync();
+		//		.ToListAsync();
 
-		}
+		//}
 
 		public async Task<Case?> GetCaseById(int caseId)
 

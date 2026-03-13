@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class All : Migration
+    public partial class off : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -313,8 +313,8 @@ namespace GovServe_Project.Migrations
                         principalColumn: "DepartmentID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Case_User_AssignedOfficerId",
-                        column: x => x.AssignedOfficerId,
+                        name: "FK_Case_User_SupervisorId",
+                        column: x => x.SupervisorId,
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -527,14 +527,14 @@ namespace GovServe_Project.Migrations
                 filter: "[ApplicationID1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Case_AssignedOfficerId",
-                table: "Case",
-                column: "AssignedOfficerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Case_DepartmentID",
                 table: "Case",
                 column: "DepartmentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Case_SupervisorId",
+                table: "Case",
+                column: "SupervisorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Case_UserId",

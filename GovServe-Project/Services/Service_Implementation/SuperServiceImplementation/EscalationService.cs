@@ -69,7 +69,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				var escalation = new Escalation
 				{
 					CaseId = c.CaseId,
-					SupervisorId = c.SupervisorId,
+					//SupervisorId = c.SupervisorId,
 					PreviousOfficerId = oldOfficerId,
 					NewOfficerId = 0, // not assigned yet
 					Reason = "Auto escalation due to SLA breach",
@@ -87,12 +87,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 				_caseRepo.Update(c);
 
-				// Notifications 
-				await _notificationService.SendNotificationAsync(
-					c.SupervisorId,
-					"Case escalated due to SLA breach",
-					c.CaseId
-				);
+				//// Notifications 
+				//await _notificationService.SendNotificationAsync(
+				//	//c.SupervisorId,
+				//	"Case escalated due to SLA breach",
+				//	c.CaseId
+				//);
 
 				await _notificationService.SendNotificationAsync(
 					c.UserId,

@@ -20,7 +20,6 @@ namespace GovServe_Project.Controllers.CitizenController
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	
 	public class CitizenDocumentController : ControllerBase
 	{
 		private readonly ICitizenDocumentService _service;
@@ -32,16 +31,20 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Upload Document
 		[HttpPost("upload")]
-		//[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO dto)
+		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO model)
 		{
-			var result = await _service.UploadDocumentAsync(dto);
-			return Ok(result);
+			var result = await _service.UploadDocumentAsync(model);
+
+			if (!result)
+				return BadRequest("Upload Failed");
+
+			return Ok("Document Uploaded Successfully");
 		}
+
 
 		// Document Status
 		[HttpGet("status/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentStatus(int id)
 		{
 			var status = await _service.GetDocumentStatusAsync(id);
@@ -54,7 +57,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Delete Document
 		[HttpDelete("delete/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			var result = await _service.DeleteDocumentAsync(id);
@@ -65,8 +68,8 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok("Document Deleted Successfully");
 		}
 
-		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
-		[Authorize(Roles = "Officer")]
+		[HttpPut("ApproveDocument/{id}")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> ApproveDocument(int id)
 		{
 			var result = await _service.ApproveDocument(id);
@@ -74,7 +77,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		[HttpPut("RejectDocument/{id}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> RejectDocument(int id)
 		{
 			var result = await _service.RejectDocument(id);

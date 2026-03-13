@@ -55,21 +55,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 		{
 			return await _context.User
-				.Where(u => u.DepartmentID == departmentId && u.RoleName.Equals("Officer"))
-				.ToListAsync();
-		}
-		//Count of active cases
-		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
-		{
-			return await _context.Case
-				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Closed");
-		}
-
-
-		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
-		{
-			return await _context.User
-				.Where(u => u.DepartmentID == departmentId && u.RoleID == 3)
+				.Where(u => u.DepartmentID == departmentId && u.RoleName=="Officer")
 				.ToListAsync();
 		}
 		//Count of active cases
@@ -78,6 +64,9 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			return await _context.Case
 				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
+
+
+		
 	}
 }
 

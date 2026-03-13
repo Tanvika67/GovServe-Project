@@ -119,11 +119,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return await _applicationRepository.GetRejectedCases(officerId);
 		}
 
-		public async Task<List<Case>>
-			GetResubmittedCase(int officerId)
-		{
-			return await _applicationRepository.GetResubmittedCases(officerId);
-		}
+		
 
 		public Task<List<Case>> GetAssignedCases(int officerId)
 		{
@@ -145,18 +141,20 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return _applicationRepository.GetRejectedCases(officerId);
 		}
 
-		public Task<List<Case>> GetResubmittedCases(int officerId)
-		{
-			return _applicationRepository.GetResubmittedCases(officerId);
-		}
+		//public Task<List<Case>> GetResubmittedCases(int officerId)
+		//{
+		//	return _applicationRepository.GetResubmittedCases(officerId);
+		//}
 
 		public async Task<bool> ApprovedCase(int CaseId, int officerId)
 		{
 			var casedata = await _applicationRepository.GetCaseById(CaseId);
+		
 			if (casedata == null || casedata.AssignedOfficerId != officerId)
+				
 				return false;
 
-			casedata.Status = "Approved";
+			casedata.Application.ApplicationStatus = "Approved";
 			casedata.CompletedDate = DateTime.Now;
 			casedata.RejectionReason = null;
 
@@ -171,7 +169,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			if (casedata == null || casedata.AssignedOfficerId != officerId)
 				return false;
 
-			casedata.Status = "Rejected";
+			casedata.Application.ApplicationStatus = "Rejected";
 			casedata.RejectionReason = reason;
 			casedata.CompletedDate = DateTime.Now;
 

@@ -7,24 +7,26 @@ namespace GovServe_Project.Models.SuperModels
 {
 	public class Case
 	{
+		//internal readonly object CitizenDocuments;
+		//internal object User;
+
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CaseId { get; set; }
 
 		public int ApplicationID { get; set; }
-		[ForeignKey("ApplicationID")]
-		public virtual Application Application { get; set; }
+		public virtual Application Application { get; set; }//navigation property
 
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }
 
-		[Required]
-		public int SupervisorId { get; set; }
-		[ForeignKey("SupervisorId")]
+		//[Required]
+		//public int SupervisorId { get; set; }
+		//[ForeignKey("SupervisorId")]
+
 		public int AssignedOfficerId { get; set; }
-		[ForeignKey("AssignedOfficerId")]
-		public virtual Users AssignedOfficer { get; set; }
+
 		[Required]
 		[ForeignKey("Department")]               //We should only keep how many admin will add that only 
 		public int DepartmentID { get; set; }
@@ -46,6 +48,9 @@ namespace GovServe_Project.Models.SuperModels
 		public string? RejectionReason { get; set; }
 
 	}
+
+
+
 
 }
 

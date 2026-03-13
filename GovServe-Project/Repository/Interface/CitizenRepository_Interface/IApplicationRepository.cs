@@ -23,7 +23,7 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task<List<Case>> GetRejectedCases(int officerId);
 
-		Task<List<Case>> GetResubmittedCases(int officerId);
+		//Task<List<Case>> GetResubmittedCases(int officerId);
 
 		Task<Case?> GetCaseById(int CaseId);
 

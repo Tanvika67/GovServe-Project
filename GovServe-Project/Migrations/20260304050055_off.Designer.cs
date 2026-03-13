@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    [Migration("20260302113535_All")]
-    partial class All
+    [Migration("20260304050055_off")]
+    partial class off
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -445,9 +445,9 @@ namespace GovServe_Project.Migrations
                         .IsUnique()
                         .HasFilter("[ApplicationID1] IS NOT NULL");
 
-                    b.HasIndex("AssignedOfficerId");
-
                     b.HasIndex("DepartmentID");
+
+                    b.HasIndex("SupervisorId");
 
                     b.HasIndex("UserId");
 
@@ -788,16 +788,16 @@ namespace GovServe_Project.Migrations
                         .WithOne("Case")
                         .HasForeignKey("GovServe_Project.Models.SuperModels.Case", "ApplicationID1");
 
-                    b.HasOne("GovServe_Project.Models.Users", "AssignedOfficer")
-                        .WithMany()
-                        .HasForeignKey("AssignedOfficerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany()
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.Users", "User")
@@ -811,8 +811,6 @@ namespace GovServe_Project.Migrations
                         .HasForeignKey("UsersUserId");
 
                     b.Navigation("Application");
-
-                    b.Navigation("AssignedOfficer");
 
                     b.Navigation("Department");
 

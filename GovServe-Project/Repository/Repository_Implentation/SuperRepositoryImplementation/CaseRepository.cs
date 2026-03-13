@@ -38,7 +38,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		}
 		public async Task<Case> GetByIdAsync(int id)
 		{
-			return await _context.Case.FindAsync(id);
+			return await _context.Case.FirstOrDefaultAsync(c => c.CaseId == id);
 		}
 
 		public async Task AddAsync(Case c)
@@ -59,96 +59,216 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		//officers work
 
 		// Get assigned cases
-		public async Task<List<Case>> GetAssignedCases(int AssignedOfficerId)
-		{
-			return await _context.Case
-				.Where(c => c.AssignedOfficerId == AssignedOfficerId)
-				.ToListAsync();
-		}
+		//public async Task<List<Case>> GetAssignedCases(int AssignedOfficerId)
+		//{
+		//	return await _context.Case
+		//		.Include(c => c.Application)
+		//		//.Include(a => a.CitizenDocuments) // FIX: Documents link karnyathi
+		//		.Include(c => c.User)
+		//		.Where(c => c.AssignedOfficerId == AssignedOfficerId)
+		//		.ToListAsync();
+		//}
 
 		// Get single case
 
-		public async Task<Case?> GetCaseById(int caseId)
-		{
-			return await _context.Case.FindAsync(caseId);
-		}
+		//	public async Task<Case?> GetCaseById(int caseId)
 
-		// Update case
-		public async Task UpdateCase(Case caseObj)
-		{
-			_context.Case.Update(caseObj);
-			await _context.SaveChangesAsync();
-		}
+		//	{
+		//		return await _context.Case
+		//		.Include(c => c.Application)
+		//			.FirstOrDefaultAsync(c => c.CaseId == caseId);
 
-		//count application for officer dashboard
-
-		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			var result = new DashboardCountcs();
-
-			// Assigned Cases
-			result.Assigned = await _context.Case
-				.CountAsync(a => a.DepartmentID == departmentId
-	&& a.Status == "Assigned");
+		//	}
 
 
-			// Approved Cases
-			result.Approved = await _context.Case
-				.CountAsync(a => a.DepartmentID == departmentId
-	&& a.Status == "Approved");
+		//	// Update case
+		//	public async Task UpdateCase(Case caseObj)
+		//	{
+		//		_context.Case.Update(caseObj);
+		//		await _context.SaveChangesAsync();
+		//	}
+
+		//	//count application for officer dashboard
+
+		//	public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		//	{
+		//		var result = new DashboardCountcs();
 
 
-			// Pending Cases
-			result.Pending = await _context.Case
-				.CountAsync(a => a.DepartmentID == departmentId
-	&& a.Status == "Pending");
+		//		// Assigned Cases
+		//		result.Assigned = await _context.Case
+		//			.CountAsync(a => a.DepartmentID == departmentId
+		//&& a.Status == "Assigned");
 
 
-			// Rejected Cases
-			result.Rejected = await _context.Case
-				.CountAsync(a => a.DepartmentID == departmentId
-	&& a.Status == "Rejected");
+		//		// Approved Cases
+		//		result.Approved = await _context.Case
+		//	.CountAsync(a => a.DepartmentID == departmentId && a.Status == "Completed");
 
 
-			// Resubmitted Cases
-			result.Resubmitted = await _context.Case
-				.CountAsync(a => a.DepartmentID == departmentId
-	&& a.Status == "Resubmitted");
+		//		// Pending Cases
+		//		result.Pending = await _context.Case
+		//			.CountAsync(a => a.DepartmentID == departmentId
+		//&& a.Status == "Pending");
 
 
-			return result;
+		//		// Rejected Cases
+		//		result.Rejected = await _context.Case
+		//			.CountAsync(a => a.DepartmentID == departmentId
+		//&& a.Status == "Rejected");
 
 
-		}
-		//notification purpose
-		public async Task<string> Reject(int caseId, string reason)
-		{
-			var caseObj = await _context.Case.FindAsync(caseId);
+		//		// Resubmitted Cases
+		//		result.Resubmitted = await _context.Case
+		//			.CountAsync(a => a.DepartmentID == departmentId
+		//&& a.Status == "Resubmitted");
 
-			if (caseObj == null)
-				return "Case Not Found";
 
-			caseObj.Status = "Rejected";
-			caseObj.RejectionReason = reason;
+		//		return result;
 
-			await _context.SaveChangesAsync();
 
-			return "Case Rejected Successfully";
-		}
+		//	}
+
+		//	public async Task<string> Reject(int caseId, string reason)
+		//	{
+		//		var caseObj = await _context.Case.FindAsync(caseId);
+
+		//		if (caseObj == null)
+		//			return "Case Not Found";
+
+		//		caseObj.Status = "Rejected";
+		//		caseObj.RejectionReason = reason;
+
+		//		await _context.SaveChangesAsync();
+
+		//		return "Case Rejected Successfully";
+		//	}
+		//	public async Task<List<Case>> GetResubmittedCases(int AssignedOfficerId)
+
+		//	{
+
+		//		return await _context.Case
+
+		//			.Include(c => c.Application)
+
+		//			.Where(c => c.AssignedOfficerId == AssignedOfficerId
+		//	&& c.Status == "Resubmitted")
+
+		//			.ToListAsync();
+
+		//	}
+
+
+
+
 
 		public Task<List<Case>> GetSLABreachedCasesAsync()
 		{
 			throw new NotImplementedException();
 		}
 
-        public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
-        {
-            throw new NotImplementedException();
-        }
+		public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+		{
+			throw new NotImplementedException();
+		}
 
-        public Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+		{
+			return await _context.Case
+				 .CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+		}
+
+
+
+		public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.Include(c => c.Department)
+				.Where(c => c.AssignedOfficerId == officerId)
+				.ToListAsync();
+		}
+
+		public async Task<Case?> GetCaseByIdAsync(int caseId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.Include(c => c.Department)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+		}
+
+		public async Task<bool> ApproveCaseAsync(int caseId, string remarks)
+		{
+			var caseEntity = await _context.Case
+				.Include(c => c.Application)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+
+			if (caseEntity == null) return false;
+
+			// Case update
+			caseEntity.Status = "Completed";
+			caseEntity.CompletedDate = DateTime.Now;
+			caseEntity.LastUpdated = DateTime.Now;
+
+			// Application update
+			if (caseEntity.Application != null)
+			{
+				caseEntity.Application.ApplicationStatus = "Approved";
+				caseEntity.Application.CompletedDate = DateTime.Now;
+			}
+
+			await _context.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<bool> RejectCaseAsync(int caseId, string reason)
+		{
+			var caseEntity = await _context.Case
+				.Include(c => c.Application)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+
+			if (caseEntity == null) return false;
+
+			// Case update
+			caseEntity.Status = "Completed";
+			caseEntity.RejectionReason = reason;
+			caseEntity.CompletedDate = DateTime.Now;
+			caseEntity.LastUpdated = DateTime.Now;
+
+			// Application update
+			if (caseEntity.Application != null)
+			{
+				caseEntity.Application.ApplicationStatus = "Rejected";
+				caseEntity.Application.CompletedDate = DateTime.Now;
+			}
+
+			await _context.SaveChangesAsync();
+			return true;
+		}
+
+		public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.Where(c => c.AssignedOfficerId == officerId && c.Application.ApplicationStatus == "Resubmitted")
+				.ToListAsync();
+		}
+
+		public async Task<object> GetOfficerDashboardAsync(int officerId)
+		{
+			var cases = await _context.Case
+				.Include(c => c.Application)
+				.Where(c => c.AssignedOfficerId == officerId)
+				.ToListAsync();
+
+			return new
+			{
+				PendingCount = cases.Count(c => c.Status == "Pending"),
+				AssignedCount = cases.Count(c => c.Status == "Assigned"),
+				CompletedCount = cases.Count(c => c.Status == "Completed"),
+				RejectedCount = cases.Count(c => c.Application.ApplicationStatus == "Rejected"),
+				ApprovedCount = cases.Count(c => c.Application.ApplicationStatus == "Approved")
+			};
+		}
+	}
 }

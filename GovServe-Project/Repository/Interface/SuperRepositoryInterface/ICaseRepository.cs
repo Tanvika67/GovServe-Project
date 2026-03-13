@@ -17,20 +17,30 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 
 		Task SaveAsync();
 
-		//officer work
-		Task<List<Case>> GetAssignedCases(int officerId);
-		Task<Case?> GetCaseById(int caseId);
-
-		Task UpdateCase(Case caseObj);
-		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
-
-		Task<string> Reject(int caseId, string reason);
 		Task<List<Case>> GetSLABreachedCasesAsync();
 
-		
+		//officer work
+		//Task<List<Case>> GetAssignedCases(int officerId);
+		//Task<Case?> GetCaseById(int caseId);
+
+		//Task UpdateCase(Case caseObj);
+		//Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+
+		//Task<string> Reject(int caseId, string reason);
 
 
 
+
+
+
+		//Task<List<Case>> GetResubmittedCases(int AssignedOfficerId);
+
+		Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId);
+		Task<Case?> GetCaseByIdAsync(int caseId);
+		Task<bool> ApproveCaseAsync(int caseId, string remarks);
+		Task<bool> RejectCaseAsync(int caseId, string reason);
+		Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId);
+		Task<object> GetOfficerDashboardAsync(int officerId);
 
 	}
 }

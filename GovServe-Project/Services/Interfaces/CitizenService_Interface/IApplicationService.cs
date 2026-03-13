@@ -19,20 +19,20 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 		
 		Task<bool> DeleteApplicationAsync(int ApplicationId);
 
-		Task<List<Case>> GetAssignedCases(int officerId);
+		Task<List<Case>> GetAssignedCases(int AssignedOfficerId);
 
-		Task<List<Case>> GetApprovedCases(int officerId);
+		Task<List<Case>> GetApprovedCases(int AssignedOfficerId);
 
-		Task<List<Case>> GetPendingCases(int officerId);
+		Task<List<Case>> GetPendingCases(int AssignedOfficerId);
 
-		Task<List<Case>> GetRejectedCases(int officerId);
+		Task<List<Case>> GetRejectedCases(int AssignedOfficerId);
 
-		Task<List<Case>> GetResubmittedCases(int officerId);
+		//Task<List<Case>> GetResubmittedCases(int officerId);
 
 
-		Task<bool> GetApproveCase(int CaseId, int officerId);
+		//Task<bool> GetApproveCase(int CaseId, int officerId);
 
-		Task<bool> RejectCase(int CaseId, int officerId, string reason);
+		//Task<bool> RejectCase(int CaseId, int officerId, string reason);
 
 		Task<Case> GetCaseById(int CaseId);
 

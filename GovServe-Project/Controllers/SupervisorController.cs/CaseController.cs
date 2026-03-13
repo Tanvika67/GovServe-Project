@@ -86,52 +86,159 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(await _service.GetDashboardAsync());
 		}
 
-		//officer work
+		//	officer work
 
-		//  GET - View assigned cases
-		[HttpGet("assigned/{AssignedOfficer}")]
-		[Authorize(Roles = "Officer")]
+		////  GET - View assigned cases
+		//[HttpGet("Assigned/{AssignedOfficer}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> GetAssignedCases(int AssignedOfficer)
+		//{
+		//	var cases = await _service.ViewAssignedCases(AssignedOfficer);
+		//	return Ok(cases);
+		//}
+
+		////  PUT - Open case (InProgress)
+		//[HttpPut("Open/{caseId}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> OpenCase(int caseId)
+		//{
+		//	await _service.OpenCase(caseId);
+		//	return Ok("Case opened succesfully");
+
+
+		//}
+
+
+		//	//  PUT - Approve case
+		//	[HttpPut("Approve/{caseId}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> ApproveCase(int caseId)
+		//{
+		//	var result = await _service.ApproveCase(caseId);
+		//	return Ok(result);
+		//}
+
+		////  PUT - Reject case//used for notification also
+		//[HttpPut("Reject/{caseId}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
+		//{
+		//	var result = await _service.Reject(caseId, reason);
+		//	return Ok(result);
+		//}
+
+
+
+
+
+
+
+
+		//		[HttpGet("Resubmitted/{AssignedOfficerId}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> GetResubmitted(int AssignedOfficerId)
+		//{
+		//	var result = await _service.GetResubmittedCases(AssignedOfficerId);
+		//	return Ok(result);
+
+		//}
+
+		////for getting application count on dashboard
+		//[HttpGet("Dashboard/{departmentId}")]
+		////[Authorize(Roles = "Officer")]
+		//public async Task<IActionResult> DashboardCounts(int departmentId)
+		//{
+		//	var result = await _service.GetDashboardCountsAsync(departmentId);
+		//	return Ok(result);
+		//}
+
+
+
+
+		[HttpGet("assigned/{officerId}")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> GetAssignedCases(int officerId)
 		{
-			var cases = await _service.ViewAssignedCases(officerId);
+			var cases = await _service.GetAssignedCasesAsync(officerId);
+
+			if (cases == null || !cases.Any())
+				return NotFound(new { message = "No cases assigned to this officer." });
+
 			return Ok(cases);
 		}
 
-		//  PUT - Open case (InProgress)
-		[HttpPut("open/{caseId}")]
-		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> OpenCase(int caseId)
+		// Officer: View details of a specific case
+		[HttpGet("{caseId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ViewCase(int caseId)
 		{
-			var result = await _service.OpenCase(caseId);
-			return Ok(result);
+			var caseDetails = await _service.GetCaseByIdAsync(caseId);
+
+			if (caseDetails == null)
+				return NotFound(new { message = "Case not found." });
+
+			return Ok(caseDetails);
 		}
 
-		//  PUT - Approve case
-		[HttpPut("approve/{caseId}")]
-		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> ApproveCase(int caseId)
+		// Officer: Approve a case
+		[HttpPut("{caseId}/approve")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ApproveCase(int caseId, [FromBody] string remarks)
 		{
-			var result = await _service.ApproveCase(caseId);
-			return Ok(result);
+			var result = await _service.ApproveCaseAsync(caseId, remarks);
+
+			if (!result)
+				return BadRequest(new { message = "Unable to approve case." });
+
+			return Ok(new { message = "Case approved successfully." });
 		}
 
-		//  PUT - Reject case//used for notification also
-		[HttpPut("reject/{caseId}")]
-		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
+		// Officer: Reject a case
+		[HttpPut("{caseId}/reject")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectCase(int caseId, [FromBody] string reason)
 		{
-			var result = await _service.Reject(caseId, reason);
-			return Ok(result);
+			var result = await _service.RejectCaseAsync(caseId, reason);
+
+			if (!result)
+				return BadRequest(new { message = "Unable to reject case." });
+
+			return Ok(new { message = "Case rejected successfully." });
 		}
 
-		//for getting application count on dashboard
-		[HttpGet("dashboard/{departmentId}")]
-		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> DashboardCounts(int departmentId)
+		// Officer: Get resubmitted applications
+		[HttpGet("resubmitted/{officerId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetResubmittedCases(int officerId)
 		{
-			var result = await _service.GetDashboardCountsAsync(departmentId);
-			return Ok(result);
+			var cases = await _service.GetResubmittedCasesAsync(officerId);
+
+			if (cases == null || !cases.Any())
+				return NotFound(new { message = "No resubmitted cases found." });
+
+			return Ok(cases);
+		}
+
+		// Officer: Dashboard summary (counts)
+		[HttpGet("dashboard/{officerId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> OfficerDashboard(int officerId)
+		{
+			var summary = await _service.GetOfficerDashboardAsync(officerId);
+
+			return Ok(summary);
 		}
 
 	}
-}
+
+
+
+	
+
+
+
+
+
+
+	}
+
