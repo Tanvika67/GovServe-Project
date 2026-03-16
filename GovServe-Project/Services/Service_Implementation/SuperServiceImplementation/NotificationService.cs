@@ -1,8 +1,9 @@
-﻿using GovServe_Project.Models.SuperModels;
+﻿using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
-using GovServe_Project.Services.Interfaces.SuperServiceInterface;
-using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -62,6 +63,24 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 		}
 
-		
+
+		public async Task SendNotificationAsync(int userId, string message, int caseId, string category)
+		{
+			Notification n = new Notification();
+			n.UserId = userId;
+			n.CaseId = caseId;     
+			n.Message = message;
+			n.Category = category; 
+			n.Status = "Unread";   
+			n.CreatedDate = DateTime.Now;
+
+			await _repo.AddAsync(n); 
+			await _repo.SaveAsync(); 
+		}
+
+
+
+
+
 	}
 }

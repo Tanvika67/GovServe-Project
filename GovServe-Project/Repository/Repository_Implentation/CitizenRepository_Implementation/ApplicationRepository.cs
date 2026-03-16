@@ -34,6 +34,19 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			return await _context.Application.FindAsync(ApplicationId);
 		}
 
+
+		public async Task<Application> GetApplicationWithDocuments(int applicationId)
+
+		{
+
+			return await _context.Application
+
+			.Include(a => a.CitizenDocuments)
+
+			.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+
+		}
+
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
@@ -52,103 +65,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			await _context.SaveChangesAsync();
 		}
 
-		//get assigned applications for officer
-
-		public async Task<List<Case>> GetAssignedCases(int officerId)
-
-		{
-
-			return await _context.Case
-
-				.Where(c => c.AssignedOfficerId == officerId
-		&& c.Status == "Assigned")
-
-				.ToListAsync();
-
-		}
-
-		public async Task<List<Case>> GetApprovedCases(int officerId)
-
-		{
-
-			return await _context.Case
-
-			.Include(c => c.Application)
-
-				.Where(c => c.AssignedOfficerId == officerId
-		&& c.Status == "Approved")
-
-				.ToListAsync();
-
-		}
-
-		public async Task<List<Case>> GetPendingCases(int officerId)
-
-		{
-
-			return await _context.Case
-
-				.Include(c => c.Application)
-
-				.Where(c => c.AssignedOfficerId == officerId
-		&& c.Status == "Pending")
-
-				.ToListAsync();
-
-		}
-
-		public async Task<List<Case>> GetRejectedCases(int officerId)
-
-		{
-
-			return await _context.Case
-
-				.Include(c => c.Application)
-
-				.Where(c => c.AssignedOfficerId == officerId
-		&& c.Status == "Rejected")
-
-				.ToListAsync();
-
-		}
-
-		//public async Task<List<Case>> GetResubmittedCases(int officerId)
-
-		//{
-
-		//	return await _context.Case
-
-		//		.Include(c => c.Application)
-
-		//		.Where(c => c.AssignedOfficerId == officerId
-		//&& c.Status == "Resubmitted")
-
-		//		.ToListAsync();
-
-		//}
-
-		public async Task<Case?> GetCaseById(int caseId)
-
-		{
-
-			return await _context.Case
-
-				.Include(c => c.Application)
-
-				.FirstOrDefaultAsync(c => c.CaseId == caseId);
-
-		}
-
-		public async Task UpdateCase(Case casedata)
-
-		{
-
-			_context.Case.Update(casedata);
-
-			await _context.SaveChangesAsync();
-
-		}
-
+		
 		//for officer to view application details
 
 		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)

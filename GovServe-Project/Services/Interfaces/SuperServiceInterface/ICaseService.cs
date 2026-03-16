@@ -29,8 +29,8 @@ namespace GovServe_Project.Services.Interfaces
 
 		Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId);
 		Task<Case?> GetCaseByIdAsync(int caseId);
-		Task<bool> ApproveCaseAsync(int caseId, string remarks);
-		Task<bool> RejectCaseAsync(int caseId, string reason);
+		Task<string> ApproveCaseAsync(int caseId);
+		Task<string> RejectCaseAsync(int caseId, string reason);
 		Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId);
 		Task<object> GetOfficerDashboardAsync(int officerId);
 

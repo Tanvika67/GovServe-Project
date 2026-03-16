@@ -95,85 +95,22 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 		//For my dashboard I created this
-		[HttpGet("officer-statistics")]
-		public async Task<IActionResult> GetOfficerStatistics()
-		//Returns summary like Total cases;Active cases;SLA breached
-		[HttpGet("dashboard")]
-		//[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> Dashboard()
-		{
-			var result = await _service.GetOfficerStatisticsAsync();
-			return Ok(result);
-		}
-
-		//	officer work
-
-		////  GET - View assigned cases
-		//[HttpGet("Assigned/{AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetAssignedCases(int AssignedOfficer)
+		//[HttpGet("officer-statistics")]
+		//public async Task<IActionResult> GetOfficerStatistics()
+		//Returns summary like Total cases;Active cases; SLA breached
+		//[HttpGet("dashboard")]
+		////[Authorize(Roles = "Supervisor")]
+		//public async Task<IActionResult> Dashboard()
 		//{
-		//	var cases = await _service.ViewAssignedCases(AssignedOfficer);
-		//	return Ok(cases);
-		//}
-
-		////  PUT - Open case (InProgress)
-		//[HttpPut("Open/{caseId}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> OpenCase(int caseId)
-		//{
-		//	await _service.OpenCase(caseId);
-		//	return Ok("Case opened succesfully");
-
-
-		//}
-
-
-		//	//  PUT - Approve case
-		//	[HttpPut("Approve/{caseId}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> ApproveCase(int caseId)
-		//{
-		//	var result = await _service.ApproveCase(caseId);
+		//	var result = await _service.GetOfficerStatisticsAsync();
 		//	return Ok(result);
 		//}
 
-		////  PUT - Reject case//used for notification also
-		//[HttpPut("Reject/{caseId}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
-		//{
-		//	var result = await _service.Reject(caseId, reason);
-		//	return Ok(result);
-		//}
+		
 
+		
 
-
-
-
-
-
-
-		//		[HttpGet("Resubmitted/{AssignedOfficerId}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetResubmitted(int AssignedOfficerId)
-		//{
-		//	var result = await _service.GetResubmittedCases(AssignedOfficerId);
-		//	return Ok(result);
-
-		//}
-
-		////for getting application count on dashboard
-		//[HttpGet("Dashboard/{departmentId}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> DashboardCounts(int departmentId)
-		//{
-		//	var result = await _service.GetDashboardCountsAsync(departmentId);
-		//	return Ok(result);
-		//}
-
-
-
+		//New Code for officer work
 
 		[HttpGet("assigned/{officerId}")]
 		//[Authorize(Roles = "Officer")]
@@ -203,13 +140,11 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		// Officer: Approve a case
 		[HttpPut("{caseId}/approve")]
 		//[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> ApproveCase(int caseId, [FromBody] string remarks)
+		public async Task<IActionResult> ApproveCase(int caseId)
 		{
-			var result = await _service.ApproveCaseAsync(caseId, remarks);
+			var result = await _service.ApproveCaseAsync(caseId);
 
-			if (!result)
-				return BadRequest(new { message = "Unable to approve case." });
-
+	
 			return Ok(new { message = "Case approved successfully." });
 		}
 
@@ -220,8 +155,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		{
 			var result = await _service.RejectCaseAsync(caseId, reason);
 
-			if (!result)
-				return BadRequest(new { message = "Unable to reject case." });
+			//if (!result)
+			//	return BadRequest(new { message = "Unable to reject case." });
 
 			return Ok(new { message = "Case rejected successfully." });
 		}
