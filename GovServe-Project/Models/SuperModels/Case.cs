@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.CitizenModels;
 
@@ -12,11 +13,13 @@ namespace GovServe_Project.Models.SuperModels
 		public int CaseId { get; set; }
 		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
+		[JsonIgnore]
 		public virtual Application Application { get; set; }
 		 
 		// Citizen linked automatically from Application
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
+		[JsonIgnore]
 		public virtual Users User { get; set; }
 
 		// Officer assigned automatically

@@ -1,15 +1,17 @@
-﻿using GovServe_Project.DTOs.SupervisorDTO;
+﻿using System.ComponentModel.DataAnnotations;
+using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
+using GovServe_Project.Exceptions;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
-using GovServe_Project.Data;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -249,9 +251,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			var caseObj = await _repo.GetCaseById(caseId);
 			if (caseObj == null) return "Case not found";
+			//throw new NotFoundException($"Case #{caseId} was not found in our system.");
 
-			
+
 			caseObj.Status = "Approved";
+
+			//throw new ValidationException("This case is already approved.");
 			caseObj.CompletedDate = DateTime.Now;
 
 			if (caseObj.Application == null)

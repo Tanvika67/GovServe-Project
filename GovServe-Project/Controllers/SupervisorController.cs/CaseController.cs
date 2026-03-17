@@ -26,7 +26,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//POST only I can create a case; API will create a new case in the system
 		[HttpPost]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);
@@ -95,20 +95,20 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			return Ok(result);
 		}
 		//For my dashboard I created this
-		//[HttpGet("officer-statistics")]
+		[HttpGet("officer-statistics")]
 		//public async Task<IActionResult> GetOfficerStatistics()
-		//Returns summary like Total cases;Active cases; SLA breached
+		////Returns summary like Total cases;Active cases; SLA breached
 		//[HttpGet("dashboard")]
 		////[Authorize(Roles = "Supervisor")]
-		//public async Task<IActionResult> Dashboard()
-		//{
-		//	var result = await _service.GetOfficerStatisticsAsync();
-		//	return Ok(result);
-		//}
+		////public async Task<IActionResult> Dashboard()
+		////{
+		////	var result = await _service.GetOfficerStatisticsAsync();
+		////	return Ok(result);
+		////}
 
-		
 
-		
+
+
 
 		//New Code for officer work
 
