@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-// builder holds the configuration and services for our app;CreateBuilder(args) → creates a builder object.
+
 var builder = WebApplication.CreateBuilder(args);
 
 // builder.Services → dependency injection (DI) container;builder.Configuration → provides access to configuration settings (appsettings.json)
@@ -71,6 +71,8 @@ builder.Services.AddCors(options =>
 				  .AllowAnyMethod();
 		});
 });
+
+//Middleware Pipeline
 
 var app = builder.Build();
 

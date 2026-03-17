@@ -428,6 +428,8 @@ namespace GovServe_Project.Migrations
 
                     b.HasIndex("DepartmentID");
 
+                    b.HasIndex("SupervisorId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Case");
@@ -766,6 +768,12 @@ namespace GovServe_Project.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany()
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.Users", "User")

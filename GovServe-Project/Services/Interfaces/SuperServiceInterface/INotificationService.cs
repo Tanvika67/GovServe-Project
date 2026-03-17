@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Models.SuperModels;
+using Microsoft.CodeAnalysis.Operations;
 namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 {
 	public interface INotificationService
@@ -12,7 +13,9 @@ namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 		Task MarkAsReadAsync(int notificationId);
 
 		Task SendNotification(int userId, string message);
-
+	
+	    Task SendNotificationAsync(int userId, string message, int caseId, string category);
+		
 
 	}
 }

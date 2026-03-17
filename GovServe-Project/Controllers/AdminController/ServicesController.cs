@@ -17,7 +17,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-      //  [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAllAsync());
@@ -31,7 +31,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("active")]
-       // [Authorize(Roles = "Admin,Citizen,Officer")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetActiveServices()
         {
             return Ok(await _service.GetActiveAsync());
@@ -45,14 +45,14 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, ServiceDTO dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -60,7 +60,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("search")]
-        [Authorize(Roles = "Admin,Officer")]
+        //[Authorize(Roles = "Admin,Officer")]
         public async Task<IActionResult> SearchByDepartment([FromQuery] string departmentName)
         {
             return Ok(await _service.SearchByDepartmentAsync(departmentName));
