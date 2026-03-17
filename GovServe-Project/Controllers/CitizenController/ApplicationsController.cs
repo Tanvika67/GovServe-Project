@@ -30,7 +30,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Create Application
 		[HttpPost("create")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
 			var result = await _applicationService.CreateApplicationAsync(dto);

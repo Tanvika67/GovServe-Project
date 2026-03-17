@@ -100,6 +100,28 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				})
 				.ToListAsync();
 		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			var stats = new DashboardStatsDto
+			{
+				TotalCases = await _context.Case.CountAsync(),
+
+				PendingCases = await _context.Case
+					.CountAsync(c => c.Status == "Pending"),
+
+				AssignedCases = await _context.Case
+					.CountAsync(c => c.Status == "Assigned"),
+
+				CompletedCases = await _context.Case
+					.CountAsync(c => c.Status == "Completed"),
+
+				EscalatedCases = await _context.Case
+					.CountAsync(c => c.Status == "Escalated")
+			};
+
+			return stats;
+		}
+
 		//officers work
 		// Get assigned cases
 		public async Task<List<Case>> GetAssignedCases(int officerId)

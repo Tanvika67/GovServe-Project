@@ -1,14 +1,16 @@
-﻿using GovServe_Project.DTOs.SupervisorDTO;
+﻿using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
-using Microsoft.AspNetCore.Mvc;
-using GovServe_Project.DTOs.OfficerDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace GovServe_Project.Controllers.SupervisorController.cs
 {
+	[EnableCors("AllowAll")]
 	[ApiController]
 	[Route("api/[controller]")]
 	//[Authorize(Roles = "Supervisor")]
@@ -98,6 +100,13 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		{
 			var result = await _service.GetOfficerStatisticsAsync();
 			return Ok(result);
+		}
+		//To display on supervisor dashboard
+		[HttpGet("dashboard-stats")]
+		public async Task<IActionResult> GetDashboardStats()
+		{
+			var stats = await _service.GetDashboardStatsAsync();
+			return Ok(stats);
 		}
 
 		//officer work

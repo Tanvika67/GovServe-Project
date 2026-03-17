@@ -47,6 +47,10 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetOfficerStatisticsAsync();
 		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			return await _repo.GetDashboardStatsAsync();
+		}
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
 			var application = await _applicationRepo
