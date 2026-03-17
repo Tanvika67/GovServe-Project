@@ -1,0 +1,484 @@
+
+Selection
+Evaluation
+Select Course 
+Assess-Type-1: Code Challenge - Entity Framework
+ Select Section 
+Entity Framework
+ Select Program 
+Membership Repository
+   
+ Logged in as 2472076@cognizant.com
+
+Time Left 
+1 : 53 : 14
+ 
+
+
+Problem Description
+
+
+
+
+
+Note :
+EFCore.csproj file is given for your reference in the code template. Do not make any changes here.
+
+Scenario:
+
+A fitness center requires a C# application to manage its membership system. The system needs to handle membership plans, attendance tracking, and subscription information.
+
+Help them to create a C# application to store details in the SQLSERVER database and use the Entity Framework Core to connect to the database, which provides the following functionalities.
+
+ 
+
+Functionalities:
+
+Add membership plan to the database.
+Retrieve membership plan details for a specific ID.
+Update membership price details for a specific ID.
+Remove membership plan details for a specific ID.
+
+
+Requirements: 
+
+1. In the class MembershipPlan, implement the below given public properties.
+
+        Data Type
+
+          Property Name
+
+   string
+
+   Id
+
+   string
+
+   Name
+
+   double
+
+   Price
+
+Add the data annotation attribute to make the Id property the primary key in the MembershipPlan class.
+Add the data annotation for Id [DatabaseGenerated(DatabaseGeneratedOption.None)]
+
+
+
+2. In the class MembershipPlanContext, implement the below given property, method and also inherit the class DbContext.
+
+              Data Type
+
+             Property Name
+
+  DbSet<MembershipPlan >
+
+  MembershipPlans
+
+
+
+             Method
+
+               Description
+
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+This method is used to configure the database connection for the DbContext.
+
+
+
+appsettings.json: 
+
+{
+
+  "ConnectionStrings": {
+
+    "DefaultConnection": "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=StudentDB;Integrated Security=True;"
+
+  }
+
+}
+
+This file is already provided for you. Use the connection string in your context class OnConfiguring method to configure the database.
+
+
+
+ The below-given reference code is the part of the MembershipPlanContext .cs
+
+
+
+
+
+3. In the class MembershipPlanRepository, implement the below given public methods.
+
+         Method 
+
+      Description
+
+public void AddMembershipPlan (MembershipPlan plan)
+
+This method is used to add the given membership plan details to the database. 
+
+public MembershipPlan GetMembershipPlanById(string id)
+
+This method is used to return the specific membership plan details from the database based on the membership plan id passed.
+
+public MembershipPlan  UpdateMembershipPlanPrice(string id, double newPrice)
+
+This method is used to update the price of the membership plan and return the updated details.
+
+public bool RemoveMembershipPlan(string id)
+
+This method is used to remove the specific membership plan details from the database based on the id passed and return true. If the id is not found, then return false.
+
+
+
+4. In the class Program - Main() method implementation already provided in the code template.
+
+
+
+The below records are already available in the database table.
+
+  Id
+
+  Name
+
+   Price
+
+  M1
+
+  Basic
+
+  1500
+
+  M2
+
+  Premium
+
+  3000
+
+  M3
+
+  Gold
+
+  5000
+
+
+Note:
+
+Keep the properties, methods and classes as public.
+Please read the method rules clearly.
+Do not use Environment.Exit() to terminate the program.
+Do not change the given code template.  
+      
+
+
+
+Sample Input/output:
+
+1. Add Membership Plan
+
+2. Get Membership Plan By Id
+
+3. Update Membership Plan Price
+
+4. Remove Membership Plan By Id
+
+5. Exit
+
+Enter your choice
+
+1
+
+Enter membership plan id
+
+M4
+
+Enter the name
+
+Platinum
+
+Enter the price
+
+7500
+
+
+
+Details Added Successfully
+
+
+
+1. Add Membership Plan
+
+2. Get Membership Plan By Id
+
+3. Update Membership Plan Price
+
+4. Remove Membership Plan By Id
+
+5. Exit
+
+Enter your choice
+
+2
+
+
+Enter membership plan id
+
+M4
+
+
+
+M4   Platinum    7500
+
+
+
+1. Add Membership Plan
+
+2. Get Membership Plan By Id
+
+3. Update Membership Plan Price
+
+4. Remove Membership Plan By Id
+
+5. Exit
+
+Enter your choice
+
+3
+
+Enter membership plan id
+
+M4
+
+Enter the price
+
+7000
+
+
+
+M4   Platinum    7000
+
+
+
+1. Add Membership Plan
+
+2. Get Membership Plan By Id
+
+3. Update Membership Plan Price
+
+4. Remove Membership Plan By Id
+
+5. Exit
+
+Enter your choice
+
+4
+
+Enter membership plan id
+
+M4
+
+
+
+Details Removed Successfully
+
+
+
+1. Add Membership Plan
+
+2. Get Membership Plan By Id
+
+3. Update Membership Plan Price
+
+4. Remove Membership Plan By Id
+
+5. Exit
+
+Enter your choice
+
+5 
+
+
+
+Thank you
+
+
+
+
+
+
+ Show Required Files List  using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MembershipPlanProject //DO NOT Change the namespace name
+{
+    public class MembershipPlan //DO NOT Change the class name
+    {
+       //Implement the code here
+    }using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MembershipPlanProject //DO NOT Change the namespace name
+{
+    public class MembershipPlanRepository //DO NOT Change the class name
+    {
+       //Implement the code here
+    }
+}namespace MembershipPlanProject //DO NOT Change the namespace name
+{
+    public class Program //DO NOT Change the class name
+    {
+        public static void Main(string[] args)
+        {
+            MembershipPlanRepository repository = new MembershipPlanRepository();
+        
+            int choice;
+            do
+            {
+                Console.WriteLine("1. Add Membership Plan");
+                Console.WriteLine("2. Get Membership Plan By Id");
+                Console.WriteLine("3. Update Membership Plan Price");
+                Console.WriteLine("4. Remove Membership Plan By Id");
+                Console.WriteLine("5. Exit");
+                Console.WriteLine("Enter your choice");
+    
+                if (!int.TryParse(Console.ReadLine(), out choice))
+                {
+                    Console.WriteLine("Please enter a valid choice.");
+                    continue;
+                }
+    
+                switch (choice)
+                {
+                    case 1:
+                        Console.WriteLine("Enter membership plan id");
+                        string newId = Console.ReadLine();
+    
+                        Console.WriteLine("Enter the name");
+                        string newName = Console.ReadLine();
+    
+                        Console.WriteLine("Enter the price");
+                        double newPrice;
+                        if (!double.TryParse(Console.ReadLine(), out newPrice))
+                        {
+                            Console.WriteLine("Invalid price.");
+                            break;
+                        }
+    
+                        repository.AddMembershipPlan(new MembershipPlan { Id = newId, Name = newName, Price = newPrice });
+                        Console.WriteLine("Details Added Successfully");
+                        break;
+    
+                    case 2:
+                        Console.WriteLine("Enter membership plan id");
+                        string idToFind = Console.ReadLine();
+    
+                        MembershipPlan foundPlan = repository.GetMembershipPlanById(idToFind);
+                        if (foundPlan != null)
+                        {
+                            Console.WriteLine($"{foundPlan.Id}   {foundPlan.Name}    {foundPlan.Price}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Membership plan not found.");
+                        }
+                        break;
+    
+                    case 3:
+                        Console.WriteLine("Enter membership plan id");
+                        string idToUpdate = Console.ReadLine();
+    
+                        Console.WriteLine("Enter the price");
+                        double updatedPrice;
+                        if (!double.TryParse(Console.ReadLine(), out updatedPrice))
+                        {
+                            Console.WriteLine("Invalid price.");
+                            break;
+                        }
+    
+                        MembershipPlan updatedPlan = repository.UpdateMembershipPlanPrice(idToUpdate, updatedPrice);
+                        if (updatedPlan != null)
+                        {
+                            Console.WriteLine($"{updatedPlan.Id}   {updatedPlan.Name}    {updatedPlan.Price}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Membership plan not found.");
+                        }
+                        break;
+    
+                    case 4:
+                        Console.WriteLine("Enter membership plan id");
+                        string idToRemove = Console.ReadLine();
+    
+                        bool removed = repository.RemoveMembershipPlan(idToRemove);
+                        if (removed)
+                        {
+                            Console.WriteLine("Details Removed Successfully");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Membership plan not found.");
+                        }
+                        break;
+    
+                    case 5:
+                        Console.WriteLine("Thank you");
+                        break;
+    
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+    
+            } while (choice != 5);
+        }
+    }
+}{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=StudentDB;Integrated Security=True;"
+  }
+}<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.4.23259.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0-preview.4.23259.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-preview.4.23259.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+  </ItemGroup>
+   <ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+namespace MembershipPlanProject  //DO NOT Change the namespace name
+{
+    public class MembershipPlanContext //DO NOT Change the class name
+    {
+         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+         {
+             // implement the code for configuring connection using connection string name mentioned in appsettings.json file
+         }
+       
+        //Declare 'MembershipPlans' of type Dbset and add neccessary declaration code.
+        
+    }
+}

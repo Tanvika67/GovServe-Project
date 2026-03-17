@@ -100,14 +100,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				})
 				.ToListAsync();
 		}
-		
-
-		//public Task<List<Case>> GetSLABreachedCasesAsync()
-		//{
-		//	throw new NotImplementedException();
-		//}
-
-		public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+		//officers work
+		// Get assigned cases
+		public async Task<List<Case>> GetAssignedCases(int officerId)
 		{
 			throw new NotImplementedException();
 		}

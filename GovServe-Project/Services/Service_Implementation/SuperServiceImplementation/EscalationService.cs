@@ -6,6 +6,7 @@ using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Data;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -15,13 +16,16 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly ICaseRepository _caseRepo;
 		private readonly INotificationService _notificationService;
 		private readonly ISLARecordRepository _slaRepo;
+		private readonly GovServe_ProjectContext _context;
 
-		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo)   
+		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo, GovServe_ProjectContext context)   
 		{
 			_repo = repo;
 			_caseRepo = caseRepo;
 			_notificationService = notificationService;
 			_slaRepo = slaRepo; 
+			_context= context;
+
 		}
 
 		public async Task SendSLAWarningsAsync()
@@ -52,9 +56,18 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			var breachedCases = await _repo.GetSLABreachedCasesAsync();
 
+			// fetch supervisor automatically
+			var supervisor = await _context.User
+				.Where(u => u.Role.RoleName == "Supervisor")
+				.FirstOrDefaultAsync();
+
+			if (supervisor == null)
+				throw new Exception("Supervisor not found");
+
 			foreach (var sla in breachedCases)
 			{
 				var c = await _caseRepo.GetByIdAsync(sla.CaseId);
+
 				if (c == null || c.IsEscalated)
 					continue;
 
@@ -64,6 +77,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				var escalation = new Escalation
 				{
 					CaseId = c.CaseId,
+					SupervisorId = supervisor.UserId,   // ADD THIS
 					PreviousOfficerId = oldOfficerId,
 					NewOfficerId = 0,
 					Reason = "Auto escalation due to SLA breach",
@@ -80,7 +94,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 				_caseRepo.Update(c);
 
-				// Notifications (citizen + old officer only)
 				await _notificationService.SendNotificationAsync(
 					citizenId,
 					"Your application is delayed and escalated",
@@ -95,6 +108,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			}
 
 			await _caseRepo.SaveAsync();
+
 			return "Auto escalation completed";
 		}
 
