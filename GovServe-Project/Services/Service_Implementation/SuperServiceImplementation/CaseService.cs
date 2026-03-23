@@ -38,50 +38,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			return await _repo.GetSLABreachedCasesAsync();
 		}
 
-		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
-		{
-			// Get available officer automatically
-			var officerId = await GetAvailableOfficer(dto.DepartmentId);
-
-			if (officerId == 0)
-				return "No officer available";
-
-			// Create case directly assigned to officer
-			var model = new Case
-			{
-				ApplicationID = dto.ApplicationId,
-				DepartmentID = dto.DepartmentId,
-				AssignedOfficerId = officerId,
-				Status = "Assigned",  
-				AssignedDate = DateTime.Now,
-				LastUpdated = DateTime.Now
-			};
-
-			await _repo.AddAsync(model);
-			await _repo.SaveAsync();
-
-			return "Case auto-assigned successfully";
-		}
-		public async Task<int> GetAvailableOfficer(int departmentId)
-		{
-			var officers = await _userRepo.GetOfficersByDepartmentAsync(departmentId);
-
-			int selectedOfficerId = 0;
-			int minCases = int.MaxValue;
-
-			foreach (var officer in officers)
-			{
-				var count = await _userRepo.GetActiveCaseCountByOfficerAsync(officer.UserId);
-
-				if (count < minCases)
-				{
-					minCases = count;
-					selectedOfficerId = officer.UserId;
-				}
-			}
-
-			return selectedOfficerId;
-		}
+		
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
 			var c = await _repo.GetByIdAsync(caseId);

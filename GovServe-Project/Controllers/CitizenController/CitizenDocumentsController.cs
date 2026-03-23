@@ -67,7 +67,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Document Status
 		[HttpGet("status/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentStatus(int id)
 		{
 			var status = await _service.GetDocumentStatusAsync(id);
@@ -80,7 +80,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Delete Document
 		[HttpDelete("delete/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			var result = await _service.DeleteDocumentAsync(id);
@@ -92,7 +92,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
-		[Authorize(Roles = "Officer")]
+		//[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> ApproveDocument(int id)
 		{
 			var result = await _service.ApproveDocument(id);

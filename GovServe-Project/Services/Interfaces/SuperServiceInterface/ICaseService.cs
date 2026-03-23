@@ -11,7 +11,6 @@ namespace GovServe_Project.Services.Interfaces
 		Task<IEnumerable<Case>> GetActiveCasesAsync();
 		Task<List<Case>> GetSLABreachedCasesAsync();
 		Task<object> GetDashboardAsync();
-		Task<string> CreateCaseAsync(CreateCaseDto dto);
 		Task<string> ReassignCaseAsync();
 	    Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId);
 		Task<string> UpdateCaseStatus(int caseId, string status);

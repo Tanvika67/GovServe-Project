@@ -15,22 +15,8 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task DeleteAsync(Application ApplicationId);
 
-		Task<List<Case>> GetAssignedCases(int officerId);
+		Task UpdateAsync(Application application);
 
-		Task<List<Case>> GetApprovedCases(int officerId);
-
-		Task<List<Case>> GetPendingCases(int officerId);
-
-		Task<List<Case>> GetRejectedCases(int officerId);
-
-		Task<List<Case>> GetResubmittedCases(int officerId);
-
-		Task<Case?> GetCaseById(int CaseId);
-
-		Task UpdateCase(Case casedata);
-
-		//Task DeleteAsync(Application application);
-		Task<ApplicationDetails> GetApplicationDetails(int ApplicationId);
 	}
 
 }

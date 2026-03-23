@@ -21,16 +21,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		{
 			_service = service;
 		}
-
-		//POST only I can create a case; API will create a new case in the system
-		//Case will be automatically assigned to the least busy officer
-		[HttpPost]
-		[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
-		{
-			var result = await _service.CreateCaseAsync(dto);
-			return Ok(result);
-		}
+		
 
 		//GET only I can see all cases;Fetches complete list of case from the database
 		[HttpGet("all")]

@@ -17,7 +17,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAllAsync());
@@ -31,7 +31,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("active")]
-        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetActiveDepartments()
         {
             return Ok(await _service.GetActiveAsync());

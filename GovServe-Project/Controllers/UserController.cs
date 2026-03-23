@@ -2,6 +2,7 @@
 using GovServe_Project.DTOs;
 using GovServe_Project.Models;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Service_Implementation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +42,7 @@ namespace GovServe_Project.Controllers
 			return Ok(data);
 		}
 
-		// Get All Users (Admin)
+		// Get All Users 
 
 		[HttpGet("all")]
 		public async Task<IActionResult> GetAllUsers()
@@ -72,6 +73,30 @@ namespace GovServe_Project.Controllers
 				return NotFound();
 
 			return Ok("User Deleted");
+		}
+
+		//Get Pending Users
+		[HttpGet("pending-users")]
+		public async Task<IActionResult> GetPendingUsers()
+		{
+			var users = await _service.GetPendingUsers();
+			return Ok(users);
+		}
+
+		// Approve User
+		[HttpPut("approve/{id}")]
+		public async Task<IActionResult> ApproveUser(int id)
+		{
+			var result = await _service.ApproveUser(id);
+			return Ok(result);
+		}
+
+		// Reject User
+		[HttpPut("reject/{id}")]
+		public async Task<IActionResult> RejectUser(int id)
+		{
+			var result = await _service.RejectUser(id);
+			return Ok(result);
 		}
 	}
 }

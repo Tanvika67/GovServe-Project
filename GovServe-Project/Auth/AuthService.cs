@@ -59,5 +59,27 @@ namespace GovServe_Project.Auth
         
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
+
+		public async Task<bool> ForgotPassword(LoginDTO model)
+		{
+			var user = await _context.User
+				.FirstOrDefaultAsync(x => x.Email == model.Email);
+
+			if (user == null)
+			{
+				return false;
+			}
+
+			user.Password = model.Password;
+
+			await _context.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task Logout()
+		{
+			await Task.CompletedTask;
+		}
 	}
 }

@@ -27,26 +27,25 @@ namespace GovServe_Project.Models
 		public string Phone { get; set; }
 
 		[Required]
-
 		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
 		ErrorMessage = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.")]
 		public string Password { get; set; }
 
-        [ForeignKey("DepartmentID")]
-        public int DepartmentID { get; set; }
-        public virtual Department Department { get; set; }
+        
+        public int? DepartmentID { get; set; }
+		[ForeignKey("DepartmentID")]
+		public virtual Department Department { get; set; }
+
+		public string? DepartmentName { get; set; }
 
 		[Required]
-	
-		[ForeignKey("RoleID")]
         public int RoleID { get; set; }
+		[ForeignKey("RoleID")]
+		public virtual Role Role { get; set; }
 
-        public virtual Role Role { get; set; }
 		public string RoleName { get; set; }
 
-
-	
-
+		public string Status { get; set; } = "Approved";
 
 		// Navigation Property
 		public virtual ICollection<Application> Applications { get; set; }
