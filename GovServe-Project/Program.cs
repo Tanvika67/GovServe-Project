@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 
-// builder holds the configuration and services for our app;CreateBuilder(args) → creates a builder object.
+
 var builder = WebApplication.CreateBuilder(args);
 
 // builder.Services → dependency injection (DI) container;builder.Configuration → provides access to configuration settings (appsettings.json)
@@ -47,6 +47,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	};
 });
 
+//builder.Services.AddCors(options =>
+//{
+//	options.AddPolicy("MyCorsPolicy", builder => builder
+//		.WithOrigins("http://localhost:3000")
+//		.AllowAnyMethod()
+//		.AllowCredentials()
+//		.WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+//});
+
 builder.Services.AddAuthorization();
 
 
@@ -63,15 +72,17 @@ builder.Services.AddCors(options =>
 });
 });
 
+//Middleware Pipeline
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+	app.UseMiddleware<ExceptionMiddleware>();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowAll");

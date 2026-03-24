@@ -27,12 +27,6 @@ namespace GovServe_Project.Data
 				.WithMany()
 				.HasForeignKey(a => a.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
-			// User   ->  Department
-			modelBuilder.Entity<Users>()
-				 .HasOne(u => u.Department)
-				 .WithMany()
-				 .HasForeignKey(u => u.DepartmentID)
-				 .OnDelete(DeleteBehavior.Restrict);
 
 			// Application → Service
 			modelBuilder.Entity<Application>()
@@ -57,7 +51,7 @@ namespace GovServe_Project.Data
 
 			modelBuilder.Entity<Case>()
 	             .HasOne(c => c.Application)
-	             .WithMany()
+                 .WithMany()
 	            .HasForeignKey(c => c.ApplicationID)
 	            .OnDelete(DeleteBehavior.Restrict);
 
@@ -68,11 +62,11 @@ namespace GovServe_Project.Data
                       .HasForeignKey(c => c.UserId)
                       .OnDelete(DeleteBehavior.Restrict); // or .NoAction() in EF Core 5+
 
-			//modelBuilder.Entity<Case>()
-			//	.HasOne(c => c.AssignedOfficer)
-			//	.WithMany()
-			//	.HasForeignKey(c => c.AssignedOfficerId)
-			//	.OnDelete(DeleteBehavior.Restrict);
+    //        modelBuilder.Entity<Case>()
+				//.HasOne<Users>()
+				//.WithMany()
+				//.HasForeignKey(c => c.SupervisorId)
+				//.OnDelete(DeleteBehavior.Restrict);
 
 			modelBuilder.Entity<Escalation>()
 	             .HasOne(e => e.Case)
@@ -130,10 +124,7 @@ namespace GovServe_Project.Data
 
 
 
-		internal async Task SaveChaangesAsync(Service service)
-        {
-            throw new NotImplementedException();
-        }
+		
     }
 }
 

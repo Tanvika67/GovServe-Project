@@ -1,14 +1,17 @@
-﻿using GovServe_Project.DTOs.SupervisorDTO;
+﻿using System.ComponentModel.DataAnnotations;
+using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
+using GovServe_Project.Exceptions;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -25,6 +28,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			_notificationService = notificationService;
 			_userRepo=userRepo;
 			_applicationRepo = applicationRepo;
+
+			
 		}
 
 		public async Task<IEnumerable<Case>> GetAllCasesAsync()
@@ -43,7 +48,14 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetSLABreachedCasesAsync();
 		}
-
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			return await _repo.GetOfficerStatisticsAsync();
+		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			return await _repo.GetDashboardStatsAsync();
+		}
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
 			var application = await _applicationRepo
@@ -204,70 +216,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			};
 		}
 
-		//officer work
-
-		public async Task<List<Case>> ViewAssignedCases(int officerId)
-		{
-			return await _repo.GetAssignedCases(officerId);
-		}
-
-		// Officer opens case → InProgress
-		public async Task<string> OpenCase(int caseId)
-		{
-			var caseObj = await _repo.GetCaseById(caseId);
-
-			if (caseObj == null)
-				return "Case not found";
-
-			caseObj.Status = "InProgress";
-			await _repo.UpdateCase(caseObj);
-
-			return "Case marked as In Progress";
-		}
-
-		public async Task<string> ApproveCase(int caseId)
-		{
-			var caseObj = await _repo.GetCaseById(caseId);
-
-			if (caseObj == null)
-				return "Case not found";
-
-			caseObj.Status = "Approved";
-			caseObj.RejectionReason = null;
-
-			await _repo.UpdateCase(caseObj);
-
-			return "Case Approved Successfully";
-		}
-
-		public async Task<string> Reject(int caseId, string reason)
-		{
-			var caseObj = await _repo.GetCaseById(caseId);
-
-			if (caseObj == null)
-				return "Case not found";
-
-			caseObj.Status = "Rejected";
-			caseObj.RejectionReason = reason;
-
-			await _repo.UpdateCase(caseObj);
-
-			return "Case Rejected with reason: ";
-
-			//add notification
-
-		}
-
-
-		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			return await _repo.GetDashboardCountsAsync(departmentId);
-		}
-
-		public Task<string> ReassignCaseAsync()
-		{
-			throw new NotImplementedException();
-		}
 
 		public Task<string> ReassignEscalatedCaseAsync()
 		{
@@ -277,8 +225,122 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly INotificationService notificationService;
 
 
+		public Task<string> ReassignCaseAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		//public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		//{
+		//	return await _repo.GetDashboardCountsAsync(departmentId);
+		//}
+
+
+
+		//New code
+
+
+		public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
+		{
+			var cases = await _repo.GetAssignedCasesAsync(officerId);
+			return cases ?? Enumerable.Empty<Case>();
+		}
+
+
+		public async Task<Case?> GetCaseByIdAsync(int caseId)
+		{
+			return await _repo.GetCaseByIdAsync(caseId);
+		}
+		public async Task<string> ApproveCaseAsync(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+			if (caseObj == null) return "Case not found";
+			//throw new NotFoundException($"Case #{caseId} was not found in our system.");
+
+
+			caseObj.Status = "Approved";
+
+			//throw new ValidationException("This case is already approved.");
+			caseObj.CompletedDate = DateTime.Now;
+
+			if (caseObj.Application == null)
+			{
+				return "Application data not linked to this case";
+				caseObj.Application.ApplicationStatus = "Approved";
+				caseObj.Application.CompletedDate = DateTime.Now;
+			}
+
+
+			// --- Notification Logic Start ---
+			await _notificationService.SendNotificationAsync(
+		     caseObj.Application.UserId,
+		     $" Your case #{caseId} has been approved.",caseId);
+
+			await _repo.UpdateCase(caseObj);
+			return "Case approved successfully";
+		}
+
+		public async Task<string> RejectCaseAsync(int caseId, string reason)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+			if (caseObj == null) return "Case not found";
+
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason; 
+
+			if (caseObj.Application != null)
+			{
+				caseObj.Application.ApplicationStatus = "Rejected";
+				
+			}
+
+			await _notificationService.SendNotificationAsync(
+		     caseObj.Application.UserId,
+		     $"Your application was rejected. Reason: {reason}",caseId);
+
+
+
+
+			await _repo.UpdateCase(caseObj);
+
+			return "Case rejected successfully";
+
+
+
+
+		}
+
+
+		public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
+		{
+			// Take data from Repository 
+			var cases = await _repo.GetResubmittedCasesAsync(officerId);
+
+			// Jar cases null asatil tar empty list return karane (Error prevent sathi)
+			if (cases == null)
+			{
+				return Enumerable.Empty<Case>();
+			}
+
+			return cases;
+
+		}
+			public async Task<object> GetOfficerDashboardAsync(int officerId)
+		{
+			var summary = await _repo.GetOfficerDashboardAsync(officerId);
+			return summary;
+		}
 	}
+
+
+
+
+
+
+
+
 }
+
 
 
  

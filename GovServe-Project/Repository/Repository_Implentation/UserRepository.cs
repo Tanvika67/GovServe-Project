@@ -64,6 +64,9 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			return await _context.Case
 				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
+
+
+		
 	}
 }
 

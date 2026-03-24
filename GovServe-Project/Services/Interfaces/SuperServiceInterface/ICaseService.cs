@@ -15,13 +15,26 @@ namespace GovServe_Project.Services.Interfaces
 		Task<string> CreateCaseAsync(CreateCaseDto dto);
 		Task<string> ReassignCaseAsync();
 	    Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId);
+		Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
+		Task<DashboardStatsDto> GetDashboardStatsAsync();
 		Task<string> UpdateCaseStatus(int caseId, string status);
-		Task<List<Case>> ViewAssignedCases(int officerId);
-        
-        Task<string> OpenCase(int caseId);
-		Task<string> ApproveCase(int caseId);
-		Task<string> Reject(int caseId, string reason);
-		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+
+
+		//Task<List<Case>> ViewAssignedCases(int AssignedOfficerId);
+		//Task<string> ApproveCase(int caseId);
+		//Task<string> Reject(int caseId, string reason);
+		//Task<List<Case>> GetResubmittedCases(int AssignedOfficerId);
+		//Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+		//Task OpenCase(int caseId);
+
+
+		Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId);
+		Task<Case?> GetCaseByIdAsync(int caseId);
+		Task<string> ApproveCaseAsync(int caseId);
+		Task<string> RejectCaseAsync(int caseId, string reason);
+		Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId);
+		Task<object> GetOfficerDashboardAsync(int officerId);
+
 
 
 	}

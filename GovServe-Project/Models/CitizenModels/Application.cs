@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Models.SuperModels;
+using System.Text.Json.Serialization;
 
 
 namespace GovServe_Project.Models.CitizenModels
@@ -19,6 +20,7 @@ namespace GovServe_Project.Models.CitizenModels
 		[Required]
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
+		[JsonIgnore]
 		public virtual Users User { get; set; }
 
 
@@ -41,12 +43,14 @@ namespace GovServe_Project.Models.CitizenModels
 
 		public string ApplicationStatus { get; set; } = "Submitted";
 
+		
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 
 		public virtual ICollection<Grievance> Grievances { get; set; }
 
 		public virtual ICollection<Appeal> Appeals { get; set; }
 
+		[JsonIgnore]
 		public virtual Case Case { get; set; }
 	}
 

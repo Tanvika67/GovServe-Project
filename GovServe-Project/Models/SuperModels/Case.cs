@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.CitizenModels;
 
@@ -10,14 +11,15 @@ namespace GovServe_Project.Models.SuperModels
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CaseId { get; set; }
-
 		public int ApplicationID { get; set; }
 		[ForeignKey("ApplicationID")]
+		[JsonIgnore]
 		public virtual Application Application { get; set; }
 		 
 		// Citizen linked automatically from Application
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
+		[JsonIgnore]
 		public virtual Users User { get; set; }
 
 		// Officer assigned automatically
@@ -32,9 +34,9 @@ namespace GovServe_Project.Models.SuperModels
 		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
 		public string Status { get; set; } = "Assigned";
 		public DateTime? AssignedDate { get; set; }
-		public DateTime? CompletedDate { get; set; }
 		public bool IsWarningSent { get; set; }
 		public bool IsEscalated { get; set; } = false;
+		public DateTime? CompletedDate { get; set; }
 		public DateTime LastUpdated { get; set; } = DateTime.Now;
 		public string? RejectionReason { get; set; }
 	}

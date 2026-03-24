@@ -4,6 +4,7 @@ using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 
 namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
@@ -12,14 +13,17 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
     {
         private readonly ISLARecordRepository _repository;
         private readonly IWorkflowStageRepository _stageRepository;
+        private readonly ICaseRepository _caseRepository;
 
-        public SLARecordService(
+		public SLARecordService(
             ISLARecordRepository repository,
-            IWorkflowStageRepository stageRepository)
+            IWorkflowStageRepository stageRepository,
+            ICaseRepository caseRepository)
         {
             _repository = repository;
             _stageRepository = stageRepository;
-        }
+            _caseRepository = caseRepository;
+		}
 
         public async Task<IEnumerable<SLARecordResponseDto>> GetAllAsync()
         {
@@ -59,33 +63,35 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return records.Select(MapToDto);
         }
 
-        public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
-        {
-            // 1) Get workflow stage to fetch SLA days
-            var stage = await _stageRepository.GetByIdAsync(dto.StageID)
-                ?? throw new NotFoundException("Workflow stage not found");
+		public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
+		{
+			// 1) Get workflow stage to fetch SLA days
+			var stage = await _stageRepository.GetByIdAsync(dto.StageID)
+				?? throw new NotFoundException("Workflow stage not found");
 
-            // 2) Calculate EndDate automatically (this is actually a SLA due date)
-            var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
+			// 2) Calculate EndDate automatically
+			var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
 
-            var record = new SLARecords
-            {
-                CaseId = dto.CaseID,
-                StageID = dto.StageID,
-                StartDate = dto.StartDate,
-                EndDate = calculatedEndDate
-            };
+			var record = new SLARecords
+			{
+				CaseId = dto.CaseID,
+				StageID = dto.StageID,
+				StartDate = dto.StartDate,
+				EndDate = calculatedEndDate
+			};
 
-            // 3) Calculate Status
-            UpdateStatus(record);
+			// 3) Calculate SLA status and update case
+			await UpdateStatus(record);
 
-            await _repository.AddAsync(record);
-            //await _repository.SaveAsync();
+			// 4) Save SLA record
+			await _repository.AddAsync(record);
+			//await _repository.SaveAsync();
 
-            return MapToDto(record);
-        }
+			return MapToDto(record);
+		}
 
-        public async Task DeleteAsync(int id)
+
+		public async Task DeleteAsync(int id)
         {
             var record = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA record not found");
@@ -93,19 +99,29 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             await _repository.DeleteAsync(record);
         }
 
-        // Automatic status update: Breached if now > EndDate (SLA target), else OnTime.
-        private void UpdateStatus(SLARecords record)
-        {
-            // If EndDate is a nullable target, guard for null:
-            // if (record.EndDate == null) { record.Status = SLAStatus.OnTime; return; }
+		private async Task UpdateStatus(SLARecords record)
+		{
+			if (DateTime.UtcNow > record.EndDate)
+				record.Status = SLAStatus.Breached;
+			else
+				record.Status = SLAStatus.OnTime;
 
-            if (DateTime.UtcNow > record.EndDate)
-                record.Status = SLAStatus.Breached;
-            else
-                record.Status = SLAStatus.OnTime;
-        }
+			// Update case table
+			var caseObj = await _caseRepository.GetByIdAsync(record.CaseId);
 
-        private static SLARecordResponseDto MapToDto(SLARecords record)
+			if (caseObj != null)
+			{
+				if (record.Status == SLAStatus.Breached)
+					caseObj.Status = "Escalated";
+				else
+					caseObj.Status = "Assigned";
+
+				_caseRepository.Update(caseObj);
+				await _caseRepository.SaveAsync();
+			}
+		}
+
+		private static SLARecordResponseDto MapToDto(SLARecords record)
         {
             return new SLARecordResponseDto
             {
