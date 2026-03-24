@@ -57,5 +57,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			_context.Application.Update(application);
 			await _context.SaveChangesAsync();
 		}
+		//supervisor needs this
+		public async Task<Application> GetApplicationWithDocuments(int applicationId)
+		{
+			return await _context.Application
+				.Include(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+		}
 	}
 }
