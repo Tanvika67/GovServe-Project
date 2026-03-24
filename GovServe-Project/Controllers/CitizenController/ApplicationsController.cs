@@ -13,6 +13,7 @@ using GovServe_Project.Services.Service_Implementation.CitizenService_Implementa
 using GovServe_Project.Services.Interfaces.CitizenService_Interface;
 using GovServe_Project.DTOs.CitizenDTO;
 using Microsoft.AspNetCore.Authorization;
+using GovServe_Project.Models.CitizenModels;
 
 
 namespace GovServe_Project.Controllers.CitizenController
@@ -30,16 +31,15 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Create Application
 		[HttpPost("create")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
-
 			var result = await _applicationService.CreateApplicationAsync(dto);
 
 			return Ok(result);
 		}
 
-		// My Applications (Citizen Dashboard)
+		// My Applications
 		[HttpGet("my")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyApplications(int userId)
@@ -67,7 +67,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		//  Delete Application
 		[HttpDelete("delete/{id}")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
 		{
 
@@ -79,57 +79,19 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok("Application Deleted Successfully");
 		}
 
-		//Assigned application
+		// Update Application 
+		[HttpPut("{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> UpdateApplication(int id, Application application)
+		{
+			var result = await _applicationService.UpdateApplicationAsync(id, application);
 
-		//[HttpGet("assigned/{ AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetAssignedCases(int AssignedOfficer) //method created
-		//{
-		//	var result = await _applicationService.GetAssignedCases(AssignedOfficer);
-		//	return Ok(result);
-		//}
+			if (!result)
+			{
+				return NotFound("Application not found");
+			}
 
-		////Approved cases
-
-		//[HttpGet("approved/{AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetApproved(int AssignedOfficer)
-		//{
-		//	var result = await _applicationService.GetApprovedCases(AssignedOfficer);
-		//	return Ok(result);
-
-		//}
-
-		////pending cases
-
-		//[HttpGet("pending/{AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetPending(int AssignedOfficer)
-		//{
-		//	var result = await _applicationService.GetPendingCases(AssignedOfficer);
-		//	return Ok(result);
-
-		//}
-
-		////rejected cases
-
-		//[HttpGet("Reject/{AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		//public async Task<IActionResult> GetRejected(int AssignedOfficer)
-		//{
-		//	var result = await _applicationService.GetRejectedCases(AssignedOfficer);
-		//	return Ok(result);
-
-		//}
-		////resubmitted cases
-
-		////[HttpGet("resubmitted /{AssignedOfficer}")]
-		////[Authorize(Roles = "Officer")]
-		////public async Task<IActionResult> GetResubmitted(int AssignedOfficer)
-		////{
-		////	var result = await _applicationService.GetResubmittedCases(AssignedOfficer);
-		////	return Ok(result);
-
-		////}
+			return Ok("Application updated successfully");
+		}
 	}
 }

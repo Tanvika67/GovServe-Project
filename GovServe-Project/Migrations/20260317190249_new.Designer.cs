@@ -4,6 +4,7 @@ using GovServe_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    partial class GovServe_ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20260317190249_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -548,10 +551,11 @@ namespace GovServe_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
-                    b.Property<int?>("DepartmentID")
+                    b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
                     b.Property<string>("DepartmentName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -865,7 +869,9 @@ namespace GovServe_Project.Migrations
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany("User")
-                        .HasForeignKey("DepartmentID");
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
                         .WithMany("User")

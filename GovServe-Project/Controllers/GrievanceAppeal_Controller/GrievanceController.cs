@@ -26,7 +26,6 @@ namespace GovServe_Project.Controllers
 			_service = service;
 		}
 
-		//[Authorize(Roles = "Citizen")]
 		[HttpPost]
 		public async Task<IActionResult> RaiseGrievance([FromBody] RaiseGrievanceDTO dto)
 		{
@@ -40,7 +39,6 @@ namespace GovServe_Project.Controllers
 
 		// View My Grievances
 		[HttpGet("user/{citizenId}")]
-		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyGrievances(int citizenId)
 		{
 			var data = await _service.MyGrievancesAsync(citizenId);

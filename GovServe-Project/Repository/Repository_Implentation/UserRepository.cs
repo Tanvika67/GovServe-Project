@@ -21,11 +21,19 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			await _context.User.AddAsync(user);
 			await _context.SaveChangesAsync();
 		}
+
+		// Check if department exists
+		public async Task<bool> DepartmentExistsAsync(int departmentId)
+		{
+			return await _context.Departments
+				.AnyAsync(d => d.DepartmentID == departmentId);
+		}
+
 		public async Task<Users> GetByEmailAsync(string email)
 		{
 			return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
 		}
-
+		t
 		// Get user by Id
 		public async Task<Users> GetByIdAsync(int id)
 		{
@@ -51,22 +59,30 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Remove(user);
 			await _context.SaveChangesAsync();
 		}
-		//Available officer by dept to get count of active cases
-		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+
+		//Get Pending User
+		public async Task<List<Users>> GetPendingUsers()
 		{
 			return await _context.User
-				.Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
+				.Where(x => x.Status == "Pending")
 				.ToListAsync();
 		}
-		//Count of active cases
-		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+
+		//Approve User
+		public async Task<Users> GetUserById(int id)
 		{
-			return await _context.Case
-				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+			return await _context.User
+				.FirstOrDefaultAsync(x => x.UserId == id);
 		}
 
 
-		
+		//Reject User
+		public async Task UpdateUser(Users user)
+		{
+			_context.User.Update(user);
+			await _context.SaveChangesAsync();
+		}
+
 	}
 }
 

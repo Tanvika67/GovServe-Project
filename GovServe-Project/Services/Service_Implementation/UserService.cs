@@ -18,9 +18,25 @@ namespace GovServe_Project.Services.Service_Implementation
 		public async Task<string> RegisterAsync(RegisterDTO dto)
 		{
 			var existingUser = await _repository.GetByEmailAsync(dto.Email);
-
 			if (existingUser != null)
 				return "Email already exists";
+
+			// Role/Department validation
+			if (dto.RoleName == "Officer")
+			{
+				if (dto.DepartmentID == null)
+					return "Department is required for Officer role.";
+
+				var departmentExists = await _repository.DepartmentExistsAsync(dto.DepartmentID.Value);
+				if (!departmentExists)
+					return "Invalid DepartmentID.";
+			}
+			else
+			{
+				// For non-Officer roles, force department fields to null
+				dto.DepartmentID = null;
+				dto.DepartmentName = null;
+			}
 
 			var user = new Users
 			{
@@ -29,11 +45,21 @@ namespace GovServe_Project.Services.Service_Implementation
 				Phone = dto.Phone,
 				Password = dto.Password,
 				RoleID = dto.RoleID,
-				RoleName=dto.RoleName,
-				DepartmentID = dto.DepartmentID
+				RoleName = dto.RoleName,
+				DepartmentID = dto.DepartmentID,
+				DepartmentName = dto.DepartmentName,
 			};
 
+			// Auto-approve Citizens, others go Pending
+			if (dto.RoleName == "Citizen")
+				user.Status = "Approved";
+			else
+				user.Status = "Pending";
+
 			await _repository.AddAsync(user);
+
+			if (user.Status == "Pending")
+				return "Your registration request is sent to admin";
 
 			return "Registration Successful";
 		}
@@ -44,7 +70,7 @@ namespace GovServe_Project.Services.Service_Implementation
 			return await _repository.GetByIdAsync(id);
 		}
 
-		// Get all users (Admin)
+		// Get all users 
 		public async Task<List<Users>> GetAllUsers()
 		{
 			return await _repository.GetAllAsync();
@@ -76,6 +102,49 @@ namespace GovServe_Project.Services.Service_Implementation
 			await _repository.DeleteAsync(user);
 			return true;
 		}
+
+		//Get All Pending Users
+		public async Task<List<Users>> GetPendingUsers()
+			{
+				return await _repository.GetPendingUsers();
+			}
+
+		// Approve User
+		public async Task<string> ApproveUser(int userId)
+			{
+				var user = await _repository.GetUserById(userId);
+
+				if (user == null)
+					return "User not found";
+
+				if (user.Status != "Pending")
+					return "User already processed";
+
+				user.Status = "Approved";
+
+				await _repository.UpdateUser(user);
+
+				return "User approved successfully";
+			}
+
+		// Reject User
+		public async Task<string> RejectUser(int userId)
+			{
+				var user = await _repository.GetUserById(userId);
+
+				if (user == null)
+					return "User not found";
+
+				if (user.Status != "Pending")
+					return "User already processed";
+
+				user.Status = "Rejected";
+
+				await _repository.UpdateUser(user);
+
+				return "User rejected successfully";
+			}
+		}
 	}
-}
+
 

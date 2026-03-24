@@ -31,7 +31,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			if (service == null)
 				throw new Exception("Service not found");
 
-			//  Step 2: Create Application
+			//   Create Application
 			var app = new Application()
 			{
 				ServiceID = service.ServiceID,   
@@ -39,8 +39,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				ServiceName = dto.ServiceName,
 				DepartmentID = dto.DepartmentID,	
 				ApplicationStatus = "Submitted",
-				SubmittedDate = DateTime.Now,
-				CompletedDate = DateTime.Today
+				SubmittedDate = DateTime.Now
 			};
 
 			await _applicationRepository.CreateAsync(app);
@@ -54,7 +53,6 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
-			// Entity → DTO mapping
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
 				ApplicationId = a.ApplicationID,	
@@ -92,21 +90,23 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return true;
 		}
 
-
-		public Task DeleteApplication(int id)
+		//Update Application
+		public async Task<bool> UpdateApplicationAsync(int id, Application application)
 		{
-			throw new NotImplementedException();
+			var existingApplication = await _applicationRepository.GetByIdAsync(id);
+
+			if (existingApplication == null)
+			{
+				return false;
+			}
+
+
+			existingApplication.ApplicationStatus = application.ApplicationStatus;
+
+			await _applicationRepository.UpdateAsync(existingApplication);
+			return true;
 		}
-		
-		//for officer to view application details
 
-		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
-		{
-			return await
-				_applicationRepository.GetApplicationDetails(applicationId);
-
-
-		}
 	}
 }
 

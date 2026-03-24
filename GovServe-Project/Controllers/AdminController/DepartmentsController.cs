@@ -24,14 +24,14 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin,Supervisor,Officer")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetById(int id)
         {
             return Ok(await _service.GetByIdAsync(id));
         }
 
         [HttpGet("active")]
-       // [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetActiveDepartments()
         {
             return Ok(await _service.GetActiveAsync());
@@ -53,7 +53,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -61,7 +61,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("count")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetTotalCountAsync()
         {
             var count = await _service.GetTotalCountAsync();

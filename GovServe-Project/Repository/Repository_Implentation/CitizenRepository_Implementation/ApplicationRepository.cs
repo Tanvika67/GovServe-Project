@@ -34,28 +34,13 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			return await _context.Application.FindAsync(ApplicationId);
 		}
 
-
-		public async Task<Application> GetApplicationWithDocuments(int applicationId)
-
-		{
-
-			return await _context.Application
-
-			.Include(a => a.CitizenDocuments)
-
-			.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
-
-		}
-
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
 			return await _context.Application
-
-								  .Include(a => a.Service)
-								 .Where(a => a.UserId == userId)
+				                  .Include(a => a.Service) 
+								    .Where(a => a.UserId == userId)
 								 .ToListAsync();
-
 		}
 
 		// Delete Application
@@ -65,38 +50,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			await _context.SaveChangesAsync();
 		}
 
-		
-		//for officer to view application details
+		//Update Application
 
-		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
-
+		public async Task UpdateAsync(Application application)
 		{
-
-			var data = await _context.Application
-
-
-			.Where(a => a.ApplicationID == applicationId)
-
-			.Select(a => new ApplicationDetails
-
-			{
-
-				ApplicationID = a.ApplicationID,
-
-				//ApplicantName = a.CitizenDocuments.,
-
-				ApplicationStatus = a.ApplicationStatus.ToString(),
-
-				SubmittedDate = a.SubmittedDate
-
-			})
-
-			.FirstOrDefaultAsync();
-
-			return data;
-
+			_context.Application.Update(application);
+			await _context.SaveChangesAsync();
 		}
-
-
 	}
 }
