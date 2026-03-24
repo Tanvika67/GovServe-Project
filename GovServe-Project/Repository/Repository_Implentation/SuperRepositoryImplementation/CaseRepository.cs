@@ -100,46 +100,30 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				})
 				.ToListAsync();
 		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			var stats = new DashboardStatsDto
+			{
+				TotalCases = await _context.Case.CountAsync(),
 
-        public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+				PendingCases = await _context.Case
+					.CountAsync(c => c.Status == "Pending"),
 
-        {
+				AssignedCases = await _context.Case
+					.CountAsync(c => c.Status == "Assigned"),
 
-            var stats = new DashboardStatsDto
-            {
+				CompletedCases = await _context.Case
+					.CountAsync(c => c.Status == "Completed"),
 
-                TotalCases = await _context.Case.CountAsync(),
+				EscalatedCases = await _context.Case
+					.CountAsync(c => c.Status == "Escalated")
+			};
 
-
-                PendingCases = await _context.Case
-
-            .CountAsync(c => c.Status == "Pending"),
-
-
-                AssignedCases = await _context.Case
-
-            .CountAsync(c => c.Status == "Assigned"),
-
-
-                CompletedCases = await _context.Case
-
-            .CountAsync(c => c.Status == "Completed"),
-
-
-                EscalatedCases = await _context.Case
-
-            .CountAsync(c => c.Status == "Escalated")
-
-            };
-
-
-            return stats;
-
-        }
-
-        //officers work
-        // Get assigned cases
-        public async Task<List<Case>> GetAssignedCases(int officerId)
+			return stats;
+		}
+		//officers work
+		// Get assigned cases
+		public async Task<List<Case>> GetAssignedCases(int officerId)
 		{
 			throw new NotImplementedException();
 		}
@@ -248,33 +232,13 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			return await _context.Case
 
 			.Include(c => c.Application) 
-			.FirstOrDefaultAsync(c => c.CaseId == caseId);
+		.FirstOrDefaultAsync(c => c.CaseId == caseId);
 		}
 
 		public async Task UpdateCase(Case caseObj)
 		{
 			_context.Case.Update(caseObj);
 			await _context.SaveChangesAsync();
-		}
-
-		// Implemented missing interface method: GetDashboardCountsAsync
-		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			var cases = await _context.Case
-				.Include(c => c.Application)
-				.Where(c => c.DepartmentID == departmentId)
-				.ToListAsync();
-
-			var result = new DashboardCountcs
-			{
-				Assigned = cases.Count(c => c.Status == "Assigned"),
-				Approved = cases.Count(c => c.Application != null && c.Application.ApplicationStatus == "Approved"),
-				Pending = cases.Count(c => c.Status == "Pending"),
-				Rejected = cases.Count(c => c.Application != null && c.Application.ApplicationStatus == "Rejected"),
-				Resubmitted = cases.Count(c => c.Application != null && c.Application.ApplicationStatus == "Resubmitted")
-			};
-
-			return result;
 		}
 	}
 }

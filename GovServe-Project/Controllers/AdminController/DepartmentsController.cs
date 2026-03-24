@@ -46,7 +46,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPut("{id}")]
-       // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, DepartmentDTO dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));

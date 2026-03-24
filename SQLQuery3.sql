@@ -1,3 +1,0 @@
-﻿UPDATE [Case]
-SET AssignedDate = DATEADD(DAY,-3,GETDATE())
-WHERE CaseId=8;
