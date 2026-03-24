@@ -7,5 +7,7 @@
 		public string ServiceName { get; set; }
 
 		public int DepartmentID { get; set; }
+
+		public DateTime CompletedDate { get; set; }
 	}
 }

@@ -1,0 +1,2 @@
+﻿DELETE FROM [User]
+WHERE UserId=9;

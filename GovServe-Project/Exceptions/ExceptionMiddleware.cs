@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Text.Json;
 using GovServe_Project.Exceptions;
 
@@ -46,6 +47,39 @@ namespace GovServe_Project.Extensions
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
-    }
+
+
+	
+		//private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+		//{
+		//	context.Response.ContentType = "application/json";
+
+		//	// Default to 500
+		//	context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+		//	var message = "An unexpected error occurred.";
+
+		//	// Map your folder's exceptions to HTTP Status Codes
+		//	if (exception is NotFoundException)
+		//	{
+		//		context.Response.StatusCode = StatusCodes.Status404NotFound;
+		//		message = exception.Message;
+		//	}
+		//	else if (exception is ValidationException)
+		//	{
+		//		context.Response.StatusCode = StatusCodes.Status400BadRequest;
+		//		message = exception.Message;
+		//	}
+
+		//	return context.Response.WriteAsync(JsonSerializer.Serialize(new
+		//	{
+		//		status = context.Response.StatusCode,
+		//		error = message
+		//	}));
+		//}
+
+
+
+
+	}
 
 }
