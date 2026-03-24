@@ -33,7 +33,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		{
 			return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
 		}
-		t
+		
 		// Get user by Id
 		public async Task<Users> GetByIdAsync(int id)
 		{
