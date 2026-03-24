@@ -98,6 +98,8 @@ namespace GovServe_Project.Repository.Repository_Implentation
 				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
 
-	}
+ 
+
+    }
 }
 

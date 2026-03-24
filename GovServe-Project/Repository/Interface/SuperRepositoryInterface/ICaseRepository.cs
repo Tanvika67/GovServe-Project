@@ -15,7 +15,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<int> GetCaseCountByOfficerAsync(int officerId);
 		Task<Case> GetCaseWithDocuments(int caseId);
 		Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
-		//Task<DashboardStatsDto> GetDashboardStatsAsync();
+		Task<DashboardStatsDto> GetDashboardStatsAsync();
 		Task AddAsync(Case c);
 		void Update(Case c);
 		Task SaveAsync();
@@ -27,7 +27,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<Case?> GetCaseById(int caseId);
 
 		Task UpdateCase(Case caseObj);
-		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+		//Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
 
 		//<string> Reject(int caseId, string reason);
 		//Task<List<Case>> GetSLABreachedCasesAsync();
