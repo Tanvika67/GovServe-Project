@@ -143,17 +143,17 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		}
 
 		// Officer opens case → InProgress
-		public async Task<string> OpenCase(int caseId)
+		public async Task OpenCase(int caseId)
 		{
 			var caseObj = await _repo.GetCaseById(caseId);
 
 			if (caseObj == null)
-				return "Case not found";
+				return;
 
 			caseObj.Status = "InProgress";
 			await _repo.UpdateCase(caseObj);
 
-			return "Case marked as In Progress";
+			return;
 		}
 
 		public async Task<string> ApproveCase(int caseId)
@@ -195,21 +195,5 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			return await _repo.GetDashboardCountsAsync(departmentId);
 		}
 
-		public Task<string> ReassignCaseAsync()
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<string> ReassignEscalatedCaseAsync()
-		{
-			throw new NotImplementedException();
-		}
-
-		private readonly INotificationService notificationService;
-
-
 	}
 }
-
-
- 

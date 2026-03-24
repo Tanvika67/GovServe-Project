@@ -91,8 +91,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> OpenCase(int caseId)
 		{
-			var result = await _service.OpenCase(caseId);
-			return Ok(result);
+			await _service.OpenCase(caseId);
+			return Ok();
 		}
 
 		//  PUT - Approve case
