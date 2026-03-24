@@ -5,7 +5,8 @@ namespace GovServe_Project.DTOs.Admin
     public class ServiceResponseDTO
     {
         public int ServiceID { get; set; }
-        public int DepartmentID { get; set; }
+        //public int DepartmentID { get; set; }
+        public string DepartmentName { get; set; } = string.Empty;
         public string ServiceName { get; set; } = string.Empty;
         public string? Description { get; set; }
 

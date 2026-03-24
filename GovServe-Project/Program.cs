@@ -16,14 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 // Configure controllers and prevent JSON serializer cycles for EF navigation properties
-builder.Services.AddControllers()
-    .AddJsonOptions(o =>
-    {
-        o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        // optional: keep property names as defined
-        // o.JsonSerializerOptions.PropertyNamingPolicy = null;
-    });
 
+
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 //API documentation and testing endpoints
 builder.Services.AddEndpointsApiExplorer();
 
@@ -57,10 +56,11 @@ builder.Services.AddCors(options =>
 	options.AddPolicy("AllowAll",
 		policy =>
 		{
-			policy.AllowAnyOrigin()
-				  .AllowAnyHeader()
+			policy.AllowAnyOrigin() 
+                  .AllowAnyHeader()
 				  .AllowAnyMethod();
-		});
+				 
+});
 });
 
 var app = builder.Build();
@@ -73,10 +73,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowAll");
 app.UseStaticFiles();
+//app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();   // JWT check
 app.UseAuthorization();    // Role check
+
 
 app.MapControllers();
 

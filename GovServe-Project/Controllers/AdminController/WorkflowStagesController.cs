@@ -19,11 +19,11 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
         [HttpGet("service/{serviceId}")]
-        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetByService(int serviceId)
             => Ok(await _service.GetByServiceAsync(serviceId));
 

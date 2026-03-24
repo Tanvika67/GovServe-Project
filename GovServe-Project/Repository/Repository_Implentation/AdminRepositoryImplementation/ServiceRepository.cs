@@ -17,16 +17,26 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task<IEnumerable<Service>> GetAllAsync()
         {
-            return await _context.Services.ToListAsync();
+
+            return await _context.Services
+                            .Include(s => s.Department)
+                            .ToListAsync();
+
+
         }
 
         public async Task<Service?> GetByIdAsync(int id)
         {
-            return await _context.Services.FindAsync(id);
+
+            return await _context.Services
+                            .Include(s => s.Department)
+                            .FirstOrDefaultAsync(s => s.ServiceID == id);
+
         }
         public async Task<IEnumerable<Service>> GetActiveAsync()
         {
             return await _context.Services
+                .Include(s=> s.Department)
                 .Where(s => s.Status == ServiceStatus.Active)
                 .ToListAsync();
         }
@@ -56,12 +66,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
                 .Include(s => s.Department)
                 .Where(s => s.Department != null && s.Department.DepartmentName.ToLower() == departmentName.ToLower()).ToListAsync();
         }
-
-        public async Task<IEnumerable<EligibilityRule>> GetByServiceNameAsync(string serviceName)
+        public async Task<int> GetServiceCountAsync()
         {
-            return await _context.EligibilityRules
-                .Include(r => r.Service)
-                .Where(r => r.Service != null && r.Service.ServiceName.ToLower().Contains(serviceName.ToLower())).ToListAsync();
+            return await _context.Services.CountAsync();
+        }
+
+        public async Task<int> GetActiveServiceCountAsync()
+        {
+            return await _context.Services
+                .Where(s => s.Status == ServiceStatus.Active)
+                .CountAsync();
         }
 
     }

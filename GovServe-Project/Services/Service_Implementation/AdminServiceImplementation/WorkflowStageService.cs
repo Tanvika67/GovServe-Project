@@ -120,7 +120,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return new WorkflowStageResponseDto
             {
                 StageID = stage.StageID,
-                ServiceID = stage.ServiceID,
+                ServiceName = stage.Service?.ServiceName ?? "",
                 ResponsibleRole = stage.ResponsibleRole,
                 SequenceNumber = stage.SequenceNumber,
                 SLA_Days = stage.SLA_Days

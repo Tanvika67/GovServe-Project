@@ -38,21 +38,21 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(ServiceDTO dto)
         {
             return Ok(await _service.CreateAsync(dto));
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, ServiceDTO dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -60,11 +60,17 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("search")]
-        [Authorize(Roles = "Admin,Officer")]
+        //[Authorize(Roles = "Admin,Officer")]
         public async Task<IActionResult> SearchByDepartment([FromQuery] string departmentName)
         {
             return Ok(await _service.SearchByDepartmentAsync(departmentName));
         }
 
+        [HttpGet("count/summary")]
+        public async Task<IActionResult> GetActiveVsTotal()
+        {
+            var result = await _service.GetActiveVsTotalAsync();
+            return Ok(result);
+        }
     }
 }

@@ -1,13 +1,15 @@
 ﻿using GovServe_Project.DTOs;
 using GovServe_Project.DTOs.AdminDTO;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
-using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GovServe_Project.Controllers.AdminController
 {
     [Route("api/[controller]")]
     [ApiController]
+   // [EnableCors("AllowAll")]
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _service;

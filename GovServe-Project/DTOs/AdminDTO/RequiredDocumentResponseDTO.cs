@@ -3,8 +3,8 @@
     public class RequiredDocumentResponseDTO
     {
         public int DocumentID { get; set; }
-        public int ServiceID { get; set; }
+        public string ServiceName { get; set; } = string.Empty;
         public string DocumentName { get; set; } = string.Empty;
-        public bool Mandatory { get; set; }
+        public string Mandatory { get; set; } = string.Empty;
     }
 }
