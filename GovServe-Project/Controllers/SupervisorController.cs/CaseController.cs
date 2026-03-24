@@ -110,9 +110,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		
-
-		
-
 		//New Code for officer work
 
 		[HttpGet("assigned/{officerId}")]
@@ -188,15 +185,5 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 	}
-
-
-
-	
-
-
-
-
-
-
-	}
+}
 

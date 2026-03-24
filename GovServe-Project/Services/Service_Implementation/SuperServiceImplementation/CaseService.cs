@@ -293,15 +293,9 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		     caseObj.Application.UserId,
 		     $"Your application was rejected. Reason: {reason}",caseId);
 
-
-
-
 			await _repo.UpdateCase(caseObj);
 
 			return "Case rejected successfully";
-
-
-
 
 		}
 
@@ -326,13 +320,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			return summary;
 		}
 	}
-
-
-
-
-
-
-
 
 }
 
