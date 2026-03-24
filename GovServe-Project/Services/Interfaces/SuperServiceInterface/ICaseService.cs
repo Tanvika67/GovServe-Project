@@ -7,6 +7,7 @@ namespace GovServe_Project.Services.Interfaces
 {
 	public interface ICaseService
 	{
+		Task<string> CreateCaseAsync(CreateCaseDto dto);
 		Task<IEnumerable<Case>> GetAllCasesAsync();
 		Task<Case> GetCaseDetails(int caseId);
 		Task<IEnumerable<Case>> GetActiveCasesAsync();

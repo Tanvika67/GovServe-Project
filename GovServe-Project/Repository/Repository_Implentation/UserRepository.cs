@@ -2,7 +2,7 @@
 using GovServe_Project.Models;
 using GovServe_Project.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Models.AdminModels;
 
 namespace GovServe_Project.Repository.Repository_Implentation
@@ -33,7 +33,7 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		{
 			return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
 		}
-		t
+		
 		// Get user by Id
 		public async Task<Users> GetByIdAsync(int id)
 		{
@@ -81,6 +81,21 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		{
 			_context.User.Update(user);
 			await _context.SaveChangesAsync();
+		}
+
+		//supervisor needs this
+
+		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+		{
+			return await _context.User
+				.Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
+				.ToListAsync();
+		}
+		//Count of active cases
+		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+		{
+			return await _context.Case
+				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
 
 	}
