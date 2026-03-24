@@ -67,7 +67,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Document Status
 		[HttpGet("status/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentStatus(int id)
 		{
 			var status = await _service.GetDocumentStatusAsync(id);
@@ -80,7 +80,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Delete Document
 		[HttpDelete("delete/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			var result = await _service.DeleteDocumentAsync(id);
@@ -92,20 +92,18 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
-		[AllowAnonymous]
 		//[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> ApproveDocument(int CitizenDocumentID)
+		public async Task<IActionResult> ApproveDocument(int id)
 		{
-			var result = await _service.ApproveDocument(CitizenDocumentID);
-			if (result == "Document Not Found") return NotFound(result); // Proper Status Code
-			return Ok(new { message = result });
+			var result = await _service.ApproveDocument(id);
+			return Ok(result);
 		}
 
-		[HttpPut("RejectDocument/{CitizenDocumentID}")]
-		//[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> RejectDocument(int CitizenDocumentID)
+		[HttpPut("RejectDocument/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectDocument(int id)
 		{
-			var result = await _service.RejectDocument(CitizenDocumentID);
+			var result = await _service.RejectDocument(id);
 			return Ok(result);
 		}
 	}

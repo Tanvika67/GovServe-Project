@@ -11,5 +11,8 @@ namespace GovServe_Project.Services.Interfaces
 		Task<List<Users>> GetAllUsers();
 		Task<bool> UpdateUser(int id, Users model);
 		Task<bool> DeleteUser(int id);
+		Task<List<Users>> GetPendingUsers();
+		Task<string> ApproveUser(int userId);
+		Task<string> RejectUser(int userId);
 	}
 }
