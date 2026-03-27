@@ -19,7 +19,13 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 		
 		Task<bool> DeleteApplicationAsync(int ApplicationId);
 
+
 		Task<bool> UpdateApplicationAsync(int id, Application application);
+
+		
+
+		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
+
 
 	}
 }

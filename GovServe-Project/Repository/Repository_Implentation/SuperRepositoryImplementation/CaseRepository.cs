@@ -219,5 +219,15 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			_context.Case.Update(caseObj);
 			await _context.SaveChangesAsync();
 		}
+
+		public Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

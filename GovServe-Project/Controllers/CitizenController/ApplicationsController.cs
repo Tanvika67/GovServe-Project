@@ -31,9 +31,10 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Create Application
 		[HttpPost("create")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
+
 			var result = await _applicationService.CreateApplicationAsync(dto);
 
 			return Ok(result);
@@ -67,7 +68,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		//  Delete Application
 		[HttpDelete("delete/{id}")]
-		[Authorize(Roles = "Citizen")]
+		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
 		{
 
@@ -78,6 +79,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 			return Ok("Application Deleted Successfully");
 		}
+
 
 		// Update Application 
 		[HttpPut("{id}")]
@@ -93,5 +95,6 @@ namespace GovServe_Project.Controllers.CitizenController
 
 			return Ok("Application updated successfully");
 		}
+
 	}
 }

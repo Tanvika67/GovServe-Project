@@ -190,10 +190,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		}
 
 
-		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			return await _repo.GetDashboardCountsAsync(departmentId);
-		}
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId) => await _repo.GetDashboardCountsAsync(departmentId);
 
 		public Task<string> ReassignCaseAsync()
 		{
@@ -201,6 +198,51 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		}
 
 		public Task<string> ReassignEscalatedCaseAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<Case> GetCaseDetails(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<Case?> GetCaseByIdAsync(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> ApproveCaseAsync(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> RejectCaseAsync(int caseId, string reason)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<object> GetOfficerDashboardAsync(int officerId)
 		{
 			throw new NotImplementedException();
 		}

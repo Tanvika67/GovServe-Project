@@ -8,6 +8,8 @@
 
 		public int DepartmentID { get; set; }
 
+		public DateTime SubmittedDate{ get; set; }
+
 		public DateTime CompletedDate { get; set; }
 	}
 }
