@@ -19,7 +19,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context = context;
 		}
-
 		public async Task<IEnumerable<Case>> GetAllAsync()
 		{
 			return await _context.Case.ToListAsync();

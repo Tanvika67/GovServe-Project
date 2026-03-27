@@ -1,15 +1,16 @@
-﻿using GovServe_Project.DTOs.SupervisorDTO;
+﻿using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.DTOs.OfficerDTO;
-using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
-using GovServe_Project.Data;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -26,8 +27,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			_notificationService = notificationService;
 			_userRepo=userRepo;
 			_applicationRepo = applicationRepo;
-
-			
 		}
 
 		public async Task<IEnumerable<Case>> GetAllCasesAsync()
@@ -81,6 +80,23 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			await _repo.AddAsync(caseModel);
 			await _repo.SaveAsync();
 
+			// Officer notification
+			await _notificationService.SendNotificationAsync(
+				officerId,
+				$"New case {caseModel.CaseId} assigned to you",
+				caseModel.CaseId,
+				"Assignment"
+			);
+
+			// Admin notification
+			var adminId = await _userRepo.GetAdminIdAsync();
+
+			await _notificationService.SendNotificationAsync(
+			adminId,
+			$"Case {caseModel.CaseId} assigned to Officer {officerId}",
+			caseModel.CaseId,
+			"Assignment"
+			);
 			return "Case assigned successfully";
 		}
 		public async Task<int> GetAvailableOfficer(int departmentId)
@@ -213,8 +229,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				Completed = all.Count(x => x.Status == "Completed")
 			};
 		}
-
-
 		public Task<string> ReassignEscalatedCaseAsync()
 		{
 			throw new NotImplementedException();

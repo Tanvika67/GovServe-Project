@@ -1,13 +1,15 @@
 
+using System.Text;
+using System.Text.Json.Serialization;
 using GovServe_Project.Extensions;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
+using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +59,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //});
 
 builder.Services.AddAuthorization();
-
 
 // CORS (cross-domain requests)
 builder.Services.AddCors(options =>

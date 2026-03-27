@@ -24,6 +24,7 @@ namespace GovServe_Project.Models.SuperModels
 
 		// Officer assigned automatically
 		public int AssignedOfficerId { get; set; }
+		public Users AssignedOfficer { get; set; }
 
 		[Required]
 		[ForeignKey("Department")]
