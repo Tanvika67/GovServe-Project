@@ -26,7 +26,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return rules.Select(r => new EligibilityRuleResponseDTO
             {
                 RuleID = r.RuleID,
-                ServiceID = r.ServiceID,
+                ServiceName = r.ServiceName ?? "",
                 RuleDescription = r.RuleDescription,
                 RuleExpression = r.RuleExpression
             });
@@ -42,7 +42,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return new EligibilityRuleResponseDTO
             {
                 RuleID = rule.RuleID,
-                ServiceID = rule.ServiceID,
+                ServiceName = rule.ServiceName ?? "",
                 RuleDescription = rule.RuleDescription,
                 RuleExpression = rule.RuleExpression
             };
@@ -101,7 +101,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return rules.Select(r => new EligibilityRuleResponseDTO
             {
                 RuleID = r.RuleID,
-                ServiceID = r.ServiceID,
+                ServiceName = r.ServiceName ?? "",
                 RuleDescription = r.RuleDescription,
                 RuleExpression = r.RuleExpression
             });

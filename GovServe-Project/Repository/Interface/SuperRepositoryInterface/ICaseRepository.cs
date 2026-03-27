@@ -23,7 +23,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<List<Case>> GetSLABreachedCasesAsync();
 
 		//officer work
-		//Task<List<Case>> GetAssignedCases(int officerId);
+		Task<List<Case>> GetAssignedCases(int officerId);
 		Task<Case?> GetCaseById(int caseId);
 
 		Task UpdateCase(Case caseObj);

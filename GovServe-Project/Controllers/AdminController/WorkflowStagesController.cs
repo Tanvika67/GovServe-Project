@@ -19,7 +19,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
         [HttpGet("service/{serviceId}")]
@@ -41,7 +41,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
         {
             await _service.UpdateAsync(id, dto);

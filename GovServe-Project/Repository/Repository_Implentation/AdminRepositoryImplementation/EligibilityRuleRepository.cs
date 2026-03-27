@@ -16,13 +16,23 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task<IEnumerable<EligibilityRule>> GetAllAsync()
         {
-            return await _context.EligibilityRules.ToListAsync();
+
+            return await _context.EligibilityRules
+                    .Include(r => r.Service)
+                    .ToListAsync();
         }
+
+        
 
         public async Task<EligibilityRule?> GetByIdAsync(int id)
         {
-            return await _context.EligibilityRules.FindAsync(id);
+
+            return await _context.EligibilityRules
+                    .Include(r => r.Service)
+                    .FirstOrDefaultAsync(r => r.RuleID == id);
         }
+
+        
 
         public async Task AddAsync(EligibilityRule rule)
         {

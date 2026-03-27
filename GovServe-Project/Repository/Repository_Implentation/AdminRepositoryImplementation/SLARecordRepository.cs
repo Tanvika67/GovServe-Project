@@ -27,15 +27,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
              return await _context.SLARecords.FindAsync(id);
 
         }
-           
-
         // This fetches SLA using CaseId(FK)
-		public async Task<SLARecords> GetByCaseIdAsync(int caseId)
-		{
-			return await _context.SLARecords
-				.FirstOrDefaultAsync(x => x.CaseId == caseId);
-		}
-		public async Task<IEnumerable<SLARecords>> GetByStatusAsync(SLAStatus status)
+        public async Task<SLARecords> GetByCaseIdAsync(int caseId)
+        {
+            return await _context.SLARecords
+                .FirstOrDefaultAsync(x => x.CaseId == caseId);
+        }
+
+        public async Task<IEnumerable<SLARecords>> GetByStatusAsync(SLAStatus status)
         {
             return await _context.SLARecords
                 .Include(x => x.Case)
@@ -57,16 +56,21 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
             await _context.SaveChangesAsync();
 
         }
-            
+
 
         public async Task DeleteAsync(SLARecords record)
         {
             _context.SLARecords.Remove(record);
             await _context.SaveChangesAsync();
-
         }
-           
+
+
+        
+   
+
     }
+           
+  }
 
 
-}
+

@@ -66,5 +66,11 @@ namespace GovServe_Project.Controllers.AdminController
             return Ok(await _service.SearchByDepartmentAsync(departmentName));
         }
 
+        [HttpGet("count/summary")]
+        public async Task<IActionResult> GetActiveVsTotal()
+        {
+            var result = await _service.GetActiveVsTotalAsync();
+            return Ok(result);
+        }
     }
 }

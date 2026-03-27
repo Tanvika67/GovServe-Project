@@ -1,51 +1,58 @@
-﻿using System.Net;
+﻿using GovServe_Project.Exceptions;
+using System.Net;
 using System.Text.Json;
-using GovServe_Project.Exceptions;
 
-namespace GovServe_Project.Extensions
+public class ExceptionMiddleware
 {
-    public class ExceptionMiddleware
+    private readonly RequestDelegate _next;
+
+    public ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        _next = next;
+    }
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (NotFoundException ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                await HandleExceptionAsync(context, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Something went wrong");
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await HandleExceptionAsync(context, "Internal Server Error");
-            }
-        }
-
-        private static Task HandleExceptionAsync(HttpContext context, string message)
-        {
-            context.Response.ContentType = "application/json";
-
-            var response = new
-            {
-                StatusCode = context.Response.StatusCode,
-                Message = message
-            };
-
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            await HandleExceptionAsync(context, ex);
         }
     }
 
+    private Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        HttpStatusCode statusCode;
+        string message = ex.Message;
+
+        switch (ex)
+        {
+            case NotFoundException:
+                statusCode = HttpStatusCode.NotFound;   // 404
+                break;
+
+            case BadRequestException:
+                statusCode = HttpStatusCode.BadRequest; // 400
+                break;
+
+            default:
+                statusCode = HttpStatusCode.InternalServerError; // 500
+                message = "Internal Server Error";
+                break;
+        }
+
+        var result = JsonSerializer.Serialize(new
+        {
+            StatusCode = (int)statusCode,
+            Message = message
+        });
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)statusCode;
+
+        return context.Response.WriteAsync(result);
+    }
 }
