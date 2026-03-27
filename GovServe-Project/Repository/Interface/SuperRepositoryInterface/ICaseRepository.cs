@@ -40,7 +40,8 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task<string> RejectCaseAsync(int caseId, string reason);
 		Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId);
 		Task<object> GetOfficerDashboardAsync(int officerId);
-
+		Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
+		Task<List<Case>> GetAssignedCases(int officerId);
 	}
 }
 
