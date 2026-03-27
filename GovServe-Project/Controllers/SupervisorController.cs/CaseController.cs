@@ -26,7 +26,7 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 
 		//POST only I can create a case; API will create a new case in the system
 		[HttpPost]
-		[Authorize(Roles = "Supervisor")]
+		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
 		{
 			var result = await _service.CreateCaseAsync(dto);

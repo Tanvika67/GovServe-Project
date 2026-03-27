@@ -28,7 +28,7 @@ namespace GovServe_Project.Controllers
             => Ok(await _service.GetByServiceAsync(serviceId));
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
             => Ok(await _service.GetByIdAsync(id));
 
@@ -41,7 +41,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
         {
             await _service.UpdateAsync(id, dto);
@@ -49,7 +49,7 @@ namespace GovServe_Project.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -58,7 +58,7 @@ namespace GovServe_Project.Controllers
 
         // Reassign endpoint
         [HttpPut("{id}/reassign")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Reassign(int id, WorkflowStageReassignDto dto)
         {

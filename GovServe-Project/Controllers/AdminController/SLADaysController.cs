@@ -19,14 +19,14 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _service.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int id)
         {
             return Ok(await _service.GetByIdAsync(id));
@@ -44,7 +44,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, SLADayCreateDto dto)
         {
             await _service.UpdateAsync(id, dto);
@@ -52,7 +52,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
