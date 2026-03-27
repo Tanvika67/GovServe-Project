@@ -536,6 +536,9 @@ namespace GovServe_Project.Migrations
                     b.Property<string>("DepartmentName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DepartmentID1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -834,8 +837,19 @@ namespace GovServe_Project.Migrations
             modelBuilder.Entity("GovServe_Project.Models.Users", b =>
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
+<<<<<<<<< Temporary merge branch 1
+                        .WithMany()
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+=========
                         .WithMany("User")
                         .HasForeignKey("DepartmentID");
+>>>>>>>>> Temporary merge branch 2
+
+                    b.HasOne("GovServe_Project.Models.AdminModels.Department", null)
+                        .WithMany("User")
+                        .HasForeignKey("DepartmentID1");
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
                         .WithMany("User")
