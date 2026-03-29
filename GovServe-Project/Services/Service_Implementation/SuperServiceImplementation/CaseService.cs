@@ -33,7 +33,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetAllAsync();
 		}
-		public async Task<Case> GetCaseDetails(int caseId)
+		public async Task<CaseDetailsDto> GetCaseDetails(int caseId)
 		{
 			return await _repo.GetCaseWithDocuments(caseId);
 		} 

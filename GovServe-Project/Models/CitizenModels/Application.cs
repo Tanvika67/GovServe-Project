@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
-using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Models.SuperModels;
 
@@ -20,19 +19,16 @@ namespace GovServe_Project.Models.CitizenModels
 
 		[Required]
 		public int UserId { get; set; }
-		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }
 
 		[Required]
 		public int ServiceID { get; set; }
-		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
 
 		[Required]
 		public string ServiceName { get; set; }
 
 		public int DepartmentID { get; set; }
-		[ForeignKey("DepartmentID")]
 		public virtual Department Department { get; set; }
 
 		public DateTime SubmittedDate { get; set; }

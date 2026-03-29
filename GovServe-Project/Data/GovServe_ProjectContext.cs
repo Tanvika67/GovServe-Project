@@ -21,21 +21,21 @@ namespace GovServe_Project.Data
         {
             base.OnModelCreating(modelBuilder);
 
-			// Application → User
+			//Application → User
 			modelBuilder.Entity<Application>()
 				.HasOne(a => a.User)
 				.WithMany()
 				.HasForeignKey(a => a.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			// Application → Service
+			//Application → Service
 			modelBuilder.Entity<Application>()
 				.HasOne(a => a.Service)
 				.WithMany()
 				.HasForeignKey(a => a.ServiceID)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			// Application → Department
+			//Application → Department
 			modelBuilder.Entity<Application>()
 				.HasOne(a => a.Department)
 				.WithMany()
@@ -112,8 +112,6 @@ namespace GovServe_Project.Data
         public DbSet<SLARecords> SLARecords { get; set; } = default!;
         public DbSet<Role> Roles { get; set; } = default!;
         public DbSet<ServiceReport> ServiceReports { get; set; } = default!;
-
-
         public DbSet<Application> Application { get; set; } = default!;
 		public DbSet<CitizenDocument> CitizenDocument { get; set; } = default!;
         public DbSet<Users> User { get; set; } = default!;

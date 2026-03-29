@@ -45,7 +45,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
