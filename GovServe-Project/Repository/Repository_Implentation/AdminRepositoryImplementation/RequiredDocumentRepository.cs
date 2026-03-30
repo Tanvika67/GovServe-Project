@@ -16,12 +16,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task<IEnumerable<RequiredDocument>> GetAllAsync()
         {
-            return await _context.RequiredDocuments.ToListAsync();
+
+            return await _context.RequiredDocuments
+                    .Include(d => d.Service)
+                    .ToListAsync();
+
         }
 
         public async Task<RequiredDocument?> GetByIdAsync(int id)
         {
-            return await _context.RequiredDocuments.FindAsync(id);
+
+            return await _context.RequiredDocuments
+                    .Include(d => d.Service)
+                    .FirstOrDefaultAsync(d => d.DocumentID == id);
+
         }
 
         public async Task AddAsync(RequiredDocument document)
@@ -40,6 +48,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         {
             _context.RequiredDocuments.Remove(document);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<RequiredDocument>> GetByServiceNameAsync(string serviceName)
+        {
+            return await _context.RequiredDocuments
+                .Include(d => d.Service)
+                .Where(d => d.Service != null &&
+                            d.Service.ServiceName.ToLower()
+                            .Contains(serviceName.ToLower()))
+                .ToListAsync();
         }
     }
 }

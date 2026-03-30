@@ -45,11 +45,20 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
             return Ok("Deleted successfully.");
+        }
+
+
+
+        [HttpGet("search")]
+        [Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> SearchByServiceName([FromQuery] string serviceName)
+        {
+            return Ok(await _service.SearchByServiceNameAsync(serviceName));
         }
     }
 }

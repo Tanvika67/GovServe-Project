@@ -30,7 +30,5 @@ namespace GovServe_Project.Models.AdminModels
         public Service? Service { get; set; }
 
 		//public virtual ICollection<Application> Application { get; set; }
-       public virtual ICollection<CitizenDocument> CitizenDocument{ get; set; }
-
 	}
 }

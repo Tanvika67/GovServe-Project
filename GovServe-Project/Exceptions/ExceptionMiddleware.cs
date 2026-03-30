@@ -1,85 +1,58 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GovServe_Project.Exceptions;
 using System.Net;
 using System.Text.Json;
-using GovServe_Project.Exceptions;
 
-namespace GovServe_Project.Extensions
+public class ExceptionMiddleware
 {
-    public class ExceptionMiddleware
+    private readonly RequestDelegate _next;
+
+    public ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        _next = next;
+    }
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        HttpStatusCode statusCode;
+        string message = ex.Message;
+
+        switch (ex)
+        {
+            case NotFoundException:
+                statusCode = HttpStatusCode.NotFound;   // 404
+                break;
+
+            case BadRequestException:
+                statusCode = HttpStatusCode.BadRequest; // 400
+                break;
+
+            default:
+                statusCode = HttpStatusCode.InternalServerError; // 500
+                message = "Internal Server Error";
+                break;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        var result = JsonSerializer.Serialize(new
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (NotFoundException ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                await HandleExceptionAsync(context, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Something went wrong");
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await HandleExceptionAsync(context, "Internal Server Error");
-            }
-        }
+            StatusCode = (int)statusCode,
+            Message = message
+        });
 
-        private static Task HandleExceptionAsync(HttpContext context, string message)
-        {
-            context.Response.ContentType = "application/json";
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)statusCode;
 
-            var response = new
-            {
-                StatusCode = context.Response.StatusCode,
-                Message = message
-            };
-
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
-        }
-
-
-	
-		//private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-		//{
-		//	context.Response.ContentType = "application/json";
-
-		//	// Default to 500
-		//	context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-		//	var message = "An unexpected error occurred.";
-
-		//	// Map your folder's exceptions to HTTP Status Codes
-		//	if (exception is NotFoundException)
-		//	{
-		//		context.Response.StatusCode = StatusCodes.Status404NotFound;
-		//		message = exception.Message;
-		//	}
-		//	else if (exception is ValidationException)
-		//	{
-		//		context.Response.StatusCode = StatusCodes.Status400BadRequest;
-		//		message = exception.Message;
-		//	}
-
-		//	return context.Response.WriteAsync(JsonSerializer.Serialize(new
-		//	{
-		//		status = context.Response.StatusCode,
-		//		error = message
-		//	}));
-		//}
-
-
-
-
-	}
-
+        return context.Response.WriteAsync(result);
+    }
 }

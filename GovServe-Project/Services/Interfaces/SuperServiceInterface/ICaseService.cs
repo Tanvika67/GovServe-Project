@@ -7,8 +7,10 @@ namespace GovServe_Project.Services.Interfaces
 {
 	public interface ICaseService
 	{
+		Task<string> CreateCaseAsync(CreateCaseDto dto);
+		Task<int> GetAvailableOfficer(int departmentID);
 		Task<IEnumerable<Case>> GetAllCasesAsync();
-		Task<Case> GetCaseDetails(int caseId);
+		Task<CaseDetailsDto> GetCaseDetails(int caseId);
 		Task<IEnumerable<Case>> GetActiveCasesAsync();
 		Task<List<Case>> GetSLABreachedCasesAsync();
 		Task<object> GetDashboardAsync();
@@ -17,7 +19,6 @@ namespace GovServe_Project.Services.Interfaces
 		Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
 		Task<DashboardStatsDto> GetDashboardStatsAsync();
 		Task<string> UpdateCaseStatus(int caseId, string status);
-
 
 		//Task<List<Case>> ViewAssignedCases(int AssignedOfficerId);
 		//Task<string> ApproveCase(int caseId);

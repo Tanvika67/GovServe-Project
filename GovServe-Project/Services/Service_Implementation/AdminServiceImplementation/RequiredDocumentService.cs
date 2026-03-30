@@ -25,9 +25,9 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return documents.Select(d => new RequiredDocumentResponseDTO
             {
                 DocumentID = d.DocumentID,
-                ServiceID = d.ServiceID,
+                ServiceName = d.Service?.ServiceName ?? "",
                 DocumentName = d.DocumentName,
-                Mandatory = d.Mandatory
+                Mandatory = d.Mandatory ? "Yes" : "No"
             });
         }
 
@@ -41,9 +41,9 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return new RequiredDocumentResponseDTO
             {
                 DocumentID = document.DocumentID,
-                ServiceID = document.ServiceID,
+                ServiceName = document.Service?.ServiceName ?? "",
                 DocumentName = document.DocumentName,
-                Mandatory = document.Mandatory
+                Mandatory = document.Mandatory ? "Yes" : "No"
             };
         }
 
@@ -86,6 +86,25 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 throw new NotFoundException("Required document not found.");
 
             await _repository.DeleteAsync(document);
+        }
+
+
+        //Search Required Document by service name
+        public async Task<IEnumerable<RequiredDocumentResponseDTO>> SearchByServiceNameAsync(string serviceName)
+        {
+            var documents = await _repository.GetByServiceNameAsync(serviceName);
+
+            if (!documents.Any())
+                throw new NotFoundException("No eligibility rules found for this service.");
+
+            return documents.Select(d => new RequiredDocumentResponseDTO
+            {
+                DocumentID = d.DocumentID,
+                ServiceName = d.Service?.ServiceName ?? "",
+                DocumentName = d.DocumentName,
+                Mandatory = d.Mandatory ? "Yes" : "No"
+            });
+
         }
     }
 }

@@ -1,13 +1,15 @@
 
+using System.Text;
+using System.Text.Json.Serialization;
 using GovServe_Project.Extensions;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Repository_Implentation;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Service_Implementation;
+using GovServe_Project.Services.Service_Implementation.AdminServiceImplementation;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,14 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 // Configure controllers and prevent JSON serializer cycles for EF navigation properties
-builder.Services.AddControllers()
-    .AddJsonOptions(o =>
-    {
-        o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        // optional: keep property names as defined
-        // o.JsonSerializerOptions.PropertyNamingPolicy = null;
-    });
 
+
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 //API documentation and testing endpoints
 builder.Services.AddEndpointsApiExplorer();
 
@@ -50,17 +51,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-
 // CORS (cross-domain requests)
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("AllowAll",
 		policy =>
 		{
-			policy.AllowAnyOrigin()
-				  .AllowAnyHeader()
+			policy.AllowAnyOrigin() 
+                  .AllowAnyHeader()
 				  .AllowAnyMethod();
-		});
+				 
+});
 });
 
 //Middleware Pipeline
@@ -75,10 +76,13 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowAll");
 app.UseStaticFiles();
+//app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();   // JWT check
 app.UseAuthorization();    // Role check
+
 
 app.MapControllers();
 

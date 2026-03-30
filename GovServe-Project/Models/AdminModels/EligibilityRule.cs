@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.CodeAnalysis.Elfie.Serialization;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GovServe_Project.Models.AdminModels
@@ -31,5 +32,11 @@ namespace GovServe_Project.Models.AdminModels
         // Navigation
         [ForeignKey(nameof(ServiceID))]
         public Service? Service { get; set; }
+
+        
+         //  Auto-read ServiceName from navigation property
+         [NotMapped]
+         public string? ServiceName => Service?.ServiceName;
+
     }
 }

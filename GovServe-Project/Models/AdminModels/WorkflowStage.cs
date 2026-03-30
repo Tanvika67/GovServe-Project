@@ -1,8 +1,8 @@
-﻿using GovServe_Project.Models.AdminModels;
+﻿using GovServe_Project.Enum;
+using GovServe_Project.Models.AdminModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace GovServe_Project.Models
 {
@@ -25,5 +25,9 @@ namespace GovServe_Project.Models
 
         [ForeignKey(nameof(ServiceID))]
         public Service? Service { get; set; } // Navigation property
+
+        [NotMapped]
+        public string? ServiceName => Service?.ServiceName;
+
     }
 }

@@ -11,8 +11,6 @@ namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 		Task<int> GetUnreadCountAsync(int userId);
 
 		Task MarkAsReadAsync(int notificationId);
-
-		Task SendNotification(int userId, string message);
 	
 	    Task SendNotificationAsync(int userId, string message, int caseId, string category);
 		

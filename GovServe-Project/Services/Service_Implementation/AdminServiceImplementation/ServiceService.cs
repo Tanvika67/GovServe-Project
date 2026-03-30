@@ -29,7 +29,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return services.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                DepartmentID = s.DepartmentID,
+                //DepartmentID = s.DepartmentID,
+                DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,
                 SLA_Days = s.SLA_Days,
@@ -48,7 +49,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return new ServiceResponseDTO
             {
                 ServiceID = service.ServiceID,
-                DepartmentID = service.DepartmentID,
+                //DepartmentID = service.DepartmentID,
+                DepartmentName = service.DepartmentName ?? "",
                 ServiceName = service.ServiceName,
                 Description = service.Description,
                 SLA_Days = service.SLA_Days,
@@ -64,7 +66,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return service.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                DepartmentID = s.DepartmentID,
+                //DepartmentID = s.DepartmentID,
+                DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,
                 SLA_Days = s.SLA_Days,
@@ -127,7 +130,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return services.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                DepartmentID = s.DepartmentID,
+                // DepartmentID = s.DepartmentID,
+                DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,
                 SLA_Days = s.SLA_Days,
@@ -136,6 +140,29 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             });
         }
 
+        public async Task<int> GetServiceCountAsync()
+        {
+            return await _repository.GetServiceCountAsync();
+        }
+
+        public async Task<int> GetActiveServiceCountAsync()
+        {
+            return await _repository.GetActiveServiceCountAsync();
+        }
+
+        // ⭐ Combined response for the UI
+        public async Task<object> GetActiveVsTotalAsync()
+        {
+            int total = await _repository.GetServiceCountAsync();
+            int active = await _repository.GetActiveServiceCountAsync();
+
+            return new
+            {
+                activeCount = active,
+                totalCount = total,
+                display = $"{active}/{total}"
+            };
+        }
 
     }
 }

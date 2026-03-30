@@ -2,10 +2,12 @@
 using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 
 
 namespace GovServe_Project.Controllers.SupervisorController.cs
@@ -18,15 +20,20 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 	public class CaseController : ControllerBase
 	{
 		private readonly ICaseService _service;
-
-		public CaseController(ICaseService service)
+		private readonly ICaseRepository _repository;
+		public CaseController(ICaseService service,ICaseRepository repository)
 		{
 			_service = service;
+			_repository = repository;
 		}
-
-
 		//POST only I can create a case; API will create a new case in the system
-
+		[HttpPost]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
+		{
+			var result = await _service.CreateCaseAsync(dto);
+			return Ok(result);
+		}
 
 		//GET only I can see all cases
 		//Fetches complete list of case from the database
@@ -87,6 +94,8 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		public async Task<IActionResult> GetCaseDetails(int caseId)
 		{
 			var result = await _service.GetCaseDetails(caseId);
+			if (result == null)
+			return NotFound();
 			return Ok(result);
 		}
 		//For my dashboard I created this
@@ -105,9 +114,6 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 		
-
-		
-
 		//New Code for officer work
 
 		[HttpGet("assigned/{officerId}")]
@@ -183,15 +189,5 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		}
 
 	}
-
-
-
-	
-
-
-
-
-
-
-	}
+}
 

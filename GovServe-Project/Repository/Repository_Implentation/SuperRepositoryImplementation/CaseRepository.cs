@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Data;
+using GovServe_Project.DTOs.CitizenDTO;
 using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
@@ -19,7 +20,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context = context;
 		}
-
 		public async Task<IEnumerable<Case>> GetAllAsync()
 		{
 			return await _context.Case.ToListAsync();
@@ -46,12 +46,30 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			return await _context.Case
 				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 		}
-		public async Task<Case> GetCaseWithDocuments(int caseId)
+		public async Task<CaseDetailsDto> GetCaseWithDocuments(int caseId)
 		{
 			return await _context.Case
-				.Include(c => c.Application)
-				.ThenInclude(a => a.CitizenDocuments)
-				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+				.Where(c => c.CaseId == caseId)
+				.Select(c => new CaseDetailsDto
+				{
+					CaseId = c.CaseId,
+					ApplicationId = c.ApplicationID,
+					AssignedOfficerId = c.AssignedOfficerId,
+					Status = c.Status,
+					AssignedDate = (DateTime)c.AssignedDate,
+					IsEscalated = c.IsEscalated,
+
+					Documents = c.Application.CitizenDocuments
+						.Select(d => new UploadCitizenDocumentResponseDTO
+						{
+							CitizenDocumentID = d.CitizenDocumentID,
+							ApplicationID = d.ApplicationID,
+							DocumentName = d.DocumentName,
+							UploadedDate = d.UploadedDate,
+							VerificationStatus = d.VerificationStatus
+						}).ToList()
+				})
+				.FirstOrDefaultAsync();
 		}
 		public async Task AddAsync(Case c)
 		{
@@ -93,12 +111,33 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Pending"),
 
 					CompletedCases = _context.Case
-						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Completed"),
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Approved"),
 
 					EscalatedCases = _context.Case
 						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Escalated")
 				})
 				.ToListAsync();
+		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			var stats = new DashboardStatsDto
+			{
+				TotalCases = await _context.Case.CountAsync(),
+
+				PendingCases = await _context.Case
+					.CountAsync(c => c.Status == "Pending"),
+
+				AssignedCases = await _context.Case
+					.CountAsync(c => c.Status == "Assigned"),
+
+				CompletedCases = await _context.Case
+					.CountAsync(c => c.Status == "Approved"||c.Status == "Completed"),
+
+				EscalatedCases = await _context.Case
+					.CountAsync(c => c.Status == "Escalated")
+			};
+
+			return stats;
 		}
 		//officers work
 		// Get assigned cases
@@ -209,7 +248,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		public async Task<Case> GetCaseById(int caseId)
 		{
 			return await _context.Case
-
 			.Include(c => c.Application) 
 		.FirstOrDefaultAsync(c => c.CaseId == caseId);
 		}
@@ -218,16 +256,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context.Case.Update(caseObj);
 			await _context.SaveChangesAsync();
-		}
-
-		public Task<DashboardStatsDto> GetDashboardStatsAsync()
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

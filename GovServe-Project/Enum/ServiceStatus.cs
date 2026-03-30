@@ -3,6 +3,6 @@
     public enum ServiceStatus
     {
             Active=1,
-            InActive=2,
+            InActive=0,
     }
 }

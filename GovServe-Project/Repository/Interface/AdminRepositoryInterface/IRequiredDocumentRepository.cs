@@ -10,5 +10,6 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task AddAsync(RequiredDocument document);
         Task UpdateAsync(RequiredDocument document);
         Task DeleteAsync(RequiredDocument document);
+        Task<IEnumerable<RequiredDocument>> GetByServiceNameAsync(string serviceName);
     }
 }

@@ -92,21 +92,18 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
-
 		//[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> ApproveDocument(int CitizenDocumentID)
-
+		public async Task<IActionResult> ApproveDocument(int id)
 		{
-			var result = await _service.ApproveDocument(CitizenDocumentID);
-			if (result == "Document Not Found") return NotFound(result); // Proper Status Code
-			return Ok(new { message = result });
+			var result = await _service.ApproveDocument(id);
+			return Ok(result);
 		}
 
-		[HttpPut("RejectDocument/{CitizenDocumentID}")]
-		//[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> RejectDocument(int CitizenDocumentID)
+		[HttpPut("RejectDocument/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectDocument(int id)
 		{
-			var result = await _service.RejectDocument(CitizenDocumentID);
+			var result = await _service.RejectDocument(id);
 			return Ok(result);
 		}
 	}

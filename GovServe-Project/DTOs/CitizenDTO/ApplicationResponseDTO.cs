@@ -8,5 +8,6 @@
 		public string ServiceName { get; set; }
 		public string ApplicationStatus { get; set; }
 		public DateTime SubmittedDate { get; set; }
+		public DateTime? CompletedDate { get; set; }
 	}
 }

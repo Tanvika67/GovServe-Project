@@ -7,6 +7,8 @@ using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Data;
+using GovServe_Project.Repository.Repository_Implentation;
+using GovServe_Project.Repository.Interface;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -17,40 +19,19 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly INotificationService _notificationService;
 		private readonly ISLARecordRepository _slaRepo;
 		private readonly GovServe_ProjectContext _context;
+		private readonly IUserRepository _userRepo;
+		private readonly ICaseService _caseService;
 
-		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo, GovServe_ProjectContext context)   
+		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo, GovServe_ProjectContext context, IUserRepository userRepo, ICaseService caseService)
 		{
 			_repo = repo;
 			_caseRepo = caseRepo;
 			_notificationService = notificationService;
 			_slaRepo = slaRepo; 
 			_context= context;
+			_userRepo = userRepo;
+			_caseService = caseService;
 
-		}
-
-		public async Task SendSLAWarningsAsync()
-		{
-			var activeCases = await _caseRepo.GetActiveCasesAsync();
-
-			foreach (var c in activeCases)
-			{
-				if (c.AssignedOfficerId == 0) continue; // safety check
-
-				var sla = await _slaRepo.GetByCaseIdAsync(c.CaseId);
-				if (sla == null) continue;
-
-				var breachTime = sla.EndDate;
-				var warningTime = breachTime.AddMinutes(-30);
-
-				if (DateTime.Now >= warningTime && DateTime.Now < breachTime)
-				{
-					await _notificationService.SendNotificationAsync(
-						c.AssignedOfficerId,
-						"SLA is about to breach. Please take action",
-						c.CaseId
-					);
-				}
-			}
 		}
 		public async Task<string> AutoEscalateAsync()
 		{
@@ -126,18 +107,77 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				if (c.IsEscalated)
 					return "Already escalated";
 
+				// Store old values
+				int oldOfficerId = c.AssignedOfficerId;
+				int citizenId = c.UserId;
+
+				// Get new officer (least busy)
+				int newOfficerId = await _caseService.GetAvailableOfficer(c.DepartmentID);
+
+				// Update case
 				c.Status = "Escalated";
 				c.IsEscalated = true;
+				c.AssignedOfficerId = newOfficerId;
 				c.LastUpdated = DateTime.Now;
 
 				_caseRepo.Update(c);
 				await _caseRepo.SaveAsync();
 
-				return "Case escalated";
+
+				// 1. Notify New Officer
+				await _notificationService.SendNotificationAsync(
+					newOfficerId,
+					$"New case {c.CaseId} assigned after SLA breach",
+					c.CaseId,
+					"Escalation"
+				);
+
+
+				// 2. Notify Old Officer
+				await _notificationService.SendNotificationAsync(
+					oldOfficerId,
+					$"Case {c.CaseId} escalated due to SLA breach",
+					c.CaseId,
+					"Escalation"
+				);
+
+
+				// 3. Notify Citizen
+				await _notificationService.SendNotificationAsync(
+					citizenId,
+					$"Your case {c.CaseId} escalated to another officer due to delay",
+					c.CaseId,
+					"Escalation"
+				);
+
+
+				// 4. Notify Admin
+				var adminId = await _userRepo.GetAdminIdAsync();
+
+				await _notificationService.SendNotificationAsync(
+					adminId,
+					$"Case {c.CaseId} escalated and reassigned",
+					c.CaseId,
+					"Escalation"
+				);
+
+
+				// 5. Notify Grievance Officer (Optional but recommended)
+				var grievanceOfficerId = await _userRepo.GetGrievanceOfficerIdAsync();
+
+				await _notificationService.SendNotificationAsync(
+					grievanceOfficerId,
+					$"Case {c.CaseId} breached SLA. Please resolve within 1 day",
+					c.CaseId,
+					"SLA Breach"
+				);
+
+				return "Case escalated successfully";
 			}
 
 			return "SLA within limit";
 		}
+
 		public async Task<int> GetEscalationCountAsync()
 		{
 			return await _repo.GetEscalationCountAsync();

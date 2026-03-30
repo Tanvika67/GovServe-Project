@@ -14,5 +14,9 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task DeleteAsync(int id);
 
         Task<IEnumerable<ServiceResponseDTO>> SearchByDepartmentAsync(string departmentName);
+
+        Task<int> GetServiceCountAsync();
+        Task<int> GetActiveServiceCountAsync();
+        Task<object> GetActiveVsTotalAsync();
     }
 }
