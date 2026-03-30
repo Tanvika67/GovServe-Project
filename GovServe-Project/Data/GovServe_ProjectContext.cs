@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Models.GrievanceAppealModel;
 using GovServe_Project.Models.SuperModels;
-
+using GovServe_Project.Models.CitizenModels;
 
 
 namespace GovServe_Project.Data
@@ -121,8 +121,7 @@ namespace GovServe_Project.Data
         public DbSet<Notification> Notification { get; set; } = default!;
 		public DbSet<Grievance> Grievance { get; set; } = default!;
 		public DbSet<Appeal> Appeals { get; set; } = default!;
-
-
+		public DbSet<CitizenDetails> CitizenDetails { get; set; } =default!;	
 
 		
     }

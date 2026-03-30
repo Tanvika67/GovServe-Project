@@ -33,7 +33,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(EligibilityRuleDTO dto)
         {
             
@@ -57,7 +57,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpGet("search")]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> SearchByServiceName([FromQuery] string serviceName)
         {
             return Ok(await _service.SearchByServiceNameAsync(serviceName));

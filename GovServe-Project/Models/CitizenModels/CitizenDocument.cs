@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Models.AdminModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GovServe_Project.Models.CitizenModels
@@ -14,8 +15,9 @@ namespace GovServe_Project.Models.CitizenModels
 		[ForeignKey("ApplicationID")]
 		public virtual Application Application { get; set; }
 
-		[Required]
-		public string DocumentName { get; set; } = default!;
+        public int  DocumentID { get; set; }
+		[ForeignKey("DocumentID")]
+		public virtual RequiredDocument RequiredDocument{ get; set; }
 
 		[Required]
 		public string URI { get; set; }

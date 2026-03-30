@@ -51,10 +51,7 @@ namespace GovServe_Project.Services.Service_Implementation
 
 
 		// Citizen - View Appeals
-
-
 		// My Appeals
-
 		public async Task<List<Appeal>> MyAppealsAsync(int applicationId)
 		{
 			return await _repository.GetByApplicationAsync(applicationId);
@@ -62,7 +59,6 @@ namespace GovServe_Project.Services.Service_Implementation
 
 
 		// Citizen - View Status Only
-
 		public async Task<Appeal?> GetAppealStatusAsync(int id)
 		{
 			return await _repository.GetByIdAsync(id);

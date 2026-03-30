@@ -17,7 +17,11 @@ namespace GovServe_Project.Repository.Interface
 		Task<Users> GetUserById(int id);
 		Task UpdateUser(Users user);
 
+		//------------------Supervisor Methods------------------
+		Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId);
+		Task<int> GetAdminIdAsync();
+		Task<int> GetGrievanceOfficerIdAsync();
 
-		
+
 	}
 }

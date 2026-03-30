@@ -2,34 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GovServe_Project.Controllers.CitizenController;
+using GovServe_Project.Controllers.CitizenController;
 using GovServe_Project.Data;
+using GovServe_Project.DTOs;
 using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.CitizenService_Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GovServe_Project.DTOs;
-using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
-using GovServe_Project.Services.Interfaces.CitizenService_Interface;
-using GovServe_Project.DTOs.CitizenDTO;
-using Microsoft.AspNetCore.Authorization;
-using GovServe_Project.Models.CitizenModels;
+using static System.Net.Mime.MediaTypeNames;
 
-
-namespace GovServe_Project.Controllers.CitizenController
+namespace GovServe_Project.Controllers
 {
-	[Route("api/[controller]")]   
+	[Route("api/[controller]")]
 	[ApiController]
 	public class ApplicationController : ControllerBase
 	{
 		private readonly IApplicationService _applicationService;
+
 
 		public ApplicationController(IApplicationService applicationService)
 		{
 			_applicationService = applicationService;
 		}
 
-		// Create Application
+		//  Create Application
 		[HttpPost("create")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
@@ -40,7 +41,7 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(result);
 		}
 
-		// My Applications
+		//  My Applications (Citizen Dashboard)
 		[HttpGet("my")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyApplications(int userId)
@@ -51,8 +52,8 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(applications);
 		}
 
-		
-		// Application Status
+
+		//  Application Status
 		[HttpGet("status/{id}")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> ApplicationStatus(int ApplicationId)
@@ -66,7 +67,7 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(status);
 		}
 
-		//  Delete Application
+		// Delete Application
 		[HttpDelete("delete/{id}")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
@@ -80,20 +81,28 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok("Application Deleted Successfully");
 		}
 
+		//[HttpPut("{id}")]
+		////[Authorize(Roles = "Citizen")]
+		//public async Task<IActionResult> UpdateApplication(int id, Application application)
+		//{
+		//	var result = await _applicationService.UpdateApplicationAsync(id, application);
 
-		// Update Application 
-		[HttpPut("{id}")]
-		[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> UpdateApplication(int id, Application application)
+		//	if (!result)
+		//	{
+		//		return NotFound("Application not found");
+		//	}
+
+		//	return Ok("Application updated successfully");
+		//}
+
+		////------------Admin use----------------
+		// Get All Applications (Admin / Officer)
+		[HttpGet("all")]
+		//[Authorize(Roles = "Admin,Officer")]
+		public async Task<IActionResult> GetAllApplications()
 		{
-			var result = await _applicationService.UpdateApplicationAsync(id, application);
-
-			if (!result)
-			{
-				return NotFound("Application not found");
-			}
-
-			return Ok("Application updated successfully");
+			var applications = await _applicationService.GetAllApplicationsAsync();
+			return Ok(applications);
 		}
 
 	}

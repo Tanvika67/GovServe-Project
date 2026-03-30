@@ -48,7 +48,6 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			var document = new CitizenDocument
 			{
 				ApplicationID = model.ApplicationID,
-				DocumentName = model.DocumentName,
 				URI = "uploads/" + fileName,
 				VerificationStatus = "Submitted",
 				UploadedDate = DateTime.Now
@@ -67,7 +66,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			{
 				CitizenDocumentID = d.CitizenDocumentID,
 				ApplicationID = d.ApplicationID,
-				DocumentName = d.DocumentName,
+			
 				//URI = "uploads/" + fileName,
 				UploadedDate = d.UploadedDate,
 				VerificationStatus = d.VerificationStatus
@@ -82,7 +81,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			{
 				CitizenDocumentID = d.CitizenDocumentID,
 				ApplicationID = d.ApplicationID,
-				DocumentName = d.DocumentName,
+				//DocumentName = d.DocumentName,
 				//URI = "uploads/" + fileName,
 				UploadedDate = d.UploadedDate,
 				VerificationStatus = d.VerificationStatus

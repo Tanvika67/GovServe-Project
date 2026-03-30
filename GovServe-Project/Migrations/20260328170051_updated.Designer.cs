@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    [Migration("20260312165834_user")]
-    partial class user
+    [Migration("20260328170051_updated")]
+    partial class updated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,6 +235,10 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
 
@@ -262,6 +266,76 @@ namespace GovServe_Project.Migrations
                     b.HasIndex("UsersUserId");
 
                     b.ToTable("Application");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDetails", b =>
+                {
+                    b.Property<int>("PersonalDetailID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonalDetailID"));
+
+                    b.Property<string>("AadhaarNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ApplicationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FatherName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MotherName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pincode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PersonalDetailID");
+
+                    b.HasIndex("ApplicationID")
+                        .IsUnique();
+
+                    b.ToTable("CitizenDetails");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDocument", b =>
@@ -428,9 +502,6 @@ namespace GovServe_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SupervisorId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -444,8 +515,6 @@ namespace GovServe_Project.Migrations
                     b.HasIndex("ApplicationID1")
                         .IsUnique()
                         .HasFilter("[ApplicationID1] IS NOT NULL");
-
-                    b.HasIndex("AssignedOfficerId");
 
                     b.HasIndex("DepartmentID");
 
@@ -551,11 +620,10 @@ namespace GovServe_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
-                    b.Property<int>("DepartmentID")
+                    b.Property<int?>("DepartmentID")
                         .HasColumnType("int");
 
                     b.Property<string>("DepartmentName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -739,6 +807,17 @@ namespace GovServe_Project.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDetails", b =>
+                {
+                    b.HasOne("GovServe_Project.Models.CitizenModels.Application", "Application")
+                        .WithOne("CitizenDetails")
+                        .HasForeignKey("GovServe_Project.Models.CitizenModels.CitizenDetails", "ApplicationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDocument", b =>
                 {
                     b.HasOne("GovServe_Project.Models.CitizenModels.Application", "Application")
@@ -796,12 +875,6 @@ namespace GovServe_Project.Migrations
                         .WithOne("Case")
                         .HasForeignKey("GovServe_Project.Models.SuperModels.Case", "ApplicationID1");
 
-                    b.HasOne("GovServe_Project.Models.Users", "AssignedOfficer")
-                        .WithMany()
-                        .HasForeignKey("AssignedOfficerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
@@ -819,8 +892,6 @@ namespace GovServe_Project.Migrations
                         .HasForeignKey("UsersUserId");
 
                     b.Navigation("Application");
-
-                    b.Navigation("AssignedOfficer");
 
                     b.Navigation("Department");
 
@@ -869,9 +940,7 @@ namespace GovServe_Project.Migrations
                 {
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany("User")
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentID");
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
                         .WithMany("User")
@@ -929,6 +998,9 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Appeals");
 
                     b.Navigation("Case")
+                        .IsRequired();
+
+                    b.Navigation("CitizenDetails")
                         .IsRequired();
 
                     b.Navigation("CitizenDocuments");
