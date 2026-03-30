@@ -1,0 +1,2817 @@
+using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DepartmentController : ControllerBase
+    {
+        private readonly IDepartmentService _service;
+
+        public DepartmentController(IDepartmentService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            return Ok(await _service.GetByIdAsync(id));
+        }
+
+        [HttpGet("active")]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetActiveDepartments()
+        {
+            return Ok(await _service.GetActiveAsync());
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(DepartmentDTO dto)
+        {
+            var result = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = result.DepartmentID }, result);
+        }
+
+        [HttpPut("{id}")]
+       // [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, DepartmentDTO dto)
+        {
+            return Ok(await _service.UpdateAsync(id, dto));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return Ok("Deleted Successfully");
+        }
+
+        [HttpGet("count")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetTotalCountAsync()
+        {
+            var count = await _service.GetTotalCountAsync();
+            return Ok(count);
+        }
+    }
+}using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EligibilityRulesController : ControllerBase
+    {
+        private readonly IEligibilityRuleService _service;
+
+        public EligibilityRulesController(IEligibilityRuleService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetAll()
+        {
+            
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetById(int id)
+        {
+           
+            return Ok(await _service.GetByIdAsync(id));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(EligibilityRuleDTO dto)
+        {
+            
+            return Ok(await _service.CreateAsync(dto));
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, EligibilityRuleDTO dto)
+        {
+     
+            return Ok(await _service.UpdateAsync(id, dto));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return Ok("Deleted successfully.");
+        }
+
+        [HttpGet("search")]
+        [Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> SearchByServiceName([FromQuery] string serviceName)
+        {
+            return Ok(await _service.SearchByServiceNameAsync(serviceName));
+        }
+
+    }
+}
+using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RequiredDocumentsController : ControllerBase
+    {
+        private readonly IRequiredDocumentService _service;
+
+        public RequiredDocumentsController(IRequiredDocumentService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+       // [Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+        //[Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            return Ok(await _service.GetByIdAsync(id));
+        }
+
+        [HttpPost]
+       // [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(RequiredDocumentDTO dto)
+        {
+            return Ok(await _service.CreateAsync(dto));
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, RequiredDocumentDTO dto)
+        {
+            return Ok(await _service.UpdateAsync(id, dto));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return Ok("Deleted successfully.");
+        }
+    }
+}
+using GovServe_Project.DTOs;
+using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RolesController : ControllerBase
+    {
+        private readonly IRoleService _service;
+
+        public RolesController(IRoleService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        //[Authorize(Roles = "Admin,Citizen,Officer,Supervisor,Grievance")]
+        public async Task<IActionResult> GetAll()
+            => Ok(await _service.GetAllAsync());
+
+        [HttpGet("{id}")]
+        //[Authorize(Roles = "Admin,Citizen,Officer,Supervisor,Grievance")]    
+        public async Task<IActionResult> Get(int id)
+            => Ok(await _service.GetByIdAsync(id));
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(RoleCreateDto dto)
+        {
+            var result = await _service.CreateAsync(dto);
+
+            return CreatedAtAction(nameof(Get),
+                new { id = result.RoleID }, result);
+        }
+
+        [HttpPut("{id}")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, RoleCreateDto dto)
+        {
+            await _service.UpdateAsync(id, dto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+
+
+}
+using GovServe_Project.DTOs.AdminDTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ServiceReportsController : ControllerBase
+{
+    private readonly IServiceReportService _service;
+
+    public ServiceReportsController(IServiceReportService service)
+    {
+        _service = service;
+    }
+
+    [HttpPost("generate")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GenerateReport([FromBody] ReportFilterRequest request)
+    {
+        var result = await _service.GenerateReportAsync(request);
+        return Ok(result);
+    }
+}
+using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ServicesController : ControllerBase
+    {
+        private readonly IServiceService _service;
+
+        public ServicesController(IServiceService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+      //  [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+       // [Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            return Ok(await _service.GetByIdAsync(id));
+        }
+
+        [HttpGet("active")]
+       // [Authorize(Roles = "Admin,Citizen,Officer")]
+        public async Task<IActionResult> GetActiveServices()
+        {
+            return Ok(await _service.GetActiveAsync());
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(ServiceDTO dto)
+        {
+            return Ok(await _service.CreateAsync(dto));
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, ServiceDTO dto)
+        {
+            return Ok(await _service.UpdateAsync(id, dto));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return Ok("Deleted successfully.");
+        }
+
+        [HttpGet("search")]
+        [Authorize(Roles = "Admin,Officer")]
+        public async Task<IActionResult> SearchByDepartment([FromQuery] string departmentName)
+        {
+            return Ok(await _service.SearchByDepartmentAsync(departmentName));
+        }
+
+    }
+}
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    using GovServe_Project.DTOs.AdminDTO;
+    using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SLADaysController : ControllerBase
+    {
+        private readonly ISLADayService _service;
+
+        public SLADaysController(ISLADayService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Get(int id)
+        {
+            return Ok(await _service.GetByIdAsync(id));
+        }
+
+        [HttpPost]
+      //  [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(SLADayCreateDto dto)
+        {
+            var result = await _service.CreateAsync(dto);
+
+            return CreatedAtAction(nameof(Get),
+                new { id = result.SLADayID },
+                result);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, SLADayCreateDto dto)
+        {
+            await _service.UpdateAsync(id, dto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+}
+using GovServe_Project.DTOs;
+using GovServe_Project.DTOs.Admin.GovServe_Project.DTOs;
+using GovServe_Project.Services;
+using GovServe_Project.Services_Interfaces_AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class WorkflowStagesController : ControllerBase
+    {
+        private readonly IWorkflowStageService _service;
+
+        public WorkflowStagesController(IWorkflowStageService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
+
+        [HttpGet("service/{serviceId}")]
+        //[Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetByService(int serviceId)
+            => Ok(await _service.GetByServiceAsync(serviceId));
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Get(int id)
+            => Ok(await _service.GetByIdAsync(id));
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(WorkflowStageCreateDto dto)
+        {
+            var result = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = result.StageID }, result);
+        }
+
+        [HttpPut("{id}")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, WorkflowStageCreateDto dto)
+        {
+            await _service.UpdateAsync(id, dto);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+
+        // Reassign endpoint
+        [HttpPut("{id}/reassign")]
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Reassign(int id, WorkflowStageReassignDto dto)
+        {
+            var result = await _service.ReassignAsync(id, dto);
+            return Ok(result);
+        }
+    }
+}
+  
+using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers.AdminController
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SLARecordsController : ControllerBase
+    {
+        private readonly ISLARecordService _service;
+
+        public SLARecordsController(ISLARecordService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+      //  [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetAll()
+        {
+           return Ok(await _service.GetAllAsync());
+
+        }
+            
+
+        [HttpGet("{id}")]
+      //  [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> Get(int id)
+        {
+           return Ok(await _service.GetByIdAsync(id));
+
+        }
+           
+
+        [HttpGet("breached")]
+      //  [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetBreachedCases()
+        {
+            var result = await _service.GetBreachedCasesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ontime")]
+       // [Authorize(Roles = "Admin,Supervisor,Officer")]
+        public async Task<IActionResult> GetOnTimeCases()
+        {
+            var result = await _service.GetOnTimeCasesAsync();
+            return Ok(result);
+        }
+
+        [HttpPost]
+       // [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(SLARecordCreateDto dto)
+        {
+            var result = await _service.CreateAsync(dto);
+
+            return CreatedAtAction(nameof(Get),
+                new { id = result.SLARecordID },
+                result);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+            return NoContent();
+        }
+    }
+
+
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GovServe_Project.Data;
+using GovServe_Project.Models;
+using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.DTOs;
+using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
+using GovServe_Project.Services.Interfaces.CitizenService_Interface;
+using GovServe_Project.DTOs.CitizenDTO;
+using Microsoft.AspNetCore.Authorization;
+
+
+namespace GovServe_Project.Controllers.CitizenController
+{
+	[Route("api/[controller]")]   
+	[ApiController]
+	public class ApplicationController : ControllerBase
+	{
+		private readonly IApplicationService _applicationService;
+
+		public ApplicationController(IApplicationService applicationService)
+		{
+			_applicationService = applicationService;
+		}
+
+		// Create Application
+		[HttpPost("create")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
+		{
+			var result = await _applicationService.CreateApplicationAsync(dto);
+
+			return Ok(result);
+		}
+
+		// My Applications (Citizen Dashboard)
+		[HttpGet("my")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> MyApplications(int userId)
+		{
+
+			var applications = await _applicationService.GetMyApplicationsAsync(userId);
+
+			return Ok(applications);
+		}
+
+		
+		// Application Status
+		[HttpGet("status/{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> ApplicationStatus(int ApplicationId)
+		{
+
+			var status = await _applicationService.GetApplicationStatusAsync(ApplicationId);
+
+			if (status == null)
+				return NotFound("Application not found");
+
+			return Ok(status);
+		}
+
+		//  Delete Application
+		[HttpDelete("delete/{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> DeleteApplication(int ApplicationId)
+		{
+
+			var result = await _applicationService.DeleteApplicationAsync(ApplicationId);
+
+			if (!result)
+				return NotFound("Application not found");
+
+			return Ok("Application Deleted Successfully");
+		}
+
+		//Assigned application
+
+		[HttpGet("assigned/{officerId}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetAssignedCases(int officerId) //method created
+		{
+			var result = await _applicationService.GetAssignedCases(officerId);
+			return Ok(result);
+		}
+
+		//Approved cases
+
+		[HttpGet("approved /{officerId}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetApproved(int officerId)
+		{
+			var result = await _applicationService.GetApprovedCases(officerId);
+			return Ok(result);
+
+		}
+
+		//pending cases
+
+		[HttpGet("pending /{officerId}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetPending(int officerId)
+		{
+			var result = await _applicationService.GetPendingCases(officerId);
+			return Ok(result);
+
+		}
+
+		//rejected cases
+
+		[HttpGet("Reject /{officerId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetRejected(int officerId)
+		{
+			var result = await _applicationService.GetRejectedCases(officerId);
+			return Ok(result);
+
+		}
+		//resubmitted cases
+
+		[HttpGet("resubmitted /{officerId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetResubmitted(int officerId)
+		{
+			var result = await _applicationService.GetResubmittedCases(officerId);
+			return Ok(result);
+
+		}
+
+	}
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GovServe_Project.Data;
+using GovServe_Project.DTOs;
+using GovServe_Project.Extensions;
+using GovServe_Project.Models;
+using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Services.Service_Implementation.CitizenService_Implementation;
+using GovServe_Project.Services.Interfaces.CitizenService_Interface;
+using GovServe_Project.DTOs.CitizenDTO;
+using Microsoft.AspNetCore.Authorization;
+
+
+namespace GovServe_Project.Controllers.CitizenController
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	
+	public class CitizenDocumentController : ControllerBase
+	{
+		private readonly ICitizenDocumentService _service;
+
+		public CitizenDocumentController(ICitizenDocumentService service)
+		{
+			_service = service;
+		}
+
+		// Upload Document
+		[HttpPost("upload")]
+	
+		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO model)
+		{
+			var result = await _service.UploadDocumentAsync(model);
+
+			if (!result)
+				return BadRequest("Upload Failed");
+
+			return Ok("Document Uploaded Successfully");
+		}
+
+		[HttpGet("GetMyAllDocuments/{userId}")]
+		public async Task<IActionResult> GetMyAllDocuments(int userId)
+		{
+			var result = await _service.GetMyAllDocuments(userId);
+
+			if (!result.Any())
+				return NotFound("No documents found");
+
+			return Ok(result);
+		}
+
+		[HttpGet("GetDocumentsByApplicationId/{applicationId}")]
+		public async Task<IActionResult> GetDocumentsByApplicationId(int applicationId)
+		{
+			var result = await _service.GetDocumentsByApplicationId(applicationId);
+
+			if (!result.Any())
+				return NotFound("No documents found");
+
+			return Ok(result);
+		}
+
+		// Document Status
+		[HttpGet("status/{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GetDocumentStatus(int id)
+		{
+			var status = await _service.GetDocumentStatusAsync(id);
+
+			if (status == null)
+				return NotFound("Document Not Found");
+
+			return Ok(status);
+		}
+
+		// Delete Document
+		[HttpDelete("delete/{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> DeleteDocument(int id)
+		{
+			var result = await _service.DeleteDocumentAsync(id);
+
+			if (!result)
+				return NotFound("Document Not Found");
+
+			return Ok("Document Deleted Successfully");
+		}
+
+		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ApproveDocument(int id)
+		{
+			var result = await _service.ApproveDocument(id);
+			return Ok(result);
+		}
+
+		[HttpPut("RejectDocument/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectDocument(int id)
+		{
+			var result = await _service.RejectDocument(id);
+			return Ok(result);
+		}
+	}
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GovServe_Project.Data;
+using GovServe_Project.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using GovServe_Project.Models;
+using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace GovServe_Project.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class AppealController : ControllerBase
+	{
+		private readonly IAppealService _service;
+
+		// Constructor injection
+		public AppealController(IAppealService service)
+		{
+			_service = service;
+		}
+
+		// File Appeal
+		// Citizen submits appeal after application rejection
+		[HttpPost]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> FileAppeal([FromBody] AppealDTO dto)
+		{
+			await _service.FileAppealAsync(dto);
+			return Ok("Appeal submitted successfully");
+		}
+
+
+		// My Appeals
+		[HttpGet("application/{applicationId}")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> MyAppeals(int applicationId)
+		{
+			var data = await _service.MyAppealsAsync(applicationId);
+			return Ok(data);
+		}
+
+		// Appeal Status (View Only)
+		[HttpGet("status/{id}")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> AppealStatus(int id)
+		{
+			var data = await _service.GetAppealStatusAsync(id);
+
+			if (data == null)
+				return NotFound("Appeal not found");
+
+			return Ok(new
+			{
+				data.AppealID,
+				data.Status
+			});
+		}
+		// Officer - View Submitted Appeals
+		[HttpGet("submitted")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> SubmittedAppeals()
+		{
+			var data = await _service.GetAllSubmittedAppealsAsync();
+			return Ok(data);
+		}
+
+		// Officer - Approve Appeal
+		[HttpPut("approve")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> ApproveAppeal(AppealActionDTO dto)
+		{
+			await _service.ApproveAppealAsync(dto);
+			return Ok("Appeal Approved Successfully");
+		}
+
+		// Officer - Reject Appeal
+		[HttpPut("reject")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> RejectAppeal(AppealActionDTO dto)
+		{
+			await _service.RejectAppealAsync(dto);
+			return Ok("Appeal Rejected Successfully");
+		}
+
+		[HttpGet("count/pending")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> GetPendingAppeals()
+		{
+			var count = await _service.GetPendingAppealCountAsync();
+			return Ok(new { PendingAppeals = count });
+
+		}
+		[HttpGet("count/Resolve")]
+		[Authorize(Roles = "Officer,Supervisor")]
+		public async Task<IActionResult> GetResolvedAppeals()
+		{
+			var count = await _service.GetResolvedAppealCountAsync();
+			return Ok(new { PendingAppeals = count });
+		}
+
+	}
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GovServe_Project.Data;
+using GovServe_Project.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using GovServe_Project.Models;
+using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace GovServe_Project.Controllers
+{
+	
+	[Route("api/[controller]")]
+	[ApiController]
+	public class GrievanceController : ControllerBase
+	{
+		private readonly IGrievanceService _service;
+
+	
+		public GrievanceController(IGrievanceService service)
+		{
+			_service = service;
+		}
+
+		//[Authorize(Roles = "Citizen")]
+		[HttpPost]
+		public async Task<IActionResult> RaiseGrievance([FromBody] RaiseGrievanceDTO dto)
+		{
+			if (!ModelState.IsValid)
+				return BadRequest(ModelState);
+
+			await _service.RaiseGrievanceAsync(dto);
+			return Ok("Grievance submitted successfully");
+		}
+
+
+		// View My Grievances
+		[HttpGet("user/{citizenId}")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> MyGrievances(int citizenId)
+		{
+			var data = await _service.MyGrievancesAsync(citizenId);
+			return Ok(data);
+		}
+
+		// View Grievance Details / Status
+		
+		[HttpGet("{id}")]
+		//[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GrievanceStatus(int id)
+		{
+			var data = await _service.GrievanceStatusAsync(id);
+
+			if (data == null)
+				return NotFound("Grievance not found");
+
+			return Ok(data);
+		}
+
+
+		// OFFICER ACTIONS
+
+
+		// View all grievances 
+		[HttpGet("all")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetAllGrievances()
+		{
+			var data = await _service.GetAllGrievancesAsync();
+			return Ok(data);
+		}
+
+		// Resolve grievance
+		[HttpPut("resolve/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ResolveGrievance(int id, GrievanceActionDTO dto)
+		{
+			dto.GrievanceId = id;
+			await _service.ResolveGrievanceAsync(dto);
+			return Ok("Grievance resolved successfully.");
+		}
+
+		// Reject grievance
+		[HttpPut("reject/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> RejectGrievance(int id, GrievanceActionDTO dto)
+		{
+			dto.GrievanceId = id;
+			await _service.RejectGrievanceAsync(dto);
+			return Ok("Grievance rejected successfully.");
+		}
+
+		[HttpPut("forward/{id}")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ForwardToSupervisor(int id, GrievanceActionDTO dto)
+		{
+			dto.GrievanceId = id;
+			await _service.ForwardToSupervisorAsync(dto);
+			return Ok("Grievance forwarded to Supervisor successfully.");
+		}
+
+		[HttpGet("count/pending")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetPendingGrievanceCount()
+		{
+			var count = await _service.GetPendingGrievanceCountAsync();
+			return Ok(new { PendingGrievanceCount = count });
+		}
+
+		[HttpGet("count/resolved")]
+		[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetResolvedGrievanceCount()
+		{
+			var count = await _service.GetResolvedGrievanceCountAsync();
+			return Ok(new { ResolvedGrievanceCount = count });
+		}
+	}
+
+}using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
+using Microsoft.AspNetCore.Mvc;
+using GovServe_Project.DTOs.OfficerDTO;
+using Microsoft.AspNetCore.Authorization;
+
+
+namespace GovServe_Project.Controllers.SupervisorController.cs
+{
+	[ApiController]
+	[Route("api/[controller]")]
+	//[Authorize(Roles = "Supervisor")]
+
+	public class CaseController : ControllerBase
+	{
+		private readonly ICaseService _service;
+
+		public CaseController(ICaseService service)
+		{
+			_service = service;
+		}
+
+		//POST only I can create a case; API will create a new case in the system
+		[HttpPost]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> CreateCase(CreateCaseDto dto)
+		{
+			var result = await _service.CreateCaseAsync(dto);
+			return Ok(result);
+		}
+
+		//GET only I can see all cases
+		//Fetches complete list of case from the database
+		[HttpGet("all")]
+		//[Authorize(Roles = "Supervisor")]              
+
+		public async Task<IActionResult> GetAll()
+		{
+			return Ok(await _service.GetAllCasesAsync());
+		}
+
+		//Returns only ongoing cases
+		[HttpGet("active")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> GetActive()
+		{
+			return Ok(await _service.GetActiveCasesAsync());
+		}
+
+		//Used to change status like: Assigned-->Inprogress-->Completed
+		[HttpPut("update-status")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> UpdateStatus([FromBody] UpdateStatusDto dto)
+		{
+			var result = await _service.UpdateCaseStatus(dto.CaseId, dto.Status);
+			return Ok(result);
+		}
+
+		//Returns cases where SLA time has already exceeded
+		//I can easily identify delayed cases
+		[HttpGet("sla-breached")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> GetSLABreached()
+		{
+			var result = await _service.GetSLABreachedCasesAsync();
+			return Ok(result);
+		}
+		//GET Returns summary like Total cases;Active cases; SLA breached
+        [HttpGet("dashboard")]
+        //[Authorize(Roles = "Supervisor")]
+        public async Task<IActionResult> Dashboard()
+		{
+			return Ok(await _service.GetDashboardAsync());
+		}
+
+		//POST to reassign a case to another officer
+		//I can easily reassign a case to another officer if needed
+		[HttpPost("reassign-escalated")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> ReassignEscalated(int caseId, int newOfficerId)
+		{
+			var result = await _service.ReassignEscalatedCaseAsync(caseId, newOfficerId);
+			return Ok(result);
+		}
+
+		//Supervisor,Officer,Grieviance needs this so I created this
+		[HttpGet("case-details/{caseId}")]
+		public async Task<IActionResult> GetCaseDetails(int caseId)
+		{
+			var result = await _service.GetCaseDetails(caseId);
+			return Ok(result);
+		}
+		//For my dashboard I created this
+		[HttpGet("officer-statistics")]
+		public async Task<IActionResult> GetOfficerStatistics()
+		{
+			var result = await _service.GetOfficerStatisticsAsync();
+			return Ok(result);
+		}
+
+		//officer work
+
+		//  GET - View assigned cases
+		[HttpGet("assigned/{officerId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> GetAssignedCases(int officerId)
+		{
+			var cases = await _service.ViewAssignedCases(officerId);
+			return Ok(cases);
+		}
+
+		//  PUT - Open case (InProgress)
+		[HttpPut("open/{caseId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> OpenCase(int caseId)
+		{
+			var result = await _service.OpenCase(caseId);
+			return Ok(result);
+		}
+
+		//  PUT - Approve case
+		[HttpPut("approve/{caseId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> ApproveCase(int caseId)
+		{
+			var result = await _service.ApproveCase(caseId);
+			return Ok(result);
+		}
+
+		//  PUT - Reject case//used for notification also
+		[HttpPut("reject/{caseId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> Reject(int caseId, [FromBody] string reason)
+		{
+			var result = await _service.Reject(caseId, reason);
+			return Ok(result);
+		}
+
+		//for getting application count on dashboard
+		[HttpGet("dashboard/{departmentId}")]
+		//[Authorize(Roles = "Officer")]
+		public async Task<IActionResult> DashboardCounts(int departmentId)
+		{
+			var result = await _service.GetDashboardCountsAsync(departmentId);
+			return Ok(result);
+		}
+
+	}
+}using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace GovServe_Project.Controllers.SupervisorController.cs
+{
+	[ApiController]
+	[Route("api/[controller]")]
+	//[Authorize(Roles = "Supervisor")]
+	public class EscalationController : ControllerBase
+	{
+		private readonly IEscalationService _service;
+
+		public EscalationController(IEscalationService service)
+		{
+			_service = service;
+		}
+
+
+		//Automatically finds and escalates them without my involvement it called by background job
+		[HttpPost("auto-escalate")]
+		public async Task<IActionResult> AutoEscalate()
+		{
+			var result = await _service.AutoEscalateAsync();
+			return Ok(result);
+		}
+		
+		//Returns total no.of escalated cases useful for dashboard
+		[HttpGet("count")]
+		public async Task<IActionResult> Count()
+		{
+			return Ok(await _service.GetEscalationCountAsync());
+		}
+	}
+}
+using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+namespace GovServe_Project.Controllers.SupervisorController.cs
+{
+	[ApiController]
+	[Route("api/[controller]")]
+	public class NotificationController : ControllerBase
+	{
+		private readonly INotificationService _service;
+
+		public NotificationController(INotificationService service)
+		{
+			_service = service;
+		}
+
+		// Get all notifications from the user
+		[HttpGet("{userId}")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> Get(int userId)
+		{
+			return Ok(await _service.GetUserNotificationsAsync(userId));
+		}
+
+		//Get only unread notifications
+		[HttpGet("unread/{userId}")]
+		//[Authorize(Roles = "Supervisor")]
+
+		public async Task<IActionResult> GetUnread(int userId)
+		{
+			return Ok(await _service.GetUnreadCountAsync(userId));
+		}
+
+		//Mark notification as read when I see the message
+		[HttpPut("mark-read/{notificationId}")]
+		//[Authorize(Roles = "Supervisor")]
+		public async Task<IActionResult> MarkRead(int notificationId)
+		{
+			await _service.MarkAsReadAsync(notificationId);
+			return Ok("Marked as read");
+		}
+	}
+}
+using GovServe_Project.Auth;
+using GovServe_Project.DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class AuthController : ControllerBase
+	{
+		private readonly IAuthService _authService;
+
+		public AuthController(IAuthService authService)
+		{
+			_authService = authService;
+		}
+
+		[HttpPost("login")]
+		public async Task<IActionResult> Login(LoginDTO dto)
+		{
+			var token = await _authService.Login(dto);
+
+			return Ok(new
+			{
+				Token = token,
+				Message = "Login Successful"
+			});
+		}
+	}
+}
+using GovServe_Project.DTOs;
+using GovServe_Project.DTOs;
+using GovServe_Project.Models;
+using GovServe_Project.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GovServe_Project.Controllers
+{
+	[Route("api/[controller]")]
+	[ApiController]
+	public class UserController : ControllerBase
+	{
+		private readonly IUserService _service;
+
+		public UserController(IUserService service)
+		{
+			_service = service;
+		}
+
+		// Register
+
+		[HttpPost("register")]
+		public async Task<IActionResult> Register(RegisterDTO dto)
+		{
+			var result = await _service.RegisterAsync(dto);
+
+			return Ok(result);
+		}
+
+
+		// Get User Profile
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetUser(int id)
+		{
+			var data = await _service.GetUserProfile(id);
+
+			if (data == null)
+				return NotFound();
+
+			return Ok(data);
+		}
+
+		// Get All Users (Admin)
+
+		[HttpGet("all")]
+		public async Task<IActionResult> GetAllUsers()
+		{
+			var data = await _service.GetAllUsers();
+			return Ok(data);
+		}
+
+		// Update User
+		[HttpPut("{id}")]
+		public async Task<IActionResult> UpdateUser(int id, Users model)
+		{
+			var result = await _service.UpdateUser(id, model);
+
+			if (!result)
+				return NotFound();
+
+			return Ok("User Updated");
+		}
+
+		// Delete User
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteUser(int id)
+		{
+			var result = await _service.DeleteUser(id);
+
+			if (!result)
+				return NotFound();
+
+			return Ok("User Deleted");
+		}
+	}
+}
+using GovServe_Project.Enum;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("Departments")]
+    public class Department
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DepartmentID { get; set; }
+
+        [Required(ErrorMessage = "Department name is required.")]
+        [StringLength(100, MinimumLength = 2,
+            ErrorMessage = "Department name must be between 2 and 100 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Department name allows letters, numbers, spaces, and - & ( ).")]
+        public string DepartmentName { get; set; } = default!;
+
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
+        public string? Description { get; set; }
+
+
+        [Required]
+        public DepartmentStatus Status { get; set; } = DepartmentStatus.Active;
+
+
+        // Navigation
+        public ICollection<Service> Services { get; set; } = new List<Service>();
+        public ICollection<Users> User { get; set; }
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("EligibilityRules")]
+    public class EligibilityRule
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int RuleID { get; set; }
+
+        // "Service" in requirement means ServiceID (FK)
+        [Required(ErrorMessage = "ServiceID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "ServiceID must be a positive number.")]
+        public int ServiceID { get; set; }
+
+        [Required(ErrorMessage = "Rule description is required.")]
+        [StringLength(1000, MinimumLength = 5,
+            ErrorMessage = "Rule description must be between 5 and 1000 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Service name allows letters, numbers, spaces, and - & ( ).")]
+        public string RuleDescription { get; set; } = default!;
+
+        [Required(ErrorMessage = "Rule expression is required.")]
+        [StringLength(4000, ErrorMessage = "Rule expression cannot exceed 4000 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9]+\s*(==|!=|>=|<=|>|<)\s*(true|false|\d+)(\s+(AND|OR)\s+[A-Za-z]+\s*(==|!=|>=|<=|>|<)\s*(true|false|\d+))*$",
+            ErrorMessage = "Invalid rule expression. Allowed format: FieldName (==, !=, >=, <=, >, <) true/false/number. Multiple conditions must be joined using AND or OR.\r\n ")]
+        public string RuleExpression { get; set; } = default!; 
+
+        // Navigation
+        [ForeignKey(nameof(ServiceID))]
+        public Service? Service { get; set; }
+    }
+}using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("RequiredDocuments")]
+    public class RequiredDocument
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int DocumentID { get; set; }
+
+        // "Service" in requirement means ServiceID (FK)
+        [Required(ErrorMessage = "ServiceID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "ServiceID must be a positive number.")]
+        public int ServiceID { get; set; }
+
+        [Required(ErrorMessage = "Document name is required.")]
+        [StringLength(150, MinimumLength = 2,
+            ErrorMessage = "Document name must be between 2 and 150 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Document name allows letters, numbers, spaces, and - & ( ).")]
+        public string DocumentName { get; set; } = default!;
+
+        [Required(ErrorMessage = "Mandatory flag is required.")]
+        public bool Mandatory { get; set; }
+
+        // Navigation
+        [ForeignKey(nameof(ServiceID))]
+        public Service? Service { get; set; }
+
+		//public virtual ICollection<Application> Application { get; set; }
+	}
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
+namespace GovServe_Project.Models.AdminModels
+{
+    
+    [Table("Roles")]
+    public class Role
+    {
+        [Key]
+        public int RoleID { get; set; }
+
+        [Required]
+        [MaxLength(100)]
+        public string RoleName { get; set; } = string.Empty;
+
+        // Navigation
+        public ICollection<WorkflowStage>? WorkflowStages { get; set; }
+        public ICollection<Users> User { get; set;}
+    }
+
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("Services")]
+    public class Service
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ServiceID { get; set; }
+        [Required(ErrorMessage = "DepartmentID is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "DepartmentID must be a positive number.")]
+        public int DepartmentID { get; set; }
+        [Required(ErrorMessage = "Service name is required.")]
+        [StringLength(120, MinimumLength = 2,
+            ErrorMessage = "Service name must be between 2 and 120 characters.")]
+        [RegularExpression(@"^[A-Za-z0-9\s\-\&\(\)]+$",
+            ErrorMessage = "Service name allows letters, numbers, spaces, and - & ( ).")]
+        public string ServiceName { get; set; } = default!;
+
+        [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters.")]
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "SLA days are required.")]
+        [Range(1, 365, ErrorMessage = "SLA days must be between 1 and 365.")]
+        public int SLA_Days { get; set; }
+
+        [Required(ErrorMessage = "Status is required.")]
+        public ServiceStatus Status { get; set; } = ServiceStatus.Active;
+        // Navigation
+        [ForeignKey(nameof(DepartmentID))]
+        public Department? Department { get; set; }
+        public ICollection<EligibilityRule> EligibilityRules { get; set; } = new List<EligibilityRule>();
+        public ICollection<RequiredDocument> RequiredDocuments { get; set; } = new List<RequiredDocument>();
+        public ICollection<WorkflowStage> WorkflowStages { get; set; } = new List<WorkflowStage>();
+        public ICollection<SLARecords> SLARecords { get; set; } = new List<SLARecords>();
+        //public ICollection<Application> Applications { get; set; } = new List<Application>();       
+
+    }
+}
+using GovServe_Project.DTOs.AdminDTO;
+using GovServe_Project.Enum;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("ServiceReports")]
+public class ServiceReport
+{
+    [Key]
+    public int ReportID { get; set; }
+
+    [Required]
+    public ReportScopeType Scope { get; set; } = default!;
+    // Example: "Department-5", "Service-3", "Period-2025-01"
+
+    [NotMapped]
+    public ServiceReportMetricsDTO Metrics { get; set; } = new();
+
+    public DateTime GeneratedDate { get; set; } = DateTime.UtcNow;
+}using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("SLADays")]
+    public class SLADays
+    {
+        [Key]
+        public int SLADayID { get; set; }
+
+        [Required]
+        public string RoleName { get; set; } = string.Empty;
+
+        [Required]
+        public int Days { get; set; }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.SuperModels;
+
+namespace GovServe_Project.Models.AdminModels
+{
+    [Table("SLARecords")]
+    public class SLARecords
+    {
+        [Key]
+        public int SLARecordID { get; set; }
+
+        [Required]
+        public int CaseId { get; set; } 
+
+        [Required]
+        public int StageID { get; set; }
+
+        [Required]
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public SLAStatus Status { get; set; }
+
+        [ForeignKey(nameof(StageID))]
+        public WorkflowStage? Stage { get; set; }
+
+        [ForeignKey(nameof(CaseId))]
+        public Case? Case { get; set; }
+    }
+
+}using GovServe_Project.Models.AdminModels;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models
+{
+    [Table("WorkflowStages")]
+    public class WorkflowStage
+    {
+        [Key]
+        public int StageID { get; set; } // Primary Key
+
+        [Required]
+        public int ServiceID { get; set; } // FK to Service
+
+        [Required]
+        public string ResponsibleRole { get; set; } = string.Empty; // Role for this stage
+
+        [Required]
+        public int SequenceNumber { get; set; } // Order of stage
+
+        public int SLA_Days { get; set; } // Auto-fetched from SLADays table
+
+        [ForeignKey(nameof(ServiceID))]
+        public Service? Service { get; set; } // Navigation property
+    }
+}
+using GovServe_Project.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.GrievanceAppealModel;
+using GovServe_Project.Models.SuperModels;
+
+
+namespace GovServe_Project.Models.CitizenModels
+{
+
+	public class Application
+	{
+
+		[Key] 
+		public int ApplicationID { get; set; }
+
+		[Required]
+		public int UserId { get; set; }
+		[ForeignKey("UserId")]
+		public virtual Users User { get; set; }
+
+
+		[Required]
+		public int ServiceID { get; set; }
+		[ForeignKey("ServiceID")]
+		public virtual Service Service { get; set; }
+
+
+		[Required]
+		public string ServiceName { get; set; }
+
+		public int DepartmentID { get; set; }
+		[ForeignKey("DepartmentID")]
+		public virtual Department Department { get; set; }
+		
+		public DateTime SubmittedDate { get; set; }
+
+		public DateTime? CompletedDate { get; set; }
+
+		public string ApplicationStatus { get; set; } = "Submitted";
+
+		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
+
+		public virtual ICollection<Grievance> Grievances { get; set; }
+
+		public virtual ICollection<Appeal> Appeals { get; set; }
+
+		public virtual Case Case { get; set; }
+	}
+
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace GovServe_Project.Models.CitizenModels
+{
+	public class CitizenDocument
+	{
+		[Key]
+		public int CitizenDocumentID { get; set; }
+
+		[Required]
+		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+		public virtual Application Application { get; set; }
+
+		[Required]
+		public string DocumentName { get; set; } = default!;
+
+		[Required]
+		public string URI { get; set; }
+
+		[Required]
+		public DateTime UploadedDate { get; set; }
+
+		[Required]
+		[RegularExpression("Submitted|Under Review|Approved|Rejected", ErrorMessage = "Status must be Submitted, Under Review, Approved or Rejected")]
+		public string VerificationStatus { get; set; }
+
+	}
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
+
+
+namespace GovServe_Project.Models.GrievanceAppealModel
+{
+	public class Appeal
+	{
+		[Key]
+		public int AppealID { get; set; }
+
+		// Citizen reference
+		[Required]
+		[ForeignKey("Users")]
+		public int UserId { get; set; }
+
+		// Reason for appeal
+		[MaxLength(500)]
+		public string Reason { get; set; }
+
+		// Detailed explanation
+		[MaxLength(1000)]
+		public string Description { get; set; }
+
+		// Remarks by authority (acts as notification)
+		public string Remarks { get; set; }
+
+		// Workflow status
+		public AppealStatus Status { get; set; } = AppealStatus.Approved;
+
+		// Date filed
+		public DateTime FiledDate { get; set; }
+
+		[Required]
+		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+		public virtual Application Application { get; set; }
+	}
+}
+
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+using GovServe_Project.Models;
+using GovServe_Project.Models.CitizenModels;
+
+namespace GovServe_Project.Models.GrievanceAppealModel
+{ 
+	public class Grievance
+	{
+		internal object g;
+
+		// Primary key of the table
+		[Key]
+		public int GrievanceId { get; set; }
+
+		[Required]
+		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+		public virtual Application Application { get; set; }	
+	
+		[Required]
+		public int UserId { get; set; }
+		[ForeignKey("UserId")]
+		public virtual Users User { get; set; }	
+
+		
+		[MaxLength(500)]
+		public string Reason { get; set; }
+
+		// Detailed explanation of grievance
+		[MaxLength(1000)]
+		public string Description { get; set; }
+
+		// Remarks given by officer/supervisor (acts as notification for citizen)
+		public string Remarks { get; set; }
+
+		// Workflow status
+		public GrievanceStatus Status { get; set; }
+
+		// Date when grievance was created
+		public DateTime FiledDate { get; set; } = DateTime.UtcNow;
+
+	}
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.CitizenModels;
+
+namespace GovServe_Project.Models.SuperModels
+{
+	public class Case
+	{
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		public int CaseId { get; set; }
+		public int ApplicationID { get; set; }
+		[ForeignKey("ApplicationID")]
+		public virtual Application Application { get; set; }
+		 
+		// Citizen linked automatically from Application
+		public int UserId { get; set; }
+		[ForeignKey("UserId")]
+		public virtual Users User { get; set; }
+
+		// Officer assigned automatically
+		public int AssignedOfficerId { get; set; }
+
+		[Required]
+		[ForeignKey("Department")]
+		public int DepartmentID { get; set; }
+		public virtual Department Department { get; set; }
+
+		[Required]
+		[RegularExpression("Pending|Assigned|Escalated|Completed", ErrorMessage = "Invalid status value")]
+		public string Status { get; set; } = "Assigned";
+		public DateTime? AssignedDate { get; set; }
+		public bool IsWarningSent { get; set; }
+		public bool IsEscalated { get; set; } = false;
+		public DateTime? CompletedDate { get; set; }
+		public DateTime LastUpdated { get; set; } = DateTime.Now;
+		public string? RejectionReason { get; set; }
+	}
+
+}
+
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
+namespace GovServe_Project.Models.SuperModels
+{
+	public class Escalation
+	{
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		public int EscalationId { get; set; }
+		[Required]
+		[ForeignKey("Case")]
+		public int CaseId { get; set; }
+		public virtual Case Case { get; set; }
+		[ForeignKey("User")]
+		public int SupervisorId { get; set; }
+		public virtual Users Supervisor{ get; set; }
+		public int PreviousOfficerId { get; set; }
+		public int NewOfficerId { get; set; }
+		[Required]
+		public string Reason { get; set; }
+
+		[RegularExpression("Open|Resolved|Closed", ErrorMessage = "Invalid escalation status")]
+		public string Status { get; set; } = "Open";
+		public DateTime EscalationDate { get; set; }
+		public DateTime? ResolvedDate { get; set; }
+		public int EscalationLevel { get; set; } = 1;
+	}
+}
+
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GovServe_Project.Models.SuperModels
+{ 
+	public class Notification
+	{
+		[Key]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		public int NotificationId { get; set; }
+		[Required]
+		[ForeignKey("User")]
+		public int UserId { get; set; }
+		public virtual Users User { get; set; }
+		[Required]
+		[ForeignKey("Case")]
+		public int CaseId { get; set; }
+		public virtual Case Case { get; set; }
+		[Required]
+		public string Message { get; set; }
+		[RegularExpression("Assignment|Escalation|Update|In-Progress|Rejected|Completed", ErrorMessage = "Invalid category")]
+		public string Category { get; set; }
+		[RegularExpression("Unread|Read", ErrorMessage = "Invalid notification status")]
+		public string Status { get; set; } = "Unread";
+		public bool IsRead {  get; set; }=false;
+		public DateTime CreatedDate { get; set; } = DateTime.Now;
+	}
+
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.CitizenModels;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.GrievanceAppealModel;
+using GovServe_Project.Models.SuperModels;
+
+
+namespace GovServe_Project.Models
+{
+	public class Users
+	{
+		[Key]
+		public int UserId { get; set; }
+
+		[Required]
+		[MaxLength(100)]
+		public string FullName { get; set; }
+
+		[Required]
+		[EmailAddress]
+		public string Email { get; set; }
+
+		[Required]
+		[MaxLength(15)]
+		public string Phone { get; set; }
+
+		[Required]
+
+		[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$",
+		ErrorMessage = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.")]
+		public string Password { get; set; }
+
+        [ForeignKey("DepartmentID")]
+        public int DepartmentID { get; set; }
+        public virtual Department Department { get; set; }
+
+		[Required]
+	
+		[ForeignKey("RoleID")]
+        public int RoleID { get; set; }
+
+        public virtual Role Role { get; set; }
+		public string RoleName { get; set; }
+
+
+	
+
+
+		// Navigation Property
+		//public virtual ICollection<Application> Applications { get; set; }
+		//public virtual ICollection<Grievance> Grievances { get; set; }
+		//public virtual ICollection<Appeal> Appeals { get; set; }
+
+		//public virtual ICollection<Case> Cases { get; set; }
+
+	}
+}
+using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Enum;
+using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
+
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
+{
+	public class CaseRepository : ICaseRepository
+	{
+		private readonly GovServe_ProjectContext _context;
+
+		public CaseRepository(GovServe_ProjectContext context)
+		{
+			_context = context;
+		}
+
+		public async Task<IEnumerable<Case>> GetAllAsync()
+		{
+			return await _context.Case.ToListAsync();
+		}
+
+		public async Task<IEnumerable<Case>> GetByStatusAsync(string status)
+		{
+			return await _context.Case
+				.Where(x => x.Status == status)
+				.ToListAsync();
+		}
+		public async Task<List<Case>> GetActiveCasesAsync()
+		{
+			return await _context.Case
+				.Where(c => c.Status != "Closed") // or your logic
+				.ToListAsync();
+		}
+		public async Task<Case> GetByIdAsync(int id)
+		{
+			return await _context.Case.FindAsync(id);
+		}
+		public async Task<int> GetCaseCountByOfficerAsync(int officerId)
+		{
+			return await _context.Case
+				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+		}
+		public async Task<Case> GetCaseWithDocuments(int caseId)
+		{
+			return await _context.Case
+				.Include(c => c.Application)
+				.ThenInclude(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
+		}
+		public async Task AddAsync(Case c)
+		{
+			await _context.Case.AddAsync(c);
+		}
+		public async Task SaveAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
+		public void Update(Case c)
+		{
+			_context.Case.Update(c);
+		}
+		// It calculates the SLA status of the case from slarecords
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _context.Case
+				.Where(c => c.Status == "Escalated")
+				.ToListAsync();
+		}
+		// For supervisor dashboard I need this
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			return await _context.User
+				.Where(u => u.Role.RoleName == "Officer")
+				.Select(u => new OfficerStatisticsDto
+				{
+					OfficerId = u.UserId,
+					OfficerName = u.FullName,
+					Department = u.Department.DepartmentName,
+
+					TotalCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId),
+
+					ActiveCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Assigned"),
+
+					PendingCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Pending"),
+
+					CompletedCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Completed"),
+
+					EscalatedCases = _context.Case
+						.Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Escalated")
+				})
+				.ToListAsync();
+		}
+		//officers work
+		// Get assigned cases
+		public async Task<List<Case>> GetAssignedCases(int officerId)
+		{
+			return await _context.Case
+				.Where(c => c.AssignedOfficerId == officerId)
+				.ToListAsync();
+		}
+
+		// Get single case
+
+		public async Task<Case?> GetCaseById(int caseId)
+		{
+			return await _context.Case.FindAsync(caseId);
+		}
+
+		// Update case
+		public async Task UpdateCase(Case caseObj)
+		{
+			_context.Case.Update(caseObj);
+			await _context.SaveChangesAsync();
+		}
+
+		//count application for officer dashboard
+
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			var result = new DashboardCountcs();
+
+			// Assigned Cases
+			result.Assigned = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Assigned");
+
+
+			// Approved Cases
+			result.Approved = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Approved");
+
+
+			// Pending Cases
+			result.Pending = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Pending");
+
+
+			// Rejected Cases
+			result.Rejected = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Rejected");
+
+
+			// Resubmitted Cases
+			result.Resubmitted = await _context.Case
+				.CountAsync(a => a.DepartmentID == departmentId
+	&& a.Status == "Resubmitted");
+
+
+			return result;
+
+
+		}
+		//Notification purpose 
+		public async Task<string> Reject(int caseId, string reason)
+		{
+			var caseObj = await _context.Case.FindAsync(caseId);
+
+			if (caseObj == null)
+				return "Case Not Found";
+
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason;
+
+			await _context.SaveChangesAsync();
+
+			return "Case Rejected Successfully";
+		}
+        public Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}using GovServe_Project.Data;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using Microsoft.EntityFrameworkCore;
+
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
+{
+	public class EscalationRepository : IEscalationRepository
+	{
+		private readonly GovServe_ProjectContext _context;
+
+		public EscalationRepository(GovServe_ProjectContext context)
+		{
+			_context = context;
+		}
+
+		public async Task CreateAsync(Escalation escalation)
+		{
+			await _context.Escalation.AddAsync(escalation);
+			await _context.SaveChangesAsync();
+		}
+		public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
+		{
+			return await _context.SLARecords
+				.Where(s => s.Status == SLAStatus.Breached)
+				.ToListAsync();
+		}
+		public async Task<SLARecords> GetByCaseIdAsync(int caseId)
+		{
+			return await _context.SLARecords
+				.FirstOrDefaultAsync(s => s.CaseId == caseId);
+		}
+		public async Task<List<Escalation>> GetAllAsync()
+		{
+			return await _context.Escalation.ToListAsync();
+		}
+
+		public async Task<int> GetEscalationCountAsync()
+		{
+			return await _context.Escalation.CountAsync();
+		}
+	}
+}
+ using GovServe_Project.Data;
+using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using Microsoft.EntityFrameworkCore;
+namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
+{
+	public class NotificationRepository : INotificationRepository
+	{
+		private readonly GovServe_ProjectContext _context;
+
+		public NotificationRepository(GovServe_ProjectContext context)
+		{
+			_context = context;
+		}
+
+		public async Task AddAsync(Notification notification)
+		{
+			await _context.Notification.AddAsync(notification);
+		}
+
+		public async Task<List<Notification>> GetByUserIdAsync(int userId)
+		{
+			return await _context.Notification
+				.Where(n => n.UserId == userId)
+				.OrderByDescending(n => n.CreatedDate)
+				.ToListAsync();
+		}
+
+		public async Task<int> GetUnreadCountAsync(int userId)
+		{
+			return await _context.Notification
+				.CountAsync(n => n.UserId == userId && !n.IsRead);
+		}
+
+		public async Task<Notification> GetByIdAsync(int id)
+		{
+			return await _context.Notification.FindAsync(id);
+		}
+
+		public async Task SaveAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
+		public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
+		{
+			return await _context.SLARecords
+				.Where(s => s.Status.Equals("Breached"))
+				.ToListAsync();
+		}
+		public async Task SendNotification(Notification notification)
+		{
+			await _context.Notification.AddAsync(notification);
+			await _context.SaveChangesAsync();
+
+
+		}
+	}
+}using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Enum;
+using GovServe_Project.Models;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.DTOs.OfficerDTO;
+using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
+
+namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
+{
+	public class CaseService : ICaseService
+	{
+		private readonly ICaseRepository _repo;
+		private readonly INotificationService _notificationService;
+		private readonly IUserRepository _userRepo;
+		private readonly IApplicationRepository _applicationRepo;
+
+		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo, IApplicationRepository applicationRepo)
+		{
+			_repo = repo;
+			_notificationService = notificationService;
+			_userRepo=userRepo;
+			_applicationRepo = applicationRepo;
+		}
+
+		public async Task<IEnumerable<Case>> GetAllCasesAsync()
+		{
+			return await _repo.GetAllAsync();
+		}
+		public async Task<Case> GetCaseDetails(int caseId)
+		{
+			return await _repo.GetCaseWithDocuments(caseId);
+		} 
+		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
+		{
+			return await _repo.GetByStatusAsync("Assigned");
+		}
+		public async Task<List<Case>> GetSLABreachedCasesAsync()
+		{
+			return await _repo.GetSLABreachedCasesAsync();
+		}
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+		{
+			return await _repo.GetOfficerStatisticsAsync();
+		}
+		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
+		{
+			var application = await _applicationRepo
+				.GetApplicationWithDocuments(dto.ApplicationId);
+
+			if (application == null)
+				return "Application not found";
+
+			int officerId = await GetAvailableOfficer(dto.DepartmentId);
+
+			if (officerId == 0)
+				return "No officer available";
+
+			var caseModel = new Case
+			{
+				ApplicationID = application.ApplicationID,
+				UserId = application.UserId,
+				DepartmentID = dto.DepartmentId,
+				AssignedOfficerId = officerId,
+				Status = "Assigned",
+				AssignedDate = DateTime.Now,
+				LastUpdated = DateTime.Now
+			};
+
+			await _repo.AddAsync(caseModel);
+			await _repo.SaveAsync();
+
+			return "Case assigned successfully";
+		}
+		public async Task<int> GetAvailableOfficer(int departmentId)
+		{
+			var officers = await _userRepo
+				.GetOfficersByDepartmentAsync(departmentId);
+
+			if (!officers.Any())
+				return 0;
+
+			int selectedOfficer = 0;
+			int minCases = int.MaxValue;
+
+			foreach (var officer in officers)
+			{
+				int count = await _repo
+					.GetCaseCountByOfficerAsync(officer.UserId);
+
+				if (count < minCases)
+				{
+					minCases = count;
+					selectedOfficer = officer.UserId;
+				}
+			}
+
+			return selectedOfficer;
+		}
+		public async Task<string> UpdateCaseStatus(int caseId, string status)
+		{
+			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
+			if (!validStatuses.Contains(status))
+				return "Invalid status";
+
+			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null)
+				return "Case not found";
+
+			c.Status = status;
+			c.LastUpdated = DateTime.Now;
+
+			if (status == "Completed")
+				c.CompletedDate = DateTime.Now;
+
+			_repo.Update(c);
+			await _repo.SaveAsync();
+
+			return "Status updated";
+		}
+
+		public async Task<string> ReassignCaseAsync(int caseId, int newOfficerId)
+		{
+			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null) return "Case not found";
+
+			int oldOfficerId = c.AssignedOfficerId;
+
+			c.AssignedOfficerId = newOfficerId;
+			c.AssignedDate = DateTime.Now;   
+			c.LastUpdated = DateTime.Now;
+
+			_repo.Update(c);
+			await _repo.SaveAsync();
+
+			await _notificationService.SendNotificationAsync(
+				newOfficerId,
+				"Case reassigned to you",
+				caseId
+			);
+
+			await _notificationService.SendNotificationAsync(
+				oldOfficerId,
+				"This case was reassigned",
+				caseId
+			);
+
+			return "Case reassigned";
+		}
+
+		public async Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId)
+		{
+			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null)
+				return "Case not found";
+
+			if (!c.IsEscalated)
+				return "Case is not escalated";
+
+			int oldOfficerId = c.AssignedOfficerId;
+			int citizenId = c.UserId;
+
+			// Reassign
+			c.AssignedOfficerId = newOfficerId;
+			c.AssignedDate = DateTime.Now;
+			c.LastUpdated = DateTime.Now;
+
+			_repo.Update(c);
+			await _repo.SaveAsync();
+
+			// Notifications
+			await _notificationService.SendNotificationAsync(
+				newOfficerId,
+				"New case assigned to you after escalation",
+				caseId
+			);
+
+			await _notificationService.SendNotificationAsync(
+				oldOfficerId,
+				"This case was reassigned due to SLA breach",
+				caseId
+			);
+
+			await _notificationService.SendNotificationAsync(
+				citizenId,
+				"Your case has been reassigned to another officer",
+				caseId
+			);
+
+			return "Case reassigned successfully";
+		}  
+		public async Task<object> GetDashboardAsync()
+		{
+			var all = await _repo.GetAllAsync();
+
+			return new
+			{
+				Total = all.Count(),
+				Pending = all.Count(x => x.Status == "Pending"),
+				Assigned = all.Count(x => x.Status == "Assigned"),
+				Escalated = all.Count(x => x.Status == "Escalated"),
+				Completed = all.Count(x => x.Status == "Completed")
+			};
+		}
+
+		//officer work
+
+		public async Task<List<Case>> ViewAssignedCases(int officerId)
+		{
+			return await _repo.GetAssignedCases(officerId);
+		}
+
+		// Officer opens case → InProgress
+		public async Task<string> OpenCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "InProgress";
+			await _repo.UpdateCase(caseObj);
+
+			return "Case marked as In Progress";
+		}
+
+		public async Task<string> ApproveCase(int caseId)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "Approved";
+			caseObj.RejectionReason = null;
+
+			await _repo.UpdateCase(caseObj);
+
+			return "Case Approved Successfully";
+		}
+
+		public async Task<string> Reject(int caseId, string reason)
+		{
+			var caseObj = await _repo.GetCaseById(caseId);
+
+			if (caseObj == null)
+				return "Case not found";
+
+			caseObj.Status = "Rejected";
+			caseObj.RejectionReason = reason;
+
+			await _repo.UpdateCase(caseObj);
+
+			return "Case Rejected with reason: ";
+
+			//add notification
+
+		}
+
+
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		{
+			return await _repo.GetDashboardCountsAsync(departmentId);
+		}
+
+		public Task<string> ReassignCaseAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<string> ReassignEscalatedCaseAsync()
+		{
+			throw new NotImplementedException();
+		}
+
+		private readonly INotificationService notificationService;
+
+
+	}
+}
+
+
+ using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Enum;
+using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Data;
+
+namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
+{
+	public class EscalationService : IEscalationService
+	{
+		private readonly IEscalationRepository _repo;
+		private readonly ICaseRepository _caseRepo;
+		private readonly INotificationService _notificationService;
+		private readonly ISLARecordRepository _slaRepo;
+		private readonly GovServe_ProjectContext _context;
+
+		public EscalationService(IEscalationRepository repo,ICaseRepository caseRepo,INotificationService notificationService,ISLARecordRepository slaRepo, GovServe_ProjectContext context)   
+		{
+			_repo = repo;
+			_caseRepo = caseRepo;
+			_notificationService = notificationService;
+			_slaRepo = slaRepo; 
+			_context= context;
+
+		}
+
+		public async Task SendSLAWarningsAsync()
+		{
+			var activeCases = await _caseRepo.GetActiveCasesAsync();
+
+			foreach (var c in activeCases)
+			{
+				if (c.AssignedOfficerId == 0) continue; // safety check
+
+				var sla = await _slaRepo.GetByCaseIdAsync(c.CaseId);
+				if (sla == null) continue;
+
+				var breachTime = sla.EndDate;
+				var warningTime = breachTime.AddMinutes(-30);
+
+				if (DateTime.Now >= warningTime && DateTime.Now < breachTime)
+				{
+					await _notificationService.SendNotificationAsync(
+						c.AssignedOfficerId,
+						"SLA is about to breach. Please take action",
+						c.CaseId
+					);
+				}
+			}
+		}
+		public async Task<string> AutoEscalateAsync()
+		{
+			var breachedCases = await _repo.GetSLABreachedCasesAsync();
+
+			// fetch supervisor automatically
+			var supervisor = await _context.User
+				.Where(u => u.Role.RoleName == "Supervisor")
+				.FirstOrDefaultAsync();
+
+			if (supervisor == null)
+				throw new Exception("Supervisor not found");
+
+			foreach (var sla in breachedCases)
+			{
+				var c = await _caseRepo.GetByIdAsync(sla.CaseId);
+
+				if (c == null || c.IsEscalated)
+					continue;
+
+				int oldOfficerId = c.AssignedOfficerId;
+				int citizenId = c.UserId;
+
+				var escalation = new Escalation
+				{
+					CaseId = c.CaseId,
+					SupervisorId = supervisor.UserId,   // ADD THIS
+					PreviousOfficerId = oldOfficerId,
+					NewOfficerId = 0,
+					Reason = "Auto escalation due to SLA breach",
+					Status = "Open",
+					EscalationDate = DateTime.Now,
+					EscalationLevel = 1
+				};
+
+				await _repo.CreateAsync(escalation);
+
+				c.Status = "Escalated";
+				c.IsEscalated = true;
+				c.LastUpdated = DateTime.Now;
+
+				_caseRepo.Update(c);
+
+				await _notificationService.SendNotificationAsync(
+					citizenId,
+					"Your application is delayed and escalated",
+					c.CaseId
+				);
+
+				await _notificationService.SendNotificationAsync(
+					oldOfficerId,
+					"Case escalated due to delay",
+					c.CaseId
+				);
+			}
+
+			await _caseRepo.SaveAsync();
+
+			return "Auto escalation completed";
+		}
+
+		public async Task<string> CheckSLAAndEscalateAsync(int caseId)
+		{
+			var c = await _caseRepo.GetByIdAsync(caseId);
+
+			if (c == null)
+				return "Case not found";
+
+			var sla = await _repo.GetByCaseIdAsync(caseId);
+
+			if (sla != null && sla.Status == SLAStatus.Breached)
+			{
+				if (c.IsEscalated)
+					return "Already escalated";
+
+				c.Status = "Escalated";
+				c.IsEscalated = true;
+				c.LastUpdated = DateTime.Now;
+
+				_caseRepo.Update(c);
+				await _caseRepo.SaveAsync();
+
+				return "Case escalated";
+			}
+
+			return "SLA within limit";
+		}
+		public async Task<int> GetEscalationCountAsync()
+		{
+			return await _repo.GetEscalationCountAsync();
+		}
+	}
+}
+ using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.DTOs.SupervisorDTO;
+using GovServe_Project.Services.Interfaces;
+
+namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
+{
+	public class NotificationService : INotificationService
+	{
+		private readonly INotificationRepository _repo;
+
+		public NotificationService(INotificationRepository repo)
+		{
+			_repo = repo;
+		}
+
+		public async Task SendNotificationAsync(int userId, string message, int caseId)
+		{
+			var notification = new Notification
+			{
+				UserId = userId,
+				CaseId = caseId,
+				Message = message,
+				Category = "Update", // or Assignment/Escalation
+				CreatedDate = DateTime.Now,
+				IsRead = false
+			};
+
+			await _repo.AddAsync(notification);
+			await _repo.SaveAsync();
+		}
+
+		public async Task<List<Notification>> GetUserNotificationsAsync(int userId)
+		{
+			return await _repo.GetByUserIdAsync(userId);
+		}
+
+		public async Task<int> GetUnreadCountAsync(int userId)
+		{
+			return await _repo.GetUnreadCountAsync(userId);
+		}
+
+		public async Task MarkAsReadAsync(int notificationId)
+		{
+			var notification = await _repo.GetByIdAsync(notificationId);
+
+			if (notification != null)
+			{
+				notification.IsRead = true;
+				await _repo.SaveAsync();
+			}
+		}
+
+		public async Task SendNotification(int userId, string message) {
+			Notification n = new Notification();
+			n.UserId = userId;
+			n.Message = message;
+			n.CreatedDate = DateTime.Now;
+
+			await _repo.AddAsync(n);
+
+		}
+
+		
+	}
+}namespace GovServe_Project.DTOs.SupervisorDTO
+{
+	public class CreateCaseDto
+	{
+		public int ApplicationId { get; set; }
+		public int DepartmentId { get; set; }
+	}
+}
+namespace GovServe_Project.DTOs.SupervisorDTO
+{
+	public class OfficerStatisticsDto
+	{
+		public int OfficerId { get; set; }
+
+		public string OfficerName { get; set; }
+
+		public string Department { get; set; }
+
+		public int TotalCases { get; set; }
+
+		public int ActiveCases { get; set; }
+
+		public int PendingCases { get; set; }
+
+		public int CompletedCases { get; set; }
+
+		public int EscalatedCases { get; set; }
+	}
+}
+namespace GovServe_Project.DTOs.SupervisorDTO
+{
+	public class ReassignCaseDto
+	{
+		public int CaseId { get; set; }
+		public int NewOfficerId { get; set; }
+	}
+}
+namespace GovServe_Project.DTOs.SupervisorDTO
+{
+	public class UpdateStatusDto
+	{
+		public int CaseId { get; set; }
+		public string Status { get; set; }
+	}
+}

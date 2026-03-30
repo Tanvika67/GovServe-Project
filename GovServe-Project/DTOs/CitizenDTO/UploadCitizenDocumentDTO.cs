@@ -3,9 +3,7 @@
 	public class UploadCitizenDocumentDTO
 	{
 		public int ApplicationID { get; set; }
-
-		public string DocumentName { get; set; }
-
+		public int DocumentID { get; set; }
 		public IFormFile URI { get; set; }
 	}
 }

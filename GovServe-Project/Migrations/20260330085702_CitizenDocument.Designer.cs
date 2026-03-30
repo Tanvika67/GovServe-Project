@@ -4,6 +4,7 @@ using GovServe_Project.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-    partial class GovServe_ProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20260330085702_CitizenDocument")]
+    partial class CitizenDocument
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -349,6 +352,13 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("DocumentID")
                         .HasColumnType("int");
 
+                    b.Property<string>("DocumentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequiredDocumentDocumentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("URI")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -364,7 +374,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasIndex("ApplicationID");
 
-                    b.HasIndex("DocumentID");
+                    b.HasIndex("RequiredDocumentDocumentID");
 
                     b.ToTable("CitizenDocument");
                 });
@@ -823,7 +833,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasOne("GovServe_Project.Models.AdminModels.RequiredDocument", "RequiredDocument")
                         .WithMany()
-                        .HasForeignKey("DocumentID")
+                        .HasForeignKey("RequiredDocumentDocumentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

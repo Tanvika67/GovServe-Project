@@ -98,7 +98,7 @@ namespace GovServe_Project.Controllers
 		////------------Admin use----------------
 		// Get All Applications (Admin / Officer)
 		[HttpGet("all")]
-		//[Authorize(Roles = "Admin,Officer")]
+		//[Authorize(Roles = "Admin,Officer,Supervisor")]
 		public async Task<IActionResult> GetAllApplications()
 		{
 			var applications = await _applicationService.GetAllApplicationsAsync();

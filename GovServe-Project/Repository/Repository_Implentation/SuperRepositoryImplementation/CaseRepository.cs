@@ -44,32 +44,15 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		public async Task<int> GetCaseCountByOfficerAsync(int officerId)
 		{
 			return await _context.Case
-				.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
+				.Where(c => c.AssignedOfficerId == officerId && c.Status != "Completed")
+				.CountAsync();
 		}
-		public async Task<CaseDetailsDto> GetCaseWithDocuments(int caseId)
+		public async Task<Case> GetCaseWithApplication(int caseId)
 		{
 			return await _context.Case
-				.Where(c => c.CaseId == caseId)
-				.Select(c => new CaseDetailsDto
-				{
-					CaseId = c.CaseId,
-					ApplicationId = c.ApplicationID,
-					AssignedOfficerId = c.AssignedOfficerId,
-					Status = c.Status,
-					AssignedDate = (DateTime)c.AssignedDate,
-					IsEscalated = c.IsEscalated,
-
-					Documents = c.Application.CitizenDocuments
-						.Select(d => new UploadCitizenDocumentResponseDTO
-						{
-							CitizenDocumentID = d.CitizenDocumentID,
-							ApplicationID = d.ApplicationID,
-							DocumentName = d.DocumentName,
-							UploadedDate = d.UploadedDate,
-							VerificationStatus = d.VerificationStatus
-						}).ToList()
-				})
-				.FirstOrDefaultAsync();
+				.Include(c => c.Application)
+				.ThenInclude(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(c => c.CaseId == caseId);
 		}
 		public async Task AddAsync(Case c)
 		{
@@ -139,6 +122,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
 			return stats;
 		}
+
 		//officers work
 		// Get assigned cases
 		public async Task<List<Case>> GetAssignedCases(int officerId)
@@ -256,6 +240,54 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context.Case.Update(caseObj);
 			await _context.SaveChangesAsync();
+		}
+		Task<Case> ICaseRepository.GetByIdAsync(int id)
+		{
+			throw new NotImplementedException();
+		}
+		Task<Case?> ICaseRepository.GetCaseById(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task ICaseRepository.UpdateCase(Case caseObj)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<IEnumerable<Case>> ICaseRepository.GetAssignedCasesAsync(int officerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<Case?> ICaseRepository.GetCaseByIdAsync(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<string> ICaseRepository.ApproveCaseAsync(int caseId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<string> ICaseRepository.RejectCaseAsync(int caseId, string reason)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<IEnumerable<Case>> ICaseRepository.GetResubmittedCasesAsync(int officerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<object> ICaseRepository.GetOfficerDashboardAsync(int officerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		Task<CaseDetailsDto> ICaseRepository.GetCaseWithDocuments(int caseId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

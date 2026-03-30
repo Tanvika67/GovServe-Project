@@ -48,6 +48,8 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			var document = new CitizenDocument
 			{
 				ApplicationID = model.ApplicationID,
+				DocumentID = model.DocumentID,
+				//DocumentName = model.DocumentName,
 				URI = "uploads/" + fileName,
 				VerificationStatus = "Submitted",
 				UploadedDate = DateTime.Now

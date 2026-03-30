@@ -20,14 +20,6 @@ namespace GovServe_Project.Services.Interfaces
 		Task<DashboardStatsDto> GetDashboardStatsAsync();
 		Task<string> UpdateCaseStatus(int caseId, string status);
 
-		//Task<List<Case>> ViewAssignedCases(int AssignedOfficerId);
-		//Task<string> ApproveCase(int caseId);
-		//Task<string> Reject(int caseId, string reason);
-		//Task<List<Case>> GetResubmittedCases(int AssignedOfficerId);
-		//Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
-		//Task OpenCase(int caseId);
-
-
 		Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId);
 		Task<Case?> GetCaseByIdAsync(int caseId);
 		Task<string> ApproveCaseAsync(int caseId);

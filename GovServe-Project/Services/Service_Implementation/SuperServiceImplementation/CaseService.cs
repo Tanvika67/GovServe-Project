@@ -4,6 +4,7 @@ using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repositories.Citizen;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
@@ -20,23 +21,20 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly INotificationService _notificationService;
 		private readonly IUserRepository _userRepo;
 		private readonly IApplicationRepository _applicationRepo;
+		private readonly ICitizenDetailsRepository _citizenRepo;
 
-		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo, IApplicationRepository applicationRepo)
+		public CaseService(ICaseRepository repo,INotificationService notificationService,IUserRepository userRepo,IApplicationRepository applicationRepo,ICitizenDetailsRepository citizenRepo)
 		{
 			_repo = repo;
 			_notificationService = notificationService;
-			_userRepo=userRepo;
+			_userRepo = userRepo;
 			_applicationRepo = applicationRepo;
+			_citizenRepo = citizenRepo;
 		}
-
 		public async Task<IEnumerable<Case>> GetAllCasesAsync()
 		{
 			return await _repo.GetAllAsync();
-		}
-		public async Task<CaseDetailsDto> GetCaseDetails(int caseId)
-		{
-			return await _repo.GetCaseWithDocuments(caseId);
-		} 
+		}	
 		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
 		{
 			return await _repo.GetByStatusAsync("Assigned");
@@ -124,6 +122,48 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			return selectedOfficer;
 		}
+		public async Task<CaseDetailsDto> GetCaseDetails(int caseId)
+		{
+			var caseData = await _repo.GetCaseWithApplication(caseId);
+
+			if (caseData == null)
+				return null;
+
+			var citizen = await _citizenRepo
+				.GetByApplicationIdAsync(caseData.ApplicationID);
+
+			return new CaseDetailsDto
+			{
+				CaseId = caseData.CaseId,
+				ApplicationID = caseData.ApplicationID,
+				Status = caseData.Status,
+				AssignedOfficerId = caseData.AssignedOfficerId,
+				AssignedDate = caseData.AssignedDate ?? DateTime.Now,
+
+				FullName = citizen?.FullName,
+				Gender = citizen?.Gender,
+				DateOfBirth = citizen?.DateOfBirth ?? DateTime.Now,
+				FatherName = citizen?.FatherName,
+				MotherName = citizen?.MotherName,
+
+				Email = citizen?.Email,
+				Phone = citizen?.Phone,
+
+				AddressLine1 = citizen?.AddressLine1,
+				AddressLine2 = citizen?.AddressLine2,
+				City = citizen?.City,
+				State = citizen?.State,
+				Pincode = citizen?.Pincode,
+
+				AadhaarNumber = citizen?.AadhaarNumber,
+
+				Documents = caseData.Application.CitizenDocuments
+		        .Select(d => d.URI)
+		        .ToList()
+			};
+
+		}
+
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
 			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
@@ -241,16 +281,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			throw new NotImplementedException();
 		}
-
-		//public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		//{
-		//	return await _repo.GetDashboardCountsAsync(departmentId);
-		//}
-
-
-
-		//New code
-
 
 		public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
 		{
