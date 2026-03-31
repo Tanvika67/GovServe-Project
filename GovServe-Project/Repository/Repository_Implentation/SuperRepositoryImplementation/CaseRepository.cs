@@ -22,7 +22,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		}
 		public async Task<IEnumerable<Case>> GetAllAsync()
 		{
-			return await _context.Case.ToListAsync();
+			return await _context.Case
+			.Include(c => c.Application)
+			.ThenInclude(a => a.CitizenDetails)
+			.ToListAsync();
 		}
 
 		public async Task<IEnumerable<Case>> GetByStatusAsync(string status)
@@ -241,50 +244,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			_context.Case.Update(caseObj);
 			await _context.SaveChangesAsync();
 		}
-		Task<Case> ICaseRepository.GetByIdAsync(int id)
-		{
-			throw new NotImplementedException();
-		}
-		Task<Case?> ICaseRepository.GetCaseById(int caseId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task ICaseRepository.UpdateCase(Case caseObj)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<IEnumerable<Case>> ICaseRepository.GetAssignedCasesAsync(int officerId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<Case?> ICaseRepository.GetCaseByIdAsync(int caseId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<string> ICaseRepository.ApproveCaseAsync(int caseId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<string> ICaseRepository.RejectCaseAsync(int caseId, string reason)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<IEnumerable<Case>> ICaseRepository.GetResubmittedCasesAsync(int officerId)
-		{
-			throw new NotImplementedException();
-		}
-
-		Task<object> ICaseRepository.GetOfficerDashboardAsync(int officerId)
-		{
-			throw new NotImplementedException();
-		}
-
 		Task<CaseDetailsDto> ICaseRepository.GetCaseWithDocuments(int caseId)
 		{
 			throw new NotImplementedException();

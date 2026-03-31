@@ -18,7 +18,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			await _context.Notification.AddAsync(notification);
 		}
-
 		public async Task<List<Notification>> GetByUserIdAsync(int userId)
 		{
 			return await _context.Notification
@@ -26,11 +25,17 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 				.OrderByDescending(n => n.CreatedDate)
 				.ToListAsync();
 		}
-
+		public async Task<List<Notification>> GetUnreadNotifications(int userId)
+		{
+			return await _context.Notification
+				.Where(n => n.UserId == userId && n.Status == "Unread")
+				.OrderByDescending(n => n.CreatedDate)
+				.ToListAsync();
+		}
 		public async Task<int> GetUnreadCountAsync(int userId)
 		{
 			return await _context.Notification
-				.CountAsync(n => n.UserId == userId && !n.IsRead);
+				.CountAsync(n => n.UserId == userId && n.Status == "Unread");
 		}
 
 		public async Task<Notification> GetByIdAsync(int id)

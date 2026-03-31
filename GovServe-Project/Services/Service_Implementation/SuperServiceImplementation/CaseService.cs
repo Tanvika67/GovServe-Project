@@ -22,7 +22,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly IUserRepository _userRepo;
 		private readonly IApplicationRepository _applicationRepo;
 		private readonly ICitizenDetailsRepository _citizenRepo;
-
 		public CaseService(ICaseRepository repo,INotificationService notificationService,IUserRepository userRepo,IApplicationRepository applicationRepo,ICitizenDetailsRepository citizenRepo)
 		{
 			_repo = repo;
@@ -31,10 +30,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			_applicationRepo = applicationRepo;
 			_citizenRepo = citizenRepo;
 		}
-		public async Task<IEnumerable<Case>> GetAllCasesAsync()
-		{
-			return await _repo.GetAllAsync();
-		}	
 		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
 		{
 			return await _repo.GetByStatusAsync("Assigned");
@@ -50,6 +45,19 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
 		{
 			return await _repo.GetDashboardStatsAsync();
+		}
+		public async Task<List<CaseDto>> GetAllCasesAsync()
+		{
+			var cases = await _repo.GetAllAsync();
+
+			return cases.Select(c => new CaseDto
+			{
+				caseId = c.CaseId,
+				applicationID = c.ApplicationID,
+				status = c.Status,
+				assignedOfficerId = c.AssignedOfficerId,
+				fullName = c.Application?.CitizenDetails?.FullName
+			}).ToList();
 		}
 		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
 		{
@@ -77,24 +85,9 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			await _repo.AddAsync(caseModel);
 			await _repo.SaveAsync();
-
-			// Officer notification
-			await _notificationService.SendNotificationAsync(
-				officerId,
-				$"New case {caseModel.CaseId} assigned to you",
-				caseModel.CaseId,
-				"Assignment"
-			);
-
-			// Admin notification
-			var adminId = await _userRepo.GetAdminIdAsync();
-
-			await _notificationService.SendNotificationAsync(
-			adminId,
-			$"Case {caseModel.CaseId} assigned to Officer {officerId}",
-			caseModel.CaseId,
-			"Assignment"
-			);
+			//For Notification
+			await _notificationService.NotifyCaseCreated(caseModel.CaseId);
+			await _notificationService.NotifyCaseAssigned(caseModel.CaseId, officerId);
 			return "Case assigned successfully";
 		}
 		public async Task<int> GetAvailableOfficer(int departmentId)
@@ -119,7 +112,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 					selectedOfficer = officer.UserId;
 				}
 			}
-
 			return selectedOfficer;
 		}
 		public async Task<CaseDetailsDto> GetCaseDetails(int caseId)
@@ -156,14 +148,12 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				Pincode = citizen?.Pincode,
 
 				AadhaarNumber = citizen?.AadhaarNumber,
-
 				Documents = caseData.Application.CitizenDocuments
 		        .Select(d => d.URI)
 		        .ToList()
 			};
 
 		}
-
 		public async Task<string> UpdateCaseStatus(int caseId, string status)
 		{
 			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
@@ -196,21 +186,11 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 			c.AssignedOfficerId = newOfficerId;
 			c.AssignedDate = DateTime.Now;   
 			c.LastUpdated = DateTime.Now;
-
 			_repo.Update(c);
 			await _repo.SaveAsync();
 
-			await _notificationService.SendNotificationAsync(
-				newOfficerId,
-				"Case reassigned to you",
-				caseId
-			);
-
-			await _notificationService.SendNotificationAsync(
-				oldOfficerId,
-				"This case was reassigned",
-				caseId
-			);
+			// For Notification
+			await _notificationService.NotifyCaseAssigned(caseId, newOfficerId);
 
 			return "Case reassigned";
 		}
@@ -234,26 +214,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			_repo.Update(c);
 			await _repo.SaveAsync();
-
-			// Notifications
-			await _notificationService.SendNotificationAsync(
-				newOfficerId,
-				"New case assigned to you after escalation",
-				caseId
-			);
-
-			await _notificationService.SendNotificationAsync(
-				oldOfficerId,
-				"This case was reassigned due to SLA breach",
-				caseId
-			);
-
-			await _notificationService.SendNotificationAsync(
-				citizenId,
-				"Your case has been reassigned to another officer",
-				caseId
-			);
-
 			return "Case reassigned successfully";
 		}  
 		public async Task<object> GetDashboardAsync()
@@ -268,10 +228,6 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				Escalated = all.Count(x => x.Status == "Escalated"),
 				Completed = all.Count(x => x.Status == "Completed")
 			};
-		}
-		public Task<string> ReassignEscalatedCaseAsync()
-		{
-			throw new NotImplementedException();
 		}
 
 		private readonly INotificationService notificationService;

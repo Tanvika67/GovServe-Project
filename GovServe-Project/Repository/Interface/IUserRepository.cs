@@ -22,6 +22,5 @@ namespace GovServe_Project.Repository.Interface
 		Task<int> GetAdminIdAsync();
 		Task<int> GetGrievanceOfficerIdAsync();
 
-
 	}
 }
