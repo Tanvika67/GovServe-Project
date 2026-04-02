@@ -40,7 +40,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				DepartmentID = dto.DepartmentID,	
 				ApplicationStatus = "Submitted",
 				SubmittedDate = DateTime.Now,
-				CompletedDate = DateTime.Today
+				CompletedDate =null
 			};
 
 			await _applicationRepository.CreateAsync(app);
@@ -67,9 +67,26 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 			return result;
 		}
+		//get all application
+        public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
+        {
+            var applications = await _applicationRepository.GetAllAsync();
 
-		// Application Status
-		public async Task<string> GetApplicationStatusAsync(int ApplicationId)
+            var result = applications.Select(a => new ApplicationResponseDTO
+            {
+                ApplicationId = a.ApplicationID,
+                UserId = a.UserId,
+                ServiceID = a.ServiceID,
+                ServiceName = a.Service.ServiceName,
+                ApplicationStatus = a.ApplicationStatus,
+                SubmittedDate = a.SubmittedDate
+            }).ToList();
+
+            return result;
+        }
+
+        // Application Status
+        public async Task<string> GetApplicationStatusAsync(int ApplicationId)
 		{
 			var application = await _applicationRepository.GetByIdAsync(ApplicationId);
 

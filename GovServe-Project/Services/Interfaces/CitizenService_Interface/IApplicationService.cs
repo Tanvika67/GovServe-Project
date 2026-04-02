@@ -16,8 +16,9 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 		Task<List<ApplicationResponseDTO>> GetMyApplicationsAsync(int userId);
 
 		Task<string> GetApplicationStatusAsync(int ApplicationId);
-		
-		Task<bool> DeleteApplicationAsync(int ApplicationId);
+        Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync();
+
+        Task<bool> DeleteApplicationAsync(int ApplicationId);
 
 
 		Task<bool> UpdateApplicationAsync(int id, Application application);

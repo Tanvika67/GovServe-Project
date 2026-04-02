@@ -1,5 +1,5 @@
 ﻿using GovServe_Project.DTOs;
-using GovServe_Project.DTOs.Admin.GovServe_Project.DTOs;
+using GovServe_Project.DTOs.Admin;
 using GovServe_Project.Services;
 using GovServe_Project.Services_Interfaces_AdminServiceInterface;
 using Microsoft.AspNetCore.Authorization;

@@ -9,7 +9,7 @@ namespace GovServe_Project.Services.Interfaces
 	{
 		Task<string> CreateCaseAsync(CreateCaseDto dto);
 		Task<int> GetAvailableOfficer(int departmentID);
-		Task<IEnumerable<Case>> GetAllCasesAsync();
+        Task<IEnumerable<CaseResponseDto>> GetAllCasesAsync();
 		Task<Case> GetCaseDetails(int caseId);
 		Task<IEnumerable<Case>> GetActiveCasesAsync();
 		Task<List<Case>> GetSLABreachedCasesAsync();

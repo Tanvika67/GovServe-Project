@@ -1,8 +1,6 @@
-﻿using GovServe_Project.Enum;
-using GovServe_Project.Models.AdminModels;
+﻿using GovServe_Project.Models.AdminModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 
 namespace GovServe_Project.Models
 {
@@ -10,24 +8,24 @@ namespace GovServe_Project.Models
     public class WorkflowStage
     {
         [Key]
-        public int StageID { get; set; } // Primary Key
+        public int StageID { get; set; }
 
         [Required]
-        public int ServiceID { get; set; } // FK to Service
+        public int ServiceID { get; set; }
 
         [Required]
-        public string ResponsibleRole { get; set; } = string.Empty; // Role for this stage
+        public int ResponsibleRoleID { get; set; }  // ✅ FIXED
 
         [Required]
-        public int SequenceNumber { get; set; } // Order of stage
+        [Range(1, int.MaxValue)]
+        public int SequenceNumber { get; set; }
 
-        public int SLA_Days { get; set; } // Auto-fetched from SLADays table
+        public int SLA_Days { get; set; } // ✅ Auto fetched
 
         [ForeignKey(nameof(ServiceID))]
-        public Service? Service { get; set; } // Navigation property
+        public Service? Service { get; set; }
 
-        [NotMapped]
-        public string? ServiceName => Service?.ServiceName;
-
+        [ForeignKey(nameof(ResponsibleRoleID))]
+        public Role? Role { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace GovServe_Project.Models.CitizenModels
 		public virtual Department Department { get; set; }
 
 		public DateTime SubmittedDate { get; set; }
-		public DateTime? CompletedDate { get; set; }
+		public DateTime? CompletedDate { get; set; } = null;
 		public string ApplicationStatus { get; set; } = "Submitted";
 
 

@@ -10,5 +10,6 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<IEnumerable<SLARecordResponseDto>> GetOnTimeCasesAsync();
         Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto);
         Task DeleteAsync(int id);
+        Task<IEnumerable<PendingSlaCaseDto>> GetPendingSlaCasesAsync();
     }
 }

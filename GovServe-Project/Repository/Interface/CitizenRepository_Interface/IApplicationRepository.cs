@@ -12,8 +12,8 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 		Task<Application> GetByIdAsync(int ApplicationId);
 		Task<Application> GetApplicationWithDocuments(int applicationId);
 		Task<List<Application>> GetByUserIdAsync(int userId);
-
-		Task DeleteAsync(Application ApplicationId);
+        Task<List<Application>> GetAllAsync();
+        Task DeleteAsync(Application ApplicationId);
 
 
 		Task UpdateAsync(Application application);

@@ -19,12 +19,19 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 		{
 			_context = context;
 		}
-		public async Task<IEnumerable<Case>> GetAllAsync()
-		{
-			return await _context.Case.ToListAsync();
-		}
 
-		public async Task<IEnumerable<Case>> GetByStatusAsync(string status)
+        public async Task<IEnumerable<Case>> GetAllAsync()
+        {
+            return await _context.Case
+                .Include(c => c.Application)
+                    .ThenInclude(a => a.Service)   // ✅ IMPORTANT
+                .Include(c => c.Department)
+                .Include(c => c.AssignedOfficer)
+                    .ThenInclude(o => o.Department)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Case>> GetByStatusAsync(string status)
 		{
 			return await _context.Case
 				.Where(x => x.Status == status)
@@ -127,7 +134,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			throw new NotImplementedException();
 		}
 
-		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
+        
+
+        public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
 		{
 			return await _context.Case
 				 .CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
@@ -240,14 +249,8 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 			await _context.SaveChangesAsync();
 		}
 
-		public Task<DashboardStatsDto> GetDashboardStatsAsync()
-		{
-			throw new NotImplementedException();
-		}
+       
 
-		public Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
-		{
-			throw new NotImplementedException();
-		}
-	}
+
+    }
 }

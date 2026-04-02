@@ -66,8 +66,17 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(status);
 		}
 
-		//  Delete Application
-		[HttpDelete("delete/{id}")]
+        // Get All Applications (Admin / Officer)
+        [HttpGet("all")]
+        //[Authorize(Roles = "Admin,Officer")]
+        public async Task<IActionResult> GetAllApplications()
+        {
+            var applications = await _applicationService.GetAllApplicationsAsync();
+            return Ok(applications);
+        }
+
+        //  Delete Application
+        [HttpDelete("delete/{id}")]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
 		{

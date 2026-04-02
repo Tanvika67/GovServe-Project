@@ -10,9 +10,20 @@ namespace GovServe_Project.Models.AdminModels
         public int SLADayID { get; set; }
 
         [Required]
-        public string RoleName { get; set; } = string.Empty;
+        public int ServiceID { get; set; }
 
         [Required]
+        public int RoleID { get; set; }
+
+        [Required]
+        [Range(1, 365)]
         public int Days { get; set; }
+
+        // Navigation
+        [ForeignKey(nameof(ServiceID))]
+        public Service Service { get; set; }
+
+        [ForeignKey(nameof(RoleID))]
+        public Role Role { get; set; }
     }
 }

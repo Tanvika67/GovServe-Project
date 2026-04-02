@@ -57,9 +57,18 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 								 .ToListAsync();
 
 		}
+		//get all application
+        public async Task<List<Application>> GetAllAsync()
+        {
+            return await _context.Application
+                .Include(a => a.Service)
+                .Include(a => a.Department)
+                .Include(a => a.User)
+                .ToListAsync();
+        }
 
-		// Delete Application
-		public async Task DeleteAsync(Application ApplicationId)
+        // Delete Application
+        public async Task DeleteAsync(Application ApplicationId)
 		{
 			_context.Application.Remove(ApplicationId);
 			await _context.SaveChangesAsync();
