@@ -19,7 +19,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			_context = context;
 		}
 
-	
+
 		// Create Application
 		public async Task CreateAsync(Application application)
 		{
@@ -34,19 +34,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			return await _context.Application.FindAsync(ApplicationId);
 		}
 
-
-		public async Task<Application> GetApplicationWithDocuments(int applicationId)
-
-		{
-
-			return await _context.Application
-
-			.Include(a => a.CitizenDocuments)
-
-			.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
-
-		}
-
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
@@ -55,17 +42,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 								  .Include(a => a.Service)
 								 .Where(a => a.UserId == userId)
 								 .ToListAsync();
-
 		}
-		//get all application
-        public async Task<List<Application>> GetAllAsync()
-        {
-            return await _context.Application
-                .Include(a => a.Service)
-                .Include(a => a.Department)
-                .Include(a => a.User)
-                .ToListAsync();
-        }
 
         // Delete Application
         public async Task DeleteAsync(Application ApplicationId)
@@ -74,7 +51,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			await _context.SaveChangesAsync();
 		}
 
+<<<<<<<<< Temporary merge branch 1
+=========
 
+>>>>>>>>> Temporary merge branch 2
 		//Update Application
 
 		public async Task UpdateAsync(Application application)
@@ -82,6 +62,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			_context.Application.Update(application);
 			await _context.SaveChangesAsync();
 		}
+<<<<<<<<< Temporary merge branch 1
+		//supervisor needs this
+		public async Task<Application> GetApplicationWithDocuments(int applicationId)
+		{
+			return await _context.Application
+				.Include(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+=========
 
 		
 		//for officer to view application details
@@ -113,6 +101,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 
 			return data;
 
+>>>>>>>>> Temporary merge branch 2
 		}
 	}
 }

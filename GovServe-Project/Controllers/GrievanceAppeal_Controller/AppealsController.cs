@@ -26,7 +26,6 @@ namespace GovServe_Project.Controllers
 		}
 
 		// File Appeal
-		// Citizen submits appeal after application rejection
 		[HttpPost]
 		//[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> FileAppeal([FromBody] AppealDTO dto)

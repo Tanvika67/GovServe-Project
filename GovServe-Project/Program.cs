@@ -49,15 +49,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	};
 });
 
-//builder.Services.AddCors(options =>
-//{
-//	options.AddPolicy("MyCorsPolicy", builder => builder
-//		.WithOrigins("http://localhost:3000")
-//		.AllowAnyMethod()
-//		.AllowCredentials()
-//		.WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
-//});
-
 builder.Services.AddAuthorization();
 
 // CORS (cross-domain requests)

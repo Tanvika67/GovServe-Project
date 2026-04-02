@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class updated : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,20 @@ namespace GovServe_Project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ServiceReports", x => x.ReportID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SLADays",
+                columns: table => new
+                {
+                    SLADayID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Days = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SLADays", x => x.SLADayID);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,52 +171,25 @@ namespace GovServe_Project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SLADays",
-                columns: table => new
-                {
-                    SLADayID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceID = table.Column<int>(type: "int", nullable: false),
-                    RoleID = table.Column<int>(type: "int", nullable: false),
-                    Days = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SLADays", x => x.SLADayID);
-                    table.ForeignKey(
-                        name: "FK_SLADays_Roles_RoleID",
-                        column: x => x.RoleID,
-                        principalTable: "Roles",
-                        principalColumn: "RoleID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SLADays_Services_ServiceID",
-                        column: x => x.ServiceID,
-                        principalTable: "Services",
-                        principalColumn: "ServiceID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "WorkflowStages",
                 columns: table => new
                 {
                     StageID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ServiceID = table.Column<int>(type: "int", nullable: false),
-                    ResponsibleRoleID = table.Column<int>(type: "int", nullable: false),
+                    ResponsibleRole = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SequenceNumber = table.Column<int>(type: "int", nullable: false),
-                    SLA_Days = table.Column<int>(type: "int", nullable: false)
+                    SLA_Days = table.Column<int>(type: "int", nullable: false),
+                    RoleID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WorkflowStages", x => x.StageID);
                     table.ForeignKey(
-                        name: "FK_WorkflowStages_Roles_ResponsibleRoleID",
-                        column: x => x.ResponsibleRoleID,
+                        name: "FK_WorkflowStages_Roles_RoleID",
+                        column: x => x.RoleID,
                         principalTable: "Roles",
-                        principalColumn: "RoleID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "RoleID");
                     table.ForeignKey(
                         name: "FK_WorkflowStages_Services_ServiceID",
                         column: x => x.ServiceID,
@@ -221,6 +208,7 @@ namespace GovServe_Project.Migrations
                     ServiceID = table.Column<int>(type: "int", nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
+                    DepartmentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -302,7 +290,8 @@ namespace GovServe_Project.Migrations
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RejectionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApplicationID1 = table.Column<int>(type: "int", nullable: true)
+                    ApplicationID1 = table.Column<int>(type: "int", nullable: true),
+                    UsersUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -325,17 +314,48 @@ namespace GovServe_Project.Migrations
                         principalColumn: "DepartmentID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Case_User_AssignedOfficerId",
-                        column: x => x.AssignedOfficerId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Case_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Case_User_UsersUserId",
+                        column: x => x.UsersUserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CitizenDetails",
+                columns: table => new
+                {
+                    PersonalDetailID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationID = table.Column<int>(type: "int", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MotherName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pincode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AadhaarNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CitizenDetails", x => x.PersonalDetailID);
+                    table.ForeignKey(
+                        name: "FK_CitizenDetails_Application_ApplicationID",
+                        column: x => x.ApplicationID,
+                        principalTable: "Application",
+                        principalColumn: "ApplicationID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -534,11 +554,6 @@ namespace GovServe_Project.Migrations
                 filter: "[ApplicationID1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Case_AssignedOfficerId",
-                table: "Case",
-                column: "AssignedOfficerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Case_DepartmentID",
                 table: "Case",
                 column: "DepartmentID");
@@ -547,6 +562,17 @@ namespace GovServe_Project.Migrations
                 name: "IX_Case_UserId",
                 table: "Case",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Case_UsersUserId",
+                table: "Case",
+                column: "UsersUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CitizenDetails_ApplicationID",
+                table: "CitizenDetails",
+                column: "ApplicationID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CitizenDocument_ApplicationID",
@@ -604,16 +630,6 @@ namespace GovServe_Project.Migrations
                 column: "DepartmentID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SLADays_RoleID",
-                table: "SLADays",
-                column: "RoleID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SLADays_ServiceID",
-                table: "SLADays",
-                column: "ServiceID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SLARecords_CaseId",
                 table: "SLARecords",
                 column: "CaseId");
@@ -639,9 +655,9 @@ namespace GovServe_Project.Migrations
                 column: "RoleID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkflowStages_ResponsibleRoleID",
+                name: "IX_WorkflowStages_RoleID",
                 table: "WorkflowStages",
-                column: "ResponsibleRoleID");
+                column: "RoleID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkflowStages_ServiceID",
@@ -654,6 +670,9 @@ namespace GovServe_Project.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Appeals");
+
+            migrationBuilder.DropTable(
+                name: "CitizenDetails");
 
             migrationBuilder.DropTable(
                 name: "CitizenDocument");

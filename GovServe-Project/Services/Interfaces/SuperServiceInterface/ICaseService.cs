@@ -9,7 +9,7 @@ namespace GovServe_Project.Services.Interfaces
 	{
 		Task<string> CreateCaseAsync(CreateCaseDto dto);
 		Task<int> GetAvailableOfficer(int departmentID);
-        Task<IEnumerable<CaseResponseDto>> GetAllCasesAsync();
+		Task<IEnumerable<Case>> GetAllCasesAsync();
 		Task<Case> GetCaseDetails(int caseId);
 		Task<IEnumerable<Case>> GetActiveCasesAsync();
 		Task<List<Case>> GetSLABreachedCasesAsync();
@@ -19,14 +19,6 @@ namespace GovServe_Project.Services.Interfaces
 		Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
 		Task<DashboardStatsDto> GetDashboardStatsAsync();
 		Task<string> UpdateCaseStatus(int caseId, string status);
-
-		//Task<List<Case>> ViewAssignedCases(int AssignedOfficerId);
-		//Task<string> ApproveCase(int caseId);
-		//Task<string> Reject(int caseId, string reason);
-		//Task<List<Case>> GetResubmittedCases(int AssignedOfficerId);
-		//Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId);
-		//Task OpenCase(int caseId);
-
 
 		Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId);
 		Task<Case?> GetCaseByIdAsync(int caseId);

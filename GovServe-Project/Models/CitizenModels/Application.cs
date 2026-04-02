@@ -37,13 +37,15 @@ namespace GovServe_Project.Models.CitizenModels
 		[ForeignKey("DepartmentID")]
 		public virtual Department Department { get; set; }
 
+		public string DepartmentName { get; set; }
+
 		public DateTime SubmittedDate { get; set; }
 		public DateTime? CompletedDate { get; set; } = null;
 		public string ApplicationStatus { get; set; } = "Submitted";
 
 
 		
-
+		public virtual CitizenDetails CitizenDetails { get; set; }
 		public virtual ICollection<CitizenDocument> CitizenDocuments { get; set; }
 		public virtual ICollection<Grievance> Grievances { get; set; }
 		public virtual ICollection<Appeal> Appeals { get; set; }

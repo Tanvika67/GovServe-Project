@@ -6,6 +6,7 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 		Task AddAsync(Notification notification);
 		Task<List<Notification>> GetByUserIdAsync(int userId);
 		Task<int> GetUnreadCountAsync(int userId);
+		Task<List<Notification>> GetUnreadNotifications(int userId);
 		Task<Notification> GetByIdAsync(int id);
 		Task SaveAsync();
 

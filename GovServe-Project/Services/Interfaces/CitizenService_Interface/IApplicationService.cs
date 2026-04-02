@@ -1,4 +1,5 @@
-﻿using GovServe_Project.DTOs;
+﻿using GovServe_Project.Controllers.CitizenController;
+using GovServe_Project.DTOs;
 using GovServe_Project.DTOs.CitizenDTO;
 using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.Models;
@@ -20,6 +21,9 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 
         Task<bool> DeleteApplicationAsync(int ApplicationId);
 
+<<<<<<<<< Temporary merge branch 1
+		Task<bool> UpdateApplicationAsync(int id, Application application);
+=========
 
 		Task<bool> UpdateApplicationAsync(int id, Application application);
 
@@ -27,6 +31,7 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 
 		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
 
+>>>>>>>>> Temporary merge branch 2
 
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using GovServe_Project.Models.CitizenModels;
 namespace GovServe_Project.Models.AdminModels
 {
     [Table("RequiredDocuments")]
@@ -29,11 +29,6 @@ namespace GovServe_Project.Models.AdminModels
         [ForeignKey(nameof(ServiceID))]
         public Service? Service { get; set; }
 
-
-        [NotMapped]
-        public string? ServiceName => Service?.ServiceName;
-
-
-        //public virtual ICollection<Application> Application { get; set; }
-    }
+		//public virtual ICollection<Application> Application { get; set; }
+	}
 }

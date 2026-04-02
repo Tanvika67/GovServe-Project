@@ -238,6 +238,10 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
 
@@ -267,6 +271,76 @@ namespace GovServe_Project.Migrations
                     b.ToTable("Application");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDetails", b =>
+                {
+                    b.Property<int>("PersonalDetailID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonalDetailID"));
+
+                    b.Property<string>("AadhaarNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ApplicationID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FatherName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MotherName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pincode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PersonalDetailID");
+
+                    b.HasIndex("ApplicationID")
+                        .IsUnique();
+
+                    b.ToTable("CitizenDetails");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDocument", b =>
                 {
                     b.Property<int>("CitizenDocumentID")
@@ -278,9 +352,8 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("ApplicationID")
                         .HasColumnType("int");
 
-                    b.Property<string>("DocumentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("DocumentID")
+                        .HasColumnType("int");
 
                     b.Property<string>("URI")
                         .IsRequired()
@@ -296,6 +369,8 @@ namespace GovServe_Project.Migrations
                     b.HasKey("CitizenDocumentID");
 
                     b.HasIndex("ApplicationID");
+
+                    b.HasIndex("DocumentID");
 
                     b.ToTable("CitizenDocument");
                 });
@@ -748,6 +823,17 @@ namespace GovServe_Project.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDetails", b =>
+                {
+                    b.HasOne("GovServe_Project.Models.CitizenModels.Application", "Application")
+                        .WithOne("CitizenDetails")
+                        .HasForeignKey("GovServe_Project.Models.CitizenModels.CitizenDetails", "ApplicationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+                });
+
             modelBuilder.Entity("GovServe_Project.Models.CitizenModels.CitizenDocument", b =>
                 {
                     b.HasOne("GovServe_Project.Models.CitizenModels.Application", "Application")
@@ -756,7 +842,15 @@ namespace GovServe_Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GovServe_Project.Models.AdminModels.RequiredDocument", "RequiredDocument")
+                        .WithMany()
+                        .HasForeignKey("DocumentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Application");
+
+                    b.Navigation("RequiredDocument");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Appeal", b =>
@@ -936,6 +1030,9 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Appeals");
 
                     b.Navigation("Case")
+                        .IsRequired();
+
+                    b.Navigation("CitizenDetails")
                         .IsRequired();
 
                     b.Navigation("CitizenDocuments");

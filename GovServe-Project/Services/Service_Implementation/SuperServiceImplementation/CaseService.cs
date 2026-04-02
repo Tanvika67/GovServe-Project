@@ -1,15 +1,18 @@
-﻿using GovServe_Project.DTOs.OfficerDTO;
+﻿<<<<<<<<< Temporary merge branch 1
+﻿using GovServe_Project.Data;
+using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
 using GovServe_Project.Models.SuperModels;
+using GovServe_Project.Repositories.Citizen;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Core.Types;
+using GovServe_Project.DTOs.OfficerDTO;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
 {
@@ -18,41 +21,24 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		private readonly ICaseRepository _repo;
 		private readonly INotificationService _notificationService;
 		private readonly IUserRepository _userRepo;
-        private readonly IApplicationRepository _applicationRepo;
 
-
-        public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo,IApplicationRepository applicationRepo)
+		public CaseService(ICaseRepository repo, INotificationService notificationService,IUserRepository userRepo)
 		{
 			_repo = repo;
 			_notificationService = notificationService;
 			_userRepo=userRepo;
+<<<<<<<<< Temporary merge branch 1
 			_applicationRepo = applicationRepo;
+=========
+>>>>>>>>> Temporary merge branch 2
+		}
 
-        }
+		public async Task<IEnumerable<Case>> GetAllCasesAsync()
+		{
+			return await _repo.GetAllAsync();
+		}
 
-
-        public async Task<IEnumerable<CaseResponseDto>> GetAllCasesAsync()
-        {
-            var cases = await _repo.GetAllAsync();
-
-            return cases.Select(c => new CaseResponseDto
-            {
-                CaseId = c.CaseId,
-                ApplicationNumber = $"APP-{c.ApplicationID}",
-
-                // ✅ SERVICE NAME FROM APPLICATION
-                ServiceName = c.Application?.Service?.ServiceName ?? "",
-
-                DepartmentName = c.Department?.DepartmentName ?? "",
-
-                OfficerName = c.AssignedOfficer?.FullName ?? "",
-                OfficerDepartment = c.AssignedOfficer?.Department?.DepartmentName ?? "",
-
-                Status = c.Status,
-                LastUpdated = c.LastUpdated
-            });
-        }
-        public async Task<IEnumerable<Case>> GetActiveCasesAsync()
+		public async Task<IEnumerable<Case>> GetActiveCasesAsync()
 		{
 			return await _repo.GetByStatusAsync("Assigned");
 		}
@@ -60,12 +46,83 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		{
 			return await _repo.GetSLABreachedCasesAsync();
 		}
-      
-
-        public async Task<string> UpdateCaseStatus(int caseId, string status)
+<<<<<<<<< Temporary merge branch 1
+		public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
 		{
-			var c = await _repo.GetByIdAsync(caseId);
+			return await _repo.GetOfficerStatisticsAsync();
+		}
+		public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+		{
+			return await _repo.GetDashboardStatsAsync();
+		}
+		public async Task<string> CreateCaseAsync(CreateCaseDto dto)
+		{
+			var application = await _applicationRepo
+				.GetApplicationWithDocuments(dto.ApplicationId);
 
+            return cases.Select(c => new CaseResponseDto
+            {
+                CaseId = c.CaseId,
+                ApplicationNumber = $"APP-{c.ApplicationID}",
+
+			await _repo.AddAsync(caseModel);
+			await _repo.SaveAsync();
+
+			// Officer notification
+			await _notificationService.SendNotificationAsync(
+				officerId,
+				$"New case {caseModel.CaseId} assigned to you",
+				caseModel.CaseId,
+				"Assignment"
+			);
+
+			// Admin notification
+			var adminId = await _userRepo.GetAdminIdAsync();
+
+			await _notificationService.SendNotificationAsync(
+			adminId,
+			$"Case {caseModel.CaseId} assigned to Officer {officerId}",
+			caseModel.CaseId,
+			"Assignment"
+			);
+			return "Case assigned successfully";
+		}
+		public async Task<int> GetAvailableOfficer(int departmentId)
+		{
+			var officers = await _userRepo
+				.GetOfficersByDepartmentAsync(departmentId);
+
+			if (!officers.Any())
+				return 0;
+
+			int selectedOfficer = 0;
+			int minCases = int.MaxValue;
+
+			foreach (var officer in officers)
+			{
+				int count = await _repo
+					.GetCaseCountByOfficerAsync(officer.UserId);
+
+				if (count < minCases)
+				{
+					minCases = count;
+					selectedOfficer = officer.UserId;
+				}
+			}
+
+			return selectedOfficer;
+		}
+=========
+
+		
+>>>>>>>>> Temporary merge branch 2
+		public async Task<string> UpdateCaseStatus(int caseId, string status)
+		{
+			var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
+			if (!validStatuses.Contains(status))
+				return "Invalid status";
+
+			var c = await _repo.GetByIdAsync(caseId);
 			if (c == null)
 				return "Case not found";
 
@@ -84,28 +141,25 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		public async Task<string> ReassignCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
+			if (c == null) return "Case not found";
 
-			if (c == null) return "Case Not Found";
+			int oldOfficerId = c.AssignedOfficerId;
 
 			c.AssignedOfficerId = newOfficerId;
+			c.AssignedDate = DateTime.Now;   
 			c.LastUpdated = DateTime.Now;
-
 			_repo.Update(c);
 			await _repo.SaveAsync();
 
-			await _notificationService.SendNotificationAsync(
-				newOfficerId,
-				"Case reassigned to you",
-				caseId
-			);
+			// For Notification
+			await _notificationService.NotifyCaseAssigned(caseId, newOfficerId);
 
-			return "Case Reassigned";
+			return "Case reassigned";
 		}
 
 		public async Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId)
 		{
 			var c = await _repo.GetByIdAsync(caseId);
-
 			if (c == null)
 				return "Case not found";
 
@@ -113,7 +167,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				return "Case is not escalated";
 
 			int oldOfficerId = c.AssignedOfficerId;
-			int citizenId = c.UserId; 
+			int citizenId = c.UserId;
 
 			// Reassign
 			c.AssignedOfficerId = newOfficerId;
@@ -122,28 +176,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 			_repo.Update(c);
 			await _repo.SaveAsync();
-
-			//  Notifications
-			await _notificationService.SendNotificationAsync(
-				newOfficerId,
-				"New case assigned to you after escalation",
-				caseId
-			);
-
-			await _notificationService.SendNotificationAsync(
-				oldOfficerId,
-				"This case was reassigned due to SLA breach",
-				caseId
-			);
-
-			await _notificationService.SendNotificationAsync(
-				citizenId,
-				"Your case has been reassigned to another officer",
-				caseId
-			);
-
 			return "Case reassigned successfully";
-		}
+		}  
 		public async Task<object> GetDashboardAsync()
 		{
 			var all = await _repo.GetAllAsync();
@@ -157,6 +191,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				Completed = all.Count(x => x.Status == "Completed")
 			};
 		}
+<<<<<<<<< Temporary merge branch 1
+=========
 
 		//officer work
 
@@ -213,13 +249,14 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 		}
 
 
-		//public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId) => await _repo.GetDashboardCountsAsync(departmentId);
+		public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId) => await _repo.GetDashboardCountsAsync(departmentId);
 
 		public Task<string> ReassignCaseAsync()
 		{
 			throw new NotImplementedException();
 		}
 
+>>>>>>>>> Temporary merge branch 2
 		public Task<string> ReassignEscalatedCaseAsync()
 		{
 			throw new NotImplementedException();
@@ -278,34 +315,27 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
             if (application == null)
                 return "Application not found";
 
-            int officerId = await GetAvailableOfficer(dto.DepartmentId);
+<<<<<<<<< Temporary merge branch 1
+		public Task<string> ReassignCaseAsync()
+		{
+			throw new NotImplementedException();
+		}
 
-            if (officerId == 0)
-                return "No officer available";
+		//public async Task<DashboardCountcs> GetDashboardCountsAsync(int departmentId)
+		//{
+		//	return await _repo.GetDashboardCountsAsync(departmentId);
+		//}
 
 
-            var caseModel = new Case
-            {
-                ApplicationID = application.ApplicationID,
-                UserId = application.UserId,
-                DepartmentID = dto.DepartmentId,
-                AssignedOfficerId = officerId,
-                Status = "Assigned",
-                AssignedDate = DateTime.Now,
-                LastUpdated = DateTime.Now
 
-            };
-            await _repo.AddAsync(caseModel);
-            await _repo.SaveAsync();
+		//New code
 
-            // Officer notification
-            await _notificationService.SendNotificationAsync(
-officerId,
-       $"New case {caseModel.CaseId} assigned to you",
-caseModel.CaseId,
- "Assignment"
-);
 
+		public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
+		{
+			var cases = await _repo.GetAssignedCasesAsync(officerId);
+			return cases ?? Enumerable.Empty<Case>();
+		}
 
             // Admin notification
             var adminId = await _userRepo.GetAdminIdAsync();
@@ -352,8 +382,11 @@ caseModel.CaseId,
 
 
 
-    }
+=========
+	}
+>>>>>>>>> Temporary merge branch 2
 }
+
 
 
  

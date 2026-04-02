@@ -8,6 +8,8 @@ using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface.CitizenRepository_Interface;
 using GovServe_Project.Services.Interfaces.CitizenService_Interface;
 using Microsoft.EntityFrameworkCore;
+using GovServe_Project.Controllers.CitizenController;
+using GovServe_Project.DTOs;
 
 namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implementation
 {
@@ -37,10 +39,10 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				ServiceID = service.ServiceID,   
 				UserId = dto.UserId,
 				ServiceName = dto.ServiceName,
-				DepartmentID = dto.DepartmentID,	
+				DepartmentID = dto.DepartmentID,
+				DepartmentName = dto.DepartmentName,
 				ApplicationStatus = "Submitted",
-				SubmittedDate = DateTime.Now,
-				CompletedDate =null
+				SubmittedDate = DateTime.Now
 			};
 
 			await _applicationRepository.CreateAsync(app);
@@ -109,40 +111,48 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return true;
 		}
 
+<<<<<<<<< Temporary merge branch 1
+=========
 
+>>>>>>>>> Temporary merge branch 2
 		//Update Application
 		public async Task<bool> UpdateApplicationAsync(int id, Application application)
-		{
-			var existingApplication = await _applicationRepository.GetByIdAsync(id);
-
-			if (existingApplication == null)
-			{
-				return false;
-			}
-
-
-			existingApplication.ApplicationStatus = application.ApplicationStatus;
-
-			await _applicationRepository.UpdateAsync(existingApplication);
-			return true;
-		}
-
-
-
-		public Task DeleteApplication(int id)
-		{
-			throw new NotImplementedException();
-		}
-		
-		//for officer to view application details
-
-		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
 		{
 			return await
 				_applicationRepository.GetApplicationDetails(applicationId);
 
 
 		}
+
+		public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
+
+          {
+
+     var applications = await _applicationRepository.GetAllAsync();
+
+
+		var result = applications.Select(a => new ApplicationResponseDTO
+		{
+			ApplicationId = a.ApplicationID,
+
+			UserId = a.UserId,
+
+			ServiceID = a.ServiceID,
+
+<<<<<<<<< Temporary merge branch 1
+=========
+
+			ApplicationStatus = a.ApplicationStatus,
+
+			SubmittedDate = a.SubmittedDate
+
+		}).ToList();
+
+
+     return result;
+
+		}
+>>>>>>>>> Temporary merge branch 2
 	}
 }
 

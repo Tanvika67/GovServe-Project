@@ -8,13 +8,16 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 	{
 	
 		Task CreateAsync(Application application);
-
 		Task<Application> GetByIdAsync(int ApplicationId);
-		Task<Application> GetApplicationWithDocuments(int applicationId);
-		Task<List<Application>> GetByUserIdAsync(int userId);
-        Task<List<Application>> GetAllAsync();
-        Task DeleteAsync(Application ApplicationId);
 
+		Task<List<Application>> GetByUserIdAsync(int userId);
+
+		Task DeleteAsync(Application ApplicationId);
+
+<<<<<<<<< Temporary merge branch 1
+		Task UpdateAsync(Application application);
+		Task<Application> GetApplicationWithDocuments(int applicationId);
+=========
 
 		Task UpdateAsync(Application application);
 
@@ -22,6 +25,7 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		//Task DeleteAsync(Application application);
 		Task<ApplicationDetails> GetApplicationDetails(int ApplicationId);
+>>>>>>>>> Temporary merge branch 2
 	}
 
 }

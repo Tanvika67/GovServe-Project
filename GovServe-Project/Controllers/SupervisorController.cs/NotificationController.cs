@@ -1,6 +1,7 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Services.Interfaces;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
+using GovServe_Project.Services.Service_Implementation.SuperServiceImplementation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace GovServe_Project.Controllers.SupervisorController.cs
@@ -16,21 +17,28 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			_service = service;
 		}
 
-		// Get all notifications from the user
-		[HttpGet("{userId}")]
 		//[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> Get(int userId)
+		[HttpPost("send")]
+		public async Task<IActionResult> Send(NotificationDto dto)
 		{
-			return Ok(await _service.GetUserNotificationsAsync(userId));
+			await _service.SendManualNotification(dto);
+			return Ok("Notification sent successfully");
+		}
+		//Get only unread notifications
+		[HttpGet("all/{userId}")]
+		//[Authorize(Roles = "Supervisor")]
+
+		public async Task<IActionResult> GetNotifications(int userId)
+		{
+			var notifications = await _service.GetUserNotificationsAsync(userId);
+			return Ok(notifications);
 		}
 
-		//Get only unread notifications
 		[HttpGet("unread/{userId}")]
-		//[Authorize(Roles = "Supervisor")]
-
 		public async Task<IActionResult> GetUnread(int userId)
 		{
-			return Ok(await _service.GetUnreadCountAsync(userId));
+			var data = await _service.GetUnreadNotifications(userId);
+			return Ok(data);
 		}
 
 		//Mark notification as read when I see the message

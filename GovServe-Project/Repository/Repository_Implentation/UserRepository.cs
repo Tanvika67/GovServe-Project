@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.Data;
+
 using GovServe_Project.Models;
 using GovServe_Project.Models;
 using GovServe_Project.Models.AdminModels;
@@ -77,47 +78,58 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			_context.User.Update(user);
 			await _context.SaveChangesAsync();
 		}
-        public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
-        {
-            return await _context.User
-                .Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
-                .ToListAsync();
-        }
-        //Count of active cases
-        public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
-        {
-            return await _context.Case
-                .CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
-        }
 
-      
+		//--------------------------------------Supervisor Repository Methods--------------------------------------
 
-        //To get admin Id for notification
-        public async Task<int> GetAdminIdAsync()
-   {
+		//supervisor needs this
+		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
 
-       var admin = await _context.User
+		{
 
-        .FirstOrDefaultAsync(u => u.Role.RoleName == "Admin");
+			return await _context.User
 
-          return admin?.UserId??0;
+			.Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
 
-     }
+			.ToListAsync();
 
-        public async Task<int> GetGrievanceOfficerIdAsync()
+		}
+		//Count of active cases
+		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
 
-        {
+		{
 
-            return await _context.User
+			return await _context.Case
 
-            .Where(u => u.RoleName == "GrievanceOfficer")
+			.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 
-            .Select(u => u.UserId)
+		}
+		//To get admin Id for notification
+		public async Task<int> GetAdminIdAsync()
 
-            .FirstOrDefaultAsync();
+		{
 
-        }
-    }
+			var admin = await _context.User
+
+			.FirstOrDefaultAsync(u => u.Role.RoleName == "Admin");
+
+			return admin?.UserId ?? 0;
+
+		}
+		//To get grievance officer id
+		public async Task<int> GetGrievanceOfficerIdAsync()
+
+		{
+
+			return await _context.User
+
+			.Where(u => u.RoleName == "GrievanceOfficer")
+
+			.Select(u => u.UserId)
+
+			.FirstOrDefaultAsync();
+
+		}
+	}
 
 }
 

@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260328054940_Admin.Designer.cs
-    [Migration("20260328054940_Admin")]
-    partial class Admin
-========
-    [Migration("20260330091039_RemoveDocumentNameFromCitizenDocument")]
-    partial class RemoveDocumentNameFromCitizenDocument
->>>>>>>> acc01bc1d4e086d7ccafa223aaef5b34cd08ff17:GovServe-Project/Migrations/20260330091039_RemoveDocumentNameFromCitizenDocument.Designer.cs
+    [Migration("20260328214156_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -143,17 +138,11 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("Days")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServiceID")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SLADayID");
-
-                    b.HasIndex("RoleID");
-
-                    b.HasIndex("ServiceID");
 
                     b.ToTable("SLADays");
                 });
@@ -517,6 +506,9 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("int");
+
                     b.HasKey("CaseId");
 
                     b.HasIndex("ApplicationID");
@@ -525,11 +517,11 @@ namespace GovServe_Project.Migrations
                         .IsUnique()
                         .HasFilter("[ApplicationID1] IS NOT NULL");
 
-                    b.HasIndex("AssignedOfficerId");
-
                     b.HasIndex("DepartmentID");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UsersUserId");
 
                     b.ToTable("Case");
                 });
@@ -681,7 +673,11 @@ namespace GovServe_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StageID"));
 
-                    b.Property<int>("ResponsibleRoleID")
+                    b.Property<string>("ResponsibleRole")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleID")
                         .HasColumnType("int");
 
                     b.Property<int>("SLA_Days")
@@ -695,7 +691,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasKey("StageID");
 
-                    b.HasIndex("ResponsibleRoleID");
+                    b.HasIndex("RoleID");
 
                     b.HasIndex("ServiceID");
 
@@ -743,25 +739,6 @@ namespace GovServe_Project.Migrations
                     b.HasOne("GovServe_Project.Models.AdminModels.Service", null)
                         .WithMany("RequiredDocuments")
                         .HasForeignKey("ServiceID1");
-
-                    b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("GovServe_Project.Models.AdminModels.SLADays", b =>
-                {
-                    b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
 
                     b.Navigation("Service");
                 });
@@ -851,7 +828,7 @@ namespace GovServe_Project.Migrations
                         .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.AdminModels.RequiredDocument", "RequiredDocument")
-                        .WithMany()
+                        .WithMany("CitizenDocument")
                         .HasForeignKey("DocumentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -907,12 +884,6 @@ namespace GovServe_Project.Migrations
                         .WithOne("Case")
                         .HasForeignKey("GovServe_Project.Models.SuperModels.Case", "ApplicationID1");
 
-                    b.HasOne("GovServe_Project.Models.Users", "AssignedOfficer")
-                        .WithMany("Cases")
-                        .HasForeignKey("AssignedOfficerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GovServe_Project.Models.AdminModels.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentID")
@@ -925,9 +896,11 @@ namespace GovServe_Project.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Application");
+                    b.HasOne("GovServe_Project.Models.Users", null)
+                        .WithMany("Cases")
+                        .HasForeignKey("UsersUserId");
 
-                    b.Navigation("AssignedOfficer");
+                    b.Navigation("Application");
 
                     b.Navigation("Department");
 
@@ -991,19 +964,15 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.WorkflowStage", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
+                    b.HasOne("GovServe_Project.Models.AdminModels.Role", null)
                         .WithMany("WorkflowStages")
-                        .HasForeignKey("ResponsibleRoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleID");
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
                         .WithMany("WorkflowStages")
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Role");
 
                     b.Navigation("Service");
                 });
@@ -1013,6 +982,11 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Services");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.AdminModels.RequiredDocument", b =>
+                {
+                    b.Navigation("CitizenDocument");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.AdminModels.Role", b =>
