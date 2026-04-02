@@ -21,17 +21,10 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 
         Task<bool> DeleteApplicationAsync(int ApplicationId);
 
-<<<<<<<<< Temporary merge branch 1
-		Task<bool> UpdateApplicationAsync(int id, Application application);
-=========
-
-		Task<bool> UpdateApplicationAsync(int id, Application application);
-
 		
-
 		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
 
->>>>>>>>> Temporary merge branch 2
+
 
 	}
 }

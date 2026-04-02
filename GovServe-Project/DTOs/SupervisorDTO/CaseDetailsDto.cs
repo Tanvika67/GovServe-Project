@@ -5,6 +5,7 @@
 	public int ApplicationID { get; set; }
 	public string Status { get; set; }
 	public int AssignedOfficerId { get; set; }
+	public string OfficerName{  get; set; }
 	public DateTime AssignedDate { get; set; }
 
 	// Citizen Personal Details

@@ -27,8 +27,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             {
                 RuleID = r.RuleID,
                 ServiceName = r.ServiceName ?? "",
-                RuleDescription = r.RuleDescription,
-                RuleExpression = r.RuleExpression
+                RuleDescription = r.RuleDescription
+                
             });
         }
 
@@ -44,7 +44,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 RuleID = rule.RuleID,
                 ServiceName = rule.ServiceName ?? "",
                 RuleDescription = rule.RuleDescription,
-                RuleExpression = rule.RuleExpression
+                
             };
         }
 
@@ -55,8 +55,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var rule = new EligibilityRule
             {
                 ServiceID = dto.ServiceID,
-                RuleDescription = dto.RuleDescription,
-                RuleExpression = dto.RuleExpression
+                RuleDescription = dto.RuleDescription
+                
             };
 
             await _repository.AddAsync(rule);
@@ -73,7 +73,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
             rule.ServiceID = dto.ServiceID;
             rule.RuleDescription = dto.RuleDescription;
-            rule.RuleExpression = dto.RuleExpression;
+            
 
             await _repository.UpdateAsync(rule);
 
@@ -102,8 +102,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             {
                 RuleID = r.RuleID,
                 ServiceName = r.ServiceName ?? "",
-                RuleDescription = r.RuleDescription,
-                RuleExpression = r.RuleExpression
+                RuleDescription = r.RuleDescription
             });
         
         }

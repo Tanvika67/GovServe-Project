@@ -80,18 +80,7 @@ namespace GovServe_Project.Controllers
 
 			return Ok("Application Deleted Successfully");
 		}
-
-<<<<<<<<< Temporary merge branch 1
-=========
-
->>>>>>>>> Temporary merge branch 2
-		// Update Application 
-		[HttpPut("{id}")]
-		[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> UpdateApplication(int id, Application application)
-		{
-			var result = await _applicationService.UpdateApplicationAsync(id, application);
-
+		
 		////------------Admin use----------------
 		// Get All Applications (Admin / Officer)
 		[HttpGet("all")]
@@ -101,6 +90,5 @@ namespace GovServe_Project.Controllers
 			var applications = await _applicationService.GetAllApplicationsAsync();
 			return Ok(applications);
 		}
-
 	}
 }

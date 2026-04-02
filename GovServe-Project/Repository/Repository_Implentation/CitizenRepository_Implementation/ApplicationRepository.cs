@@ -51,26 +51,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			await _context.SaveChangesAsync();
 		}
 
-<<<<<<<<< Temporary merge branch 1
-=========
 
->>>>>>>>> Temporary merge branch 2
-		//Update Application
+		
 
-		public async Task UpdateAsync(Application application)
-		{
-			_context.Application.Update(application);
-			await _context.SaveChangesAsync();
-		}
-<<<<<<<<< Temporary merge branch 1
 		//supervisor needs this
 		public async Task<Application> GetApplicationWithDocuments(int applicationId)
 		{
 			return await _context.Application
 				.Include(a => a.CitizenDocuments)
 				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
-=========
-
+		}
 		
 		//for officer to view application details
 
@@ -101,7 +91,18 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 
 			return data;
 
->>>>>>>>> Temporary merge branch 2
+
 		}
-	}
+
+        public async Task<List<Application>> GetAllAsync()
+        {
+            return await _context.Application
+                .Include(a => a.Service)
+                .Include(a => a.Department)
+                .Include(a => a.User)
+                .ToListAsync();
+        }
+
+
+    }
 }

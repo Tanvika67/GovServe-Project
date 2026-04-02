@@ -18,7 +18,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		private readonly GovServe_ProjectContext _context;
 		private readonly IApplicationRepository _applicationRepository;
 
-		public ApplicationService(IApplicationRepository applicationRepository,GovServe_ProjectContext context)
+		public ApplicationService(IApplicationRepository applicationRepository, GovServe_ProjectContext context)
 		{
 			_applicationRepository = applicationRepository;
 			_context = context;
@@ -36,13 +36,18 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			//  Step 2: Create Application
 			var app = new Application()
 			{
-				ServiceID = service.ServiceID,   
+				ServiceID = service.ServiceID,
 				UserId = dto.UserId,
 				ServiceName = dto.ServiceName,
 				DepartmentID = dto.DepartmentID,
 				DepartmentName = dto.DepartmentName,
 				ApplicationStatus = "Submitted",
-				SubmittedDate = DateTime.Now
+				SubmittedDate = DateTime.Now,
+
+				CompletedDate = null
+
+				//CompletedDate = DateTime.Today
+
 			};
 
 			await _applicationRepository.CreateAsync(app);
@@ -53,13 +58,13 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 		// My Applications
 		public async Task<List<ApplicationResponseDTO>> GetMyApplicationsAsync(int userId)
 		{
-			
+
 			var applications = await _applicationRepository.GetByUserIdAsync(userId);
 
 			// Entity → DTO mapping
 			var result = applications.Select(a => new ApplicationResponseDTO
 			{
-				ApplicationId = a.ApplicationID,	
+				ApplicationId = a.ApplicationID,
 				UserId = a.UserId,
 				ServiceName = a.Service.ServiceName,
 				ServiceID = a.ServiceID,
@@ -70,25 +75,25 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return result;
 		}
 		//get all application
-        public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
-        {
-            var applications = await _applicationRepository.GetAllAsync();
+		//public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
+		//{
+		//	var applications = await _applicationRepository.GetAllAsync();
 
-            var result = applications.Select(a => new ApplicationResponseDTO
-            {
-                ApplicationId = a.ApplicationID,
-                UserId = a.UserId,
-                ServiceID = a.ServiceID,
-                ServiceName = a.Service.ServiceName,
-                ApplicationStatus = a.ApplicationStatus,
-                SubmittedDate = a.SubmittedDate
-            }).ToList();
+		//	var result = applications.Select(a => new ApplicationResponseDTO
+		//	{
+		//		ApplicationId = a.ApplicationID,
+		//		UserId = a.UserId,
+		//		ServiceID = a.ServiceID,
+		//		ServiceName = a.Service.ServiceName,
+		//		ApplicationStatus = a.ApplicationStatus,
+		//		SubmittedDate = a.SubmittedDate
+		//	}).ToList();
 
-            return result;
-        }
+		//	return result;
+		//}
 
-        // Application Status
-        public async Task<string> GetApplicationStatusAsync(int ApplicationId)
+		// Application Status
+		public async Task<string> GetApplicationStatusAsync(int ApplicationId)
 		{
 			var application = await _applicationRepository.GetByIdAsync(ApplicationId);
 
@@ -111,12 +116,19 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 			return true;
 		}
 
-<<<<<<<<< Temporary merge branch 1
-=========
 
->>>>>>>>> Temporary merge branch 2
-		//Update Application
-		public async Task<bool> UpdateApplicationAsync(int id, Application application)
+
+
+
+
+		public Task DeleteApplication(int id)
+		{
+			throw new NotImplementedException();
+		}
+
+		//for officer to view application details
+
+		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
 		{
 			return await
 				_applicationRepository.GetApplicationDetails(applicationId);
@@ -124,35 +136,28 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 
 		}
 
-		public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
-
-          {
-
-     var applications = await _applicationRepository.GetAllAsync();
 
 
-		var result = applications.Select(a => new ApplicationResponseDTO
-		{
-			ApplicationId = a.ApplicationID,
+        //get all application
+        public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
+        {
+            var applications = await _applicationRepository.GetAllAsync();
 
-			UserId = a.UserId,
+            var result = applications.Select(a => new ApplicationResponseDTO
+            {
+                ApplicationId = a.ApplicationID,
+                UserId = a.UserId,
+                ServiceID = a.ServiceID,
+                ServiceName = a.Service.ServiceName,
+                ApplicationStatus = a.ApplicationStatus,
+                SubmittedDate = a.SubmittedDate
+            }).ToList();
 
-			ServiceID = a.ServiceID,
-
-<<<<<<<<< Temporary merge branch 1
-=========
-
-			ApplicationStatus = a.ApplicationStatus,
-
-			SubmittedDate = a.SubmittedDate
-
-		}).ToList();
+            return result;
+        }
 
 
-     return result;
+    }
 
-		}
->>>>>>>>> Temporary merge branch 2
-	}
 }
 

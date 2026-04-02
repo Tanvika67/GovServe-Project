@@ -14,18 +14,16 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task DeleteAsync(Application ApplicationId);
 
-<<<<<<<<< Temporary merge branch 1
-		Task UpdateAsync(Application application);
-		Task<Application> GetApplicationWithDocuments(int applicationId);
-=========
 
-		Task UpdateAsync(Application application);
+		
+		Task<Application> GetApplicationWithDocuments(int applicationId);
 
 		
 
 		//Task DeleteAsync(Application application);
 		Task<ApplicationDetails> GetApplicationDetails(int ApplicationId);
->>>>>>>>> Temporary merge branch 2
-	}
+        Task<List<Application>> GetAllAsync();
+
+    }
 
 }

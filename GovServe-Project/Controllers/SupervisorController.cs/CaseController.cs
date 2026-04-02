@@ -38,15 +38,16 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		//GET only I can see all cases
 		//Fetches complete list of case from the database
 		[HttpGet("all")]
-		//[Authorize(Roles = "Supervisor")]              
+        //[Authorize(Roles = "Supervisor")]              
 
-		public async Task<IActionResult> GetAll()
-		{
-			return Ok(await _service.GetAllCasesAsync());
-		}
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _service.GetAllCasesAsync());
+        }
 
-		//Returns only ongoing cases
-		[HttpGet("active")]
+
+        //Returns only ongoing cases
+        [HttpGet("active")]
 		//[Authorize(Roles = "Supervisor")]
 		public async Task<IActionResult> GetActive()
 		{
@@ -65,13 +66,23 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 		//Returns cases where SLA time has already exceeded
 		//I can easily identify delayed cases
 		[HttpGet("sla-breached")]
-		//[Authorize(Roles = "Supervisor")]
-		public async Task<IActionResult> GetSLABreached()
-		{
-			var result = await _service.GetSLABreachedCasesAsync();
-			return Ok(result);
-		}
-		//GET Returns summary like Total cases;Active cases; SLA breached
+        //[Authorize(Roles = "Supervisor")]
+        public async Task<IActionResult> GetSLABreachedCases()
+
+        {
+
+            var cases = await _service.GetSLABreachedCasesAsync();
+
+
+            if (!cases.Any())
+
+                return Ok(new { message = "No SLA breached cases" });
+
+
+            return Ok(cases);
+
+        }
+        //GET Returns summary like Total cases;Active cases; SLA breached
         [HttpGet("dashboard")]
         //[Authorize(Roles = "Supervisor")]
         public async Task<IActionResult> Dashboard()

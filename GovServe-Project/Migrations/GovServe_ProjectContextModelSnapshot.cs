@@ -60,11 +60,6 @@ namespace GovServe_Project.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("RuleExpression")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
 

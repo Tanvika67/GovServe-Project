@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260328054940_Admin.Designer.cs
-    [Migration("20260328054940_Admin")]
+    [Migration("20260402060752_Admin")]
     partial class Admin
-========
-    [Migration("20260330091039_RemoveDocumentNameFromCitizenDocument")]
-    partial class RemoveDocumentNameFromCitizenDocument
->>>>>>>> acc01bc1d4e086d7ccafa223aaef5b34cd08ff17:GovServe-Project/Migrations/20260330091039_RemoveDocumentNameFromCitizenDocument.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,11 +62,6 @@ namespace GovServe_Project.Migrations
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("RuleExpression")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
