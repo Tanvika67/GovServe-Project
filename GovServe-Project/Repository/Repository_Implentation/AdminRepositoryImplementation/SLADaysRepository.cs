@@ -47,10 +47,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task UpdateAsync(SLADays slaDay)
         {
-            _context.SLADays.Update(slaDay);
+            // Entity already tracked from GetByIdAsync
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(SLADays slaDay)
         {
             _context.SLADays.Remove(slaDay);

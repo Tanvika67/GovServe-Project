@@ -42,10 +42,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task UpdateAsync(EligibilityRule rule)
         {
-            _context.EligibilityRules.Update(rule);
+            // Entity already tracked from GetByIdAsync
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(EligibilityRule rule)
         {
             _context.EligibilityRules.Remove(rule);
@@ -61,5 +60,17 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
                             .Contains(serviceName.ToLower()))
                 .ToListAsync();
         }
-    }
+
+        //for citizen
+        public async Task<IEnumerable<EligibilityRule>> GetByServiceIdAsync(int serviceId)
+
+        {
+
+            return await _context.EligibilityRules
+             .Include(r => r.Service)
+          .Where(r => r.ServiceID == serviceId)
+          .ToListAsync();
+
+         }
+     }
 }

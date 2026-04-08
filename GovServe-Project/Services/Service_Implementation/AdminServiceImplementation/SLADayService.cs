@@ -61,14 +61,17 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return await GetByIdAsync(slaDay.SLADayID);
         }
 
-        public async Task<SLADayResponseDto> UpdateAsync(int id, SLADayCreateDto dto)
+        public async Task<SLADayResponseDto> UpdateAsync(int id, SLADayUpdateDto dto)
         {
             var slaDay = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA Day not found");
 
-            slaDay.ServiceID = dto.ServiceID;
+            // ✅ ONLY EDITABLE FIELDS
             slaDay.RoleID = dto.RoleID;
             slaDay.Days = dto.Days;
+
+            // ❌ DO NOT TOUCH
+            // slaDay.ServiceID
 
             await _repository.UpdateAsync(slaDay);
             return await GetByIdAsync(id);

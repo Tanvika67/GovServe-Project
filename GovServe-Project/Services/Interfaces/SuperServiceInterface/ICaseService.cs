@@ -25,7 +25,7 @@ namespace GovServe_Project.Services.Interfaces
 
         Task<object> GetDashboardAsync();
 
-        Task<string> ReassignCaseAsync();
+        Task<string> ReassignCaseAsync(int caseId, int newOfficerId);
 
         Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId);
 
@@ -48,7 +48,13 @@ namespace GovServe_Project.Services.Interfaces
 
         Task<object> GetOfficerDashboardAsync(int officerId);
 
+        Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId);
 
+        Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status);
+
+        Task<IEnumerable<Notification>> GetOfficerNotificationsAsync(int officerId);
+
+        Task<string> VerifyDocumentsAsync(int caseId);
 
 
     }

@@ -49,5 +49,12 @@ namespace GovServe_Project.Controllers.SupervisorController.cs
 			await _service.MarkAsReadAsync(notificationId);
 			return Ok("Marked as read");
 		}
-	}
+
+        [HttpGet("read/{userId}")]
+        public async Task<IActionResult> GetRead(int userId)
+        {
+            var data = await _service.GetReadNotifications(userId);
+            return Ok(data);
+        }
+    }
 }

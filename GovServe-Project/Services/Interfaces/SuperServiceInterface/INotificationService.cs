@@ -15,7 +15,9 @@ namespace GovServe_Project.Services.Interfaces.SuperServiceInterface
 		Task NotifySLABreach(int caseId);
 		Task<int> GetUnreadCountAsync(int userId);
 		Task MarkAsReadAsync(int notificationId);
-	    Task SendNotificationAsync(int userId, string message, int caseId, string category);
+		Task<List<Notification>> GetReadNotifications(int userId);
+        Task NotifySlaCreatedAsync(int caseId);
+        Task SendNotificationAsync(int userId, string message, int caseId, string category);
 		
 	}
 }

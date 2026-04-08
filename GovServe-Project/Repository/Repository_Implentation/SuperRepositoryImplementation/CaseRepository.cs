@@ -9,7 +9,6 @@ using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.SuperServiceInterface;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImplementation
@@ -31,16 +30,23 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
         }
 
         public async Task<IEnumerable<Case>> GetAllAsync()
-        {
-            return await _context.Case
-                .Include(c => c.Application)
-                    .ThenInclude(a => a.Service)   // ✅ IMPORTANT
-                .Include(c => c.Department)
-                .Include(c => c.AssignedOfficer)
-                    .ThenInclude(o => o.Department)
-                .ToListAsync();
-        }
 
+        {
+
+            return await _context.Case
+
+            .Include(c => c.Application)
+
+               .ThenInclude(a => a.Service)  // ✅ IMPORTANT        
+               .Include(c => c.Department)
+
+                .Include(c => c.AssignedOfficer)
+
+               .ThenInclude(o => o.Department)
+
+               .ToListAsync();
+
+        }
 
 
         public async Task<IEnumerable<Case>> GetByStatusAsync(string status)
@@ -61,8 +67,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
             return await _context.Case
 
-            .Where(c => c.Status != "Closed")
+            .Where(c => c.Status != "Closed") // or your logic        
             .ToListAsync();
+
+
 }
 
         public async Task<Case> GetByIdAsync(int id)
@@ -123,68 +131,43 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 
         }
 
-        // It calculates the SLA status of the case from slarecords
-        public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
-
-        {
-
-            return await _context.SLARecords
-
-            .Include(s => s.Case)
-
-            .Where(s => s.Status.ToString() == "Breached")
-
-            .ToListAsync();
-
-        }
-
-        // For supervisor dashboard I need this
-        public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+    // It calculates the SLA status of the case from slarecords
+    public async Task<List<SLARecords>> GetSLABreachedCasesAsync()
 
     {
 
-      return await _context.User
+      return await _context.SLARecords
 
-          .Where(u => u.Role.RoleName == "Officer")
+           .Include(s => s.Case)
+    
+      .Where(s=>s.Status.ToString()=="Breached")
+    
+      .ToListAsync();
 
-        .Select(u => new OfficerStatisticsDto {
+    }
 
-             OfficerId = u.UserId,
+        // For supervisor dashboard I need this
+        public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
+        {
+            return await _context.User
+                .Where(u => u.Role.RoleName == "Officer")
+                .Select(u => new OfficerStatisticsDto
+                {
+                    OfficerId = u.UserId,
+                    OfficerName = u.FullName,
+                    Department = u.Department.DepartmentName,
 
-          OfficerName = u.FullName,
+                    // ✅ SINGLE SOURCE OF TRUTH
+                    ActiveCases = _context.Case.Count(c =>
+                        c.AssignedOfficerId == u.UserId &&
+                        c.Status != "Completed" &&
+                        c.Status != "Rejected" &&
+                        c.Status != "Escalated")
+                })
+                .ToListAsync();
+        }
+ 
 
-          Department = u.Department.DepartmentName,
-
-
-          TotalCases = _context.Case
-
-            .Count(c => c.AssignedOfficerId == u.UserId),
-
-
-          ActiveCases = _context.Case
-
-            .Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Assigned"),
-
-
-          PendingCases = _context.Case
-
-            .Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Pending"),
-
-
-          CompletedCases = _context.Case
-
-            .Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Approved"),
-
-
-          EscalatedCases = _context.Case
-
-            .Count(c => c.AssignedOfficerId == u.UserId && c.Status == "Escalated")
-
-        })
-
-        .ToListAsync();
-
-}
 
 public async Task<DashboardStatsDto> GetDashboardStatsAsync()
 
@@ -224,15 +207,6 @@ public async Task<DashboardStatsDto> GetDashboardStatsAsync()
 
 
 //officers work// Get assigned cases
-public async Task<List<Case>> GetAssignedCases(int officerId)
-
-{
-
-    throw new NotImplementedException();
-
-}
-
-
 public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
 
 {
@@ -253,11 +227,15 @@ public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
 
     .Include(c => c.Application)
 
+    .Include(c => c.User)
+
     .Include(c => c.Department)
 
-    .Where(c => c.AssignedOfficerId == officerId)
+    .Where(c => c.AssignedOfficerId == officerId && c.Status == "Assigned")
 
+    .AsNoTracking() // Read-only query sathi he best ahe        
     .ToListAsync();
+
 
 }
 
@@ -270,9 +248,13 @@ public async Task<Case?> GetCaseByIdAsync(int caseId)
 
     .Include(c => c.Application)
 
+    .Include(c => c.User)
+
     .Include(c => c.Department)
 
-    .FirstOrDefaultAsync(c => c.CaseId == caseId);
+    .AsNoTracking() // Read-only query sathi he best ahe       
+   .FirstOrDefaultAsync(c => c.CaseId == caseId);
+
 
 }
 
@@ -288,25 +270,23 @@ public async Task<string> ApproveCaseAsync(int caseId)
     .FirstOrDefaultAsync(c => c.CaseId == caseId);
 
 
-    if (caseEntity == null) return "Approved";
+    if (caseEntity == null) return "Case not found";
 
 
-    // Case update
-    caseEntity.Status = "Completed";
+    caseEntity.Status = "Approved";
 
-    caseEntity.CompletedDate = DateTime.Now;
+    caseEntity.CompletedDate = DateTime.UtcNow;
 
-    caseEntity.LastUpdated = DateTime.Now;
+    caseEntity.LastUpdated = DateTime.UtcNow;
 
 
-    // Application update
     if (caseEntity.Application != null)
 
     {
 
         caseEntity.Application.ApplicationStatus = "Approved";
 
-        caseEntity.Application.CompletedDate = DateTime.Now;
+        caseEntity.Application.CompletedDate = DateTime.UtcNow;
 
     }
 
@@ -329,27 +309,25 @@ public async Task<string> RejectCaseAsync(int caseId, string reason)
     .FirstOrDefaultAsync(c => c.CaseId == caseId);
 
 
-    if (caseEntity == null) return "Rejected";
+    if (caseEntity == null) return "Case not found";
 
 
-    // Case update
-   caseEntity.Status = "Completed";
+    caseEntity.Status = "Rejected";
 
     caseEntity.RejectionReason = reason;
 
-    caseEntity.CompletedDate = DateTime.Now;
+    caseEntity.CompletedDate = DateTime.UtcNow;
 
-    caseEntity.LastUpdated = DateTime.Now;
+    caseEntity.LastUpdated = DateTime.UtcNow;
 
 
-    // Application update
     if (caseEntity.Application != null)
 
     {
 
         caseEntity.Application.ApplicationStatus = "Rejected";
 
-        caseEntity.Application.CompletedDate = DateTime.Now;
+        caseEntity.Application.CompletedDate = DateTime.UtcNow;
 
     }
 
@@ -361,63 +339,26 @@ public async Task<string> RejectCaseAsync(int caseId, string reason)
 }
 
 
-public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
+public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId) => await _context.Case
 
-{
+.Include(c => c.Application)
 
-    return await _context.Case
+.Include(c => c.Department) // Department chi mahiti ghenyasathi        
+.Where(c => c.AssignedOfficerId == officerId &&
 
-    .Include(c => c.Application)
+c.Status == "Resubmitted")
 
-    .Where(c => c.AssignedOfficerId == officerId && c.Application.ApplicationStatus == "Resubmitted")
-
-    .ToListAsync();
-
-}
+.AsNoTracking() // Read-only query sathi he best ahe        
+ .ToListAsync();
 
 
-public async Task<object> GetOfficerDashboardAsync(int officerId)
-
-{
-
-    var cases = await _context.Case
-
-    .Include(c => c.Application)
-
-    .Where(c => c.AssignedOfficerId == officerId)
-
-    .ToListAsync();
 
 
-    return new
-    {
+public async Task<Case> GetCaseById(int caseId) => await _context.Case
 
-        PendingCount = cases.Count(c => c.Status == "Pending"),
+.Include(c => c.Application)
 
-        AssignedCount = cases.Count(c => c.Status == "Assigned"),
-
-        CompletedCount = cases.Count(c => c.Status == "Completed"),
-
-        RejectedCount = cases.Count(c => c.Application.ApplicationStatus == "Rejected"),
-
-        ApprovedCount = cases.Count(c => c.Application.ApplicationStatus == "Approved")
-
-    };
-
-}
-
-
-public async Task<Case> GetCaseById(int caseId)
-
-{
-
-    return await _context.Case
-
-    .Include(c => c.Application)
-
-    .FirstOrDefaultAsync(c => c.CaseId == caseId);
-
-}
+.FirstOrDefaultAsync(c => c.CaseId == caseId);
 
 
 public async Task UpdateCase(Case caseObj)
@@ -430,15 +371,89 @@ public async Task UpdateCase(Case caseObj)
 
 }
 
-Task<CaseDetailsDto> ICaseRepository.GetCaseWithDocuments(int caseId)
 
+public async Task<object> GetOfficerDashboardAsync(int officerId)
 
 {
 
-    throw new NotImplementedException();
+      // Optimized: No .Include needed for simple status counts
+      var cases = await _context.Case
+
+   .Where(c => c.AssignedOfficerId == officerId)
+
+     .Select(c => new { c.Status })
+
+     .ToListAsync();
+
+
+    return new
+    {
+
+        AssignedCount = cases.Count(c => c.Status == "Assigned"),
+
+        PendingVerificationCount = cases.Count(c => c.Status == "Under Verification"),
+
+        ApprovedCount = cases.Count(c => c.Status == "Approved"),
+
+        RejectedCount = cases.Count(c => c.Status == "Rejected"),
+
+    };
 
 }
 
-  }
+public async Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId)
+
+{
+
+    var today = DateTime.UtcNow;
+
+
+    var query = from c in _context.Case
+
+                join sla in _context.SLARecords on c.CaseId equals sla.CaseId
+
+                join app in _context.Application on c.ApplicationID equals app.ApplicationID
+
+                where c.AssignedOfficerId == officerId && c.Status != "Completed"
+                select new OfficerCaseDashboardDTO
+                {
+
+                    CaseId = c.CaseId,
+
+                    ApplicationName = app.ServiceName,
+
+                    Status = c.Status,
+
+                    DeadlineDate = sla.EndDate,
+
+                    DaysRemaining = (sla.EndDate - today).Days
+
+                };
+
+
+    return await query.ToListAsync();
+
+}
+
+
+public async Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status)
+
+{
+
+    return await _context.Case
+
+    .Include(c => c.Application)
+
+    .Include(c => c.User)
+
+    .Where(c => c.AssignedOfficerId == officerId && c.Application != null && c.Application.ApplicationStatus == status)
+
+                    .AsNoTracking()
+
+                    .ToListAsync();
+
+}
+
+	}
 
 }

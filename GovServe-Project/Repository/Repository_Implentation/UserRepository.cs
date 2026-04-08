@@ -129,7 +129,21 @@ namespace GovServe_Project.Repository.Repository_Implentation
 			.FirstOrDefaultAsync();
 
 		}
-	}
+
+        public async Task<int> GetSupervisorIdAsync()
+        {
+            var supervisorId = await _context.User
+                .Where(u => u.RoleName == "Supervisor")
+                .Select(u => (int?)u.UserId)
+                .FirstOrDefaultAsync();
+
+            if (supervisorId == null)
+                throw new Exception("Supervisor user not found");
+
+            return supervisorId.Value;
+        }
+
+    }
 
 }
 

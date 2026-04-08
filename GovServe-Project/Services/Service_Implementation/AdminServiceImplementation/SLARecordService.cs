@@ -3,9 +3,11 @@ using GovServe_Project.Enum;
 using GovServe_Project.Exceptions;
 using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Repositories.Interface.AdminRepositoryInterface;
+using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
+using GovServe_Project.Services.Interfaces.SuperServiceInterface;
 
 namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplementation
 {
@@ -14,16 +16,22 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         private readonly ISLARecordRepository _repository;
         private readonly IWorkflowStageRepository _stageRepository;
         private readonly ICaseRepository _caseRepository;
+        private readonly INotificationService _notificationService;
+        
 
 		public SLARecordService(
             ISLARecordRepository repository,
             IWorkflowStageRepository stageRepository,
-            ICaseRepository caseRepository)
+            ICaseRepository caseRepository, INotificationService notificationService)
         {
             _repository = repository;
             _stageRepository = stageRepository;
             _caseRepository = caseRepository;
-		}
+            _notificationService = notificationService;
+
+
+
+        }
 
         public async Task<IEnumerable<SLARecordResponseDto>> GetAllAsync()
         {
@@ -63,35 +71,39 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return records.Select(MapToDto);
         }
 
-		public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
-		{
-			// 1) Get workflow stage to fetch SLA days
-			var stage = await _stageRepository.GetByIdAsync(dto.StageID)
-				?? throw new NotFoundException("Workflow stage not found");
+        public async Task<SLARecordResponseDto> CreateAsync(SLARecordCreateDto dto)
+        {
+            // 1) Get workflow stage to fetch SLA days
+            var stage = await _stageRepository.GetByIdAsync(dto.StageID)
+                ?? throw new NotFoundException("Workflow stage not found");
 
-			// 2) Calculate EndDate automatically
-			var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
+            // 2) Calculate EndDate automatically
+            var calculatedEndDate = dto.StartDate.AddDays(stage.SLA_Days);
 
-			var record = new SLARecords
-			{
-				CaseId = dto.CaseID,
-				StageID = dto.StageID,
-				StartDate = dto.StartDate,
-				EndDate = calculatedEndDate
-			};
+            var record = new SLARecords
+            {
+                CaseId = dto.CaseID,
+                StageID = dto.StageID,
+                StartDate = dto.StartDate,
+                EndDate = calculatedEndDate
+            };
 
-			// 3) Calculate SLA status and update case
-			await UpdateStatus(record);
+            // 3) Calculate SLA status and update case
+            await UpdateStatus(record);
 
-			// 4) Save SLA record
-			await _repository.AddAsync(record);
-			//await _repository.SaveAsync();
+            // 4) Save SLA record
+            await _repository.AddAsync(record);
 
-			return MapToDto(record);
-		}
+            //await _repository.SaveChangesAsync();
+
+            // ✅ ONE CLEAN CALL
+            await _notificationService.NotifySlaCreatedAsync(dto.CaseID);
+
+            return MapToDto(record);
+        }
 
 
-		public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var record = await _repository.GetByIdAsync(id)
                 ?? throw new NotFoundException("SLA record not found");

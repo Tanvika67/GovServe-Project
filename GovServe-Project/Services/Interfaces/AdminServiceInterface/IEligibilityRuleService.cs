@@ -7,8 +7,10 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<IEnumerable<EligibilityRuleResponseDTO>> GetAllAsync();
         Task<EligibilityRuleResponseDTO> GetByIdAsync(int id);
         Task<EligibilityRuleResponseDTO> CreateAsync(EligibilityRuleDTO dto);
-        Task<EligibilityRuleResponseDTO> UpdateAsync(int id, EligibilityRuleDTO dto);
+        Task<EligibilityRuleResponseDTO> UpdateAsync(int id, EligibilityRuleUpdateDTO dto);
         Task DeleteAsync(int id);
         Task<IEnumerable<EligibilityRuleResponseDTO>> SearchByServiceNameAsync(string serviceName);
+
+        Task<IEnumerable<EligibilityRuleResponseDTO>> GetByServiceIdAsync(int serviceId);
     }
 }

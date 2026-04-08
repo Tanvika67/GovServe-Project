@@ -25,8 +25,6 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 
         Task<int> GetCaseCountByOfficerAsync(int officerId);
 
-        Task<CaseDetailsDto> GetCaseWithDocuments(int caseId);
-
         Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync();
 
         Task<DashboardStatsDto> GetDashboardStatsAsync();
@@ -55,8 +53,12 @@ namespace GovServe_Project.Repository.Interface.SuperRepositoryInterface
 
         Task<object> GetOfficerDashboardAsync(int officerId);
 
+        Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId);
+
+        Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status);
+
+
 
     }
 
 }
-

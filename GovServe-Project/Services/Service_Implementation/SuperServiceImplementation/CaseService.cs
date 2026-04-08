@@ -3,7 +3,6 @@ using GovServe_Project.DTOs.OfficerDTO;
 using GovServe_Project.DTOs.SupervisorDTO;
 using GovServe_Project.Enum;
 using GovServe_Project.Models;
-using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repositories.Citizen;
 using GovServe_Project.Repository.Interface;
@@ -15,78 +14,43 @@ using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplementation
-
 {
-
     public class CaseService : ICaseService
-
     {
-
         private readonly ICaseRepository _repo;
-
         private readonly INotificationService _notificationService;
-
         private readonly IUserRepository _userRepo;
-
         private readonly IApplicationRepository _applicationRepo;
-
         private readonly ICitizenDetailsRepository _citizenRepo;
-
         public CaseService(ICaseRepository repo, INotificationService notificationService, IUserRepository userRepo, IApplicationRepository applicationRepo, ICitizenDetailsRepository citizenRepo)
-
         {
-
             _repo = repo;
-
             _notificationService = notificationService;
-
             _userRepo = userRepo;
-
             _applicationRepo = applicationRepo;
-
             _citizenRepo = citizenRepo;
-
         }
-
         public async Task<IEnumerable<Case>> GetActiveCasesAsync()
-
         {
-
             return await _repo.GetByStatusAsync("Assigned");
-
         }
-
-        public async Task<List<Case>> GetSLABreachedCasesAsync()
-
+        public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
         {
-
+            return await _repo.GetOfficerStatisticsAsync();
+        }
+        public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+        {
+            return await _repo.GetDashboardStatsAsync();
+        }
+        public async Task<List<Case>> GetSLABreachedCasesAsync()
+        {
             var slaRecords = await _repo.GetSLABreachedCasesAsync();
 
-
-            return slaRecords.Where(s => s.Case != null)
-
-            .Select(s => s.Case!)
-
-            .ToList();
-
+            return slaRecords
+                .Where(s => s.Case != null)
+                .Select(s => s.Case!)
+                .ToList();
         }
-
-        public async Task<List<OfficerStatisticsDto>> GetOfficerStatisticsAsync()
-
-        {
-
-            return await _repo.GetOfficerStatisticsAsync();
-
-        }
-
-        public async Task<DashboardStatsDto> GetDashboardStatsAsync()
-
-        {
-
-            return await _repo.GetDashboardStatsAsync();
-
-        }
-
         public async Task<IEnumerable<CaseResponseDto>> GetAllCasesAsync()
         {
             var cases = await _repo.GetAllAsync();
@@ -100,6 +64,7 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
                 ServiceName = c.Application?.Service?.ServiceName ?? "",
 
                 DepartmentName = c.Department?.DepartmentName ?? "",
+                DepartmentID = c.DepartmentID,
 
                 OfficerName = c.AssignedOfficer?.FullName ?? "",
                 OfficerDepartment = c.AssignedOfficer?.Department?.DepartmentName ?? "",
@@ -108,468 +73,330 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
                 LastUpdated = c.LastUpdated
             });
         }
-
-
         public async Task<string> CreateCaseAsync(CreateCaseDto dto)
-
         {
-
             var application = await _applicationRepo
-
-            .GetApplicationWithDocuments(dto.ApplicationId);
-
+                .GetApplicationWithDocuments(dto.ApplicationId);
 
             if (application == null)
-
                 return "Application not found";
-
 
             int officerId = await GetAvailableOfficer(dto.DepartmentId);
 
-
             if (officerId == 0)
-
                 return "No officer available";
 
-
             var caseModel = new Case
-
             {
-
                 ApplicationID = application.ApplicationID,
-
                 UserId = application.UserId,
-
                 DepartmentID = dto.DepartmentId,
-
                 AssignedOfficerId = officerId,
-
                 Status = "Assigned",
-
                 AssignedDate = DateTime.Now,
-
                 LastUpdated = DateTime.Now
-
             };
-
 
             await _repo.AddAsync(caseModel);
-
             await _repo.SaveAsync();
-
             //For Notification
             await _notificationService.NotifyCaseCreated(caseModel.CaseId);
-
             await _notificationService.NotifyCaseAssigned(caseModel.CaseId, officerId);
-
             return "Case assigned successfully";
-
         }
-
         public async Task<int> GetAvailableOfficer(int departmentId)
-
         {
-
             var officers = await _userRepo
-
-            .GetOfficersByDepartmentAsync(departmentId);
-
+                .GetOfficersByDepartmentAsync(departmentId);
 
             if (!officers.Any())
-
                 return 0;
 
-
             int selectedOfficer = 0;
-
             int minCases = int.MaxValue;
 
-
             foreach (var officer in officers)
-
             {
-
                 int count = await _repo
-
-                .GetCaseCountByOfficerAsync(officer.UserId);
-
+                    .GetCaseCountByOfficerAsync(officer.UserId);
 
                 if (count < minCases)
-
                 {
-
                     minCases = count;
-
                     selectedOfficer = officer.UserId;
-
                 }
-
             }
-
             return selectedOfficer;
-
         }
-
         public async Task<CaseDetailsDto> GetCaseDetails(int caseId)
-
         {
-
             var caseData = await _repo.GetCaseWithApplication(caseId);
 
-
             if (caseData == null)
-
                 return null;
 
-
             var citizen = await _citizenRepo
-
-            .GetByApplicationIdAsync(caseData.ApplicationID);
-
+                .GetByApplicationIdAsync(caseData.ApplicationID);
             var officer = await _userRepo
-
-            .GetByIdAsync(caseData.AssignedOfficerId);
-
+                .GetByIdAsync(caseData.AssignedOfficerId);
 
             return new CaseDetailsDto
-
             {
-
                 CaseId = caseData.CaseId,
-
                 ApplicationID = caseData.ApplicationID,
-
                 Status = caseData.Status,
-
                 AssignedOfficerId = caseData.AssignedOfficerId,
-
                 OfficerName = officer?.FullName,
-
                 AssignedDate = caseData.AssignedDate ?? DateTime.Now,
 
-
                 FullName = citizen?.FullName,
-
                 Gender = citizen?.Gender,
-
                 DateOfBirth = citizen?.DateOfBirth ?? DateTime.Now,
-
                 FatherName = citizen?.FatherName,
-
                 MotherName = citizen?.MotherName,
 
-
                 Email = citizen?.Email,
-
                 Phone = citizen?.Phone,
 
-
                 AddressLine1 = citizen?.AddressLine1,
-
                 AddressLine2 = citizen?.AddressLine2,
-
                 City = citizen?.City,
-
                 State = citizen?.State,
-
                 Pincode = citizen?.Pincode,
 
-
                 AadhaarNumber = citizen?.AadhaarNumber,
-
                 //Documents = caseData.Application.CitizenDocuments
-                //.Select(d => new DocumentDto
-                //     {
-
-                //         CitizenDocumentID = d.CitizenDocumentID,
-
-                //         DocumentName = d.RequiredDocument.DocumentName,
-
-                //         Uri = d.URI
-                //     }).ToList()
-
+                //  .Select(d => new DocumentDto
+                //  {
+                //      CitizenDocumentID = d.CitizenDocumentID,
+                //      DocumentName = d.RequiredDocument.DocumentName,
+                //      Uri = d.URI
+                //  })
+                // .ToList()
             };
 
-
         }
-
         public async Task<string> UpdateCaseStatus(int caseId, string status)
-
         {
-
             var validStatuses = new[] { "Pending", "Assigned", "Escalated", "Completed" };
-
             if (!validStatuses.Contains(status))
-
                 return "Invalid status";
 
-
             var c = await _repo.GetByIdAsync(caseId);
-
             if (c == null)
-
                 return "Case not found";
 
-
             c.Status = status;
-
             c.LastUpdated = DateTime.Now;
 
-
             if (status == "Completed")
-
                 c.CompletedDate = DateTime.Now;
 
-
             _repo.Update(c);
-
             await _repo.SaveAsync();
 
-
             return "Status updated";
-
         }
-
         public async Task<string> ReassignCaseAsync(int caseId, int newOfficerId)
-
         {
-
             var c = await _repo.GetByIdAsync(caseId);
-
             if (c == null) return "Case not found";
-
 
             int oldOfficerId = c.AssignedOfficerId;
 
-
             c.AssignedOfficerId = newOfficerId;
-
-            c.AssignedDate = DateTime.Now; c.LastUpdated = DateTime.Now;
-
+            c.AssignedDate = DateTime.Now;
+            c.LastUpdated = DateTime.Now;
             _repo.Update(c);
-
             await _repo.SaveAsync();
-
 
             // For Notification
             await _notificationService.NotifyCaseAssigned(caseId, newOfficerId);
 
-
             return "Case reassigned";
-
         }
-
 
         public async Task<string> ReassignEscalatedCaseAsync(int caseId, int newOfficerId)
-
         {
-
             var c = await _repo.GetByIdAsync(caseId);
-
             if (c == null)
-
                 return "Case not found";
 
-
-            if (!c.IsEscalated)
-
+            if (c.Status != "Escalated")
                 return "Case is not escalated";
 
+            if (c.AssignedOfficerId == newOfficerId)
+                return "Case is already assigned to this officer";
 
-            int oldOfficerId = c.AssignedOfficerId;
+            var officer = await _userRepo.GetByIdAsync(newOfficerId);
+            if (officer == null || officer.DepartmentID != c.DepartmentID)
+                return "Invalid officer for this department";
 
-            int citizenId = c.UserId;
+            int activeCases = await _repo.GetCaseCountByOfficerAsync(officer.UserId);
+            if (activeCases >= 5)
+                return "Selected officer is busy. Please choose another officer.";
 
-
-            // Reassignc.AssignedOfficerId = newOfficerId;
-
+            c.AssignedOfficerId = newOfficerId;
             c.AssignedDate = DateTime.Now;
-
+            c.Status = "Assigned";      // ✅ IMPORTANT
+            c.IsEscalated = false;      // ✅ IMPORTANT
             c.LastUpdated = DateTime.Now;
 
-
             _repo.Update(c);
-
             await _repo.SaveAsync();
 
-            return "Case reassigned successfully";
+            await _notificationService.NotifyCaseAssigned(caseId, newOfficerId);
 
+            return "Case reassigned successfully";
         }
         public async Task<object> GetDashboardAsync()
-
         {
-
             var all = await _repo.GetAllAsync();
-
 
             return new
             {
-
                 Total = all.Count(),
-
                 Pending = all.Count(x => x.Status == "Pending"),
-
                 Assigned = all.Count(x => x.Status == "Assigned"),
-
                 Escalated = all.Count(x => x.Status == "Escalated"),
-
                 Completed = all.Count(x => x.Status == "Completed")
-
             };
-
         }
-
 
         private readonly INotificationService notificationService;
 
-
-
-        public Task<string> ReassignCaseAsync()
-
-        {
-
-            throw new NotImplementedException();
-
-        }
-
-
         public async Task<IEnumerable<Case>> GetAssignedCasesAsync(int officerId)
-
         {
-
             var cases = await _repo.GetAssignedCasesAsync(officerId);
-
             return cases ?? Enumerable.Empty<Case>();
-
         }
-
         public async Task<Case?> GetCaseByIdAsync(int caseId)
-
         {
-
             return await _repo.GetCaseByIdAsync(caseId);
-
         }
-
         public async Task<string> ApproveCaseAsync(int caseId)
-
         {
-
             var caseObj = await _repo.GetCaseById(caseId);
-
             if (caseObj == null) return "Case not found";
 
-
-
+            // Standardized to "Approved" to match Story 5 & 8
             caseObj.Status = "Approved";
-
             caseObj.CompletedDate = DateTime.Now;
-
-
-            if (caseObj.Application == null)
-
-            {
-
-                return "Application data not linked to this case";
-
-                caseObj.Application.ApplicationStatus = "Approved";
-
-                caseObj.Application.CompletedDate = DateTime.Now;
-
-            }
-
-
-
-            // --- Notification Logic Start ---
-            await _notificationService.SendNotificationAsync(
-
-            caseObj.Application.UserId,
-
-         $" Your case #{caseId} has been approved.",caseId);
-
-
-            await _repo.UpdateCase(caseObj);
-
-            return "Case approved successfully";
-
-        }
-
-
-        public async Task<string> RejectCaseAsync(int caseId, string reason)
-
-        {
-
-            var caseObj = await _repo.GetCaseById(caseId);
-
-            if (caseObj == null) return "Case not found";
-
-
-            caseObj.Status = "Rejected";
-
-            caseObj.RejectionReason = reason;
-
+            caseObj.LastUpdated = DateTime.Now;
 
             if (caseObj.Application != null)
-
             {
+                caseObj.Application.ApplicationStatus = "Approved";
+                caseObj.Application.CompletedDate = DateTime.Now;
 
-                caseObj.Application.ApplicationStatus = "Rejected";
-
-
+                await _notificationService.SendNotificationAsync(
+                    caseObj.Application.UserId,
+                    $"Your case #{caseId} has been approved.",
+                    caseId
+                );
             }
-
-
-            await _notificationService.SendNotificationAsync(
-
-                 caseObj.Application.UserId,
-
-                 $"Your application was rejected. Reason: {reason}", caseId);
-
 
             await _repo.UpdateCase(caseObj);
-
-
-            return "Case rejected successfully";
-
-
+            return "Case approved successfully";
         }
 
-
-
-        public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
-
+        public async Task<string> RejectCaseAsync(int caseId, string reason)
         {
 
-            // Take data from Repository
-            var cases = await _repo.GetResubmittedCasesAsync(officerId);
+            var caseObj = await _repo.GetCaseById(caseId);
+            if (caseObj == null) return "Case not found";
 
+            // 1. Validate that a reason is provided (User Story 6 requirement)
 
-            // Jar cases null asatil tar empty list return karane (Error prevent sathi)
-            if (cases == null)
+            if (string.IsNullOrWhiteSpace(reason))
+                return "Rejection reason is required";
 
+            caseObj.Status = "Rejected";
+            caseObj.RejectionReason = reason;
+            caseObj.CompletedDate = DateTime.Now;
+            caseObj.LastUpdated = DateTime.Now;
+
+            // 2. Safety Check: Only notify if the Application link exists
+
+            if (caseObj.Application != null)
             {
-
-                return Enumerable.Empty<Case>();
-
+                caseObj.Application.ApplicationStatus = "Rejected";
+                await _notificationService.SendNotificationAsync(
+                    caseObj.Application.UserId,
+                    $"Your application was rejected. Reason: {reason}",
+                    caseId
+                );
             }
 
+            await _repo.UpdateCase(caseObj);
+            return "Case rejected successfully";
+        }
+        public async Task<IEnumerable<Case>> GetResubmittedCasesAsync(int officerId)
+        {
+            // Take data from Repository 
+            var cases = await _repo.GetResubmittedCasesAsync(officerId);
+            if (cases == null)
+            {
+                return Enumerable.Empty<Case>();
+            }
 
             return cases;
 
-
         }
-
         public async Task<object> GetOfficerDashboardAsync(int officerId)
-
         {
-
             var summary = await _repo.GetOfficerDashboardAsync(officerId);
-
             return summary;
+        }
+        public async Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId)
+        {
+            return await _repo.GetOfficerDetailedDashboardAsync(officerId);
+        }
+        public async Task<string> ResubmitApplicationAsync(int applicationId)
+        {
+            // Find the case by ApplicationID
+            var caseObj = await _repo.GetCaseById(applicationId);
 
+            if (caseObj == null) return "Case not found";
+
+            caseObj.Status = "Resubmitted"; // Now it will show up for the officer
+            caseObj.CompletedDate = null;
+
+            await _repo.UpdateCase(caseObj);
+            return "Success";
+        }
+        public async Task<string> VerifyDocumentsAsync(int caseId)
+        {
+            // Find the case by ID
+            var caseObj = await _repo.GetByIdAsync(caseId);
+
+            if (caseObj == null) return "Case not found";
+
+            // User Story 4: Update status to "Under Verification"
+            caseObj.Status = "Under Verification";
+            caseObj.LastUpdated = DateTime.Now;
+
+            // Update and Save (using your existing repo methods)
+            _repo.Update(caseObj);
+            await _repo.SaveAsync();
+
+            return "Status updated to Under Verification";
+        }
+        public async Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status)
+        {
+            var cases = await _repo.GetCasesByStatusAsync(officerId, status);
+            return cases ?? Enumerable.Empty<Case>();
+        }
+        public async Task<IEnumerable<Notification>> GetOfficerNotificationsAsync(int officerId)
+        {
+            // Use the exact method name from your NotificationService.cs
+            // This fetches new cases, updates, and SLA Breach notifications 
+            var notifications = await _notificationService.GetUserNotificationsAsync(officerId);
+
+            return notifications ?? Enumerable.Empty<Notification>();
         }
 
     }
 
-
 }
+

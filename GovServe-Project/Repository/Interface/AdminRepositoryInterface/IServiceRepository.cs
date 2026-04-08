@@ -16,5 +16,7 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
 
         Task<int> GetServiceCountAsync();
         Task<int> GetActiveServiceCountAsync();
+
+       
     }
 }

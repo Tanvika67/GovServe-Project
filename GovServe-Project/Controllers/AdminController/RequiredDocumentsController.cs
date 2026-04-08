@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,10 +40,13 @@ namespace GovServe_Project.Controllers.AdminController
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, RequiredDocumentDTO dto)
+
+        public async Task<IActionResult> Update(int id, RequiredDocumentUpdateDTO dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));
         }
+
+
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Admin")]
@@ -60,5 +64,15 @@ namespace GovServe_Project.Controllers.AdminController
         {
             return Ok(await _service.SearchByServiceNameAsync(serviceName));
         }
-    }
+
+        //for citizen
+        [HttpGet("service/{serviceId}")]
+        public async Task<IActionResult> GetByServiceId(int serviceId)
+
+        {
+
+        return Ok(await _service.GetByServiceIdAsync(serviceId));
+
+         }
+     }
 }

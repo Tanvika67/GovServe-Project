@@ -37,7 +37,7 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, SLADayCreateDto dto)
+        public async Task<IActionResult> Update(int id, SLADayUpdateDto dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));
         }

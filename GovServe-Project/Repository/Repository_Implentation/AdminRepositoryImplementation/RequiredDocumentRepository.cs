@@ -40,10 +40,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task UpdateAsync(RequiredDocument document)
         {
-            _context.RequiredDocuments.Update(document);
+            // Entity already tracked from GetByIdAsync
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(RequiredDocument document)
         {
             _context.RequiredDocuments.Remove(document);
@@ -59,5 +58,20 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
                             .Contains(serviceName.ToLower()))
                 .ToListAsync();
         }
+
+        //For citizen
+        public async Task<IEnumerable<RequiredDocument>> GetByServiceIdAsync(int serviceId)
+
+        {
+
+          return await _context.RequiredDocuments
+
+           .Include(d => d.Service)
+
+         .Where(d => d.ServiceID == serviceId)
+
+         .ToListAsync();
+
     }
+}
 }
