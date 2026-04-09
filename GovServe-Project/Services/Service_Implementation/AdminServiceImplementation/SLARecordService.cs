@@ -146,31 +146,31 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             };
         }
 
-		public async Task<IEnumerable<PendingSlaCaseDto>> GetPendingSlaCasesAsync()
-		{
-			var cases = await _repository.GetCasesWithoutSLAAsync();
+        public async Task<IEnumerable<PendingSlaCaseDto>> GetPendingSlaCasesAsync()
+        {
+            var cases = await _repository.GetCasesWithoutSLAAsync();
 
-			return cases.Select(c => new PendingSlaCaseDto
-			{
-				CaseId = c.CaseId,
-				ApplicationNumber = $"APP-{c.ApplicationID}",
+            return cases.Select(c => new PendingSlaCaseDto
+            {
+                CaseId = c.CaseId,
+                ApplicationNumber = $"APP-{c.ApplicationID}",
 
-				// Instead of Application.ServiceName, fetch from Service entity
-				ServiceName = c.Application != null && c.Application.Service != null
-					? c.Application.Service.ServiceName
-					: "",
+                // Instead of Application.ServiceName, fetch from Service entity
+                ServiceName = c.Application != null && c.Application.Service != null
+                    ? c.Application.Service.ServiceName
+                    : "",
 
-				DepartmentName = c.Department?.DepartmentName ?? "",
-				OfficerName = c.AssignedOfficer != null
-					? c.AssignedOfficer.FullName
-					: "Unassigned",
+                DepartmentName = c.Department?.DepartmentName ?? "",
+                OfficerName = c.AssignedOfficer != null
+                    ? c.AssignedOfficer.FullName
+                    : "Unassigned",
 
-				OfficerDepartment = c.AssignedOfficer?.Department?.DepartmentName ?? "",
-				Status = c.Status,
-				LastUpdated = c.LastUpdated
-			});
-		}
+                OfficerDepartment = c.AssignedOfficer?.Department?.DepartmentName ?? "",
+                Status = c.Status,
+                LastUpdated = c.LastUpdated
+            });
+        }
 
 
-	}
+    }
 }
