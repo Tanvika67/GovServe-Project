@@ -1,5 +1,4 @@
 ﻿using GovServe_Project.DTOs.SupervisorDTO;
-using GovServe_Project.Migrations;
 using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface;
 using GovServe_Project.Repository.Interface.SuperRepositoryInterface;

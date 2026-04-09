@@ -13,6 +13,7 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 		Task<List<Application>> GetByUserIdAsync(int userId);
 
 		Task DeleteAsync(Application ApplicationId);
+		Task<Application> GetApplicationWithAllDetailsAsync(int applicationId);
 
 		//------------Super Admin----------------
 		Task<Application> GetApplicationWithDocuments(int applicationId);

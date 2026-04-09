@@ -21,9 +21,6 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 		Task<bool> DeleteApplicationAsync(int ApplicationId);
 
 		Task<ApplicationDetailsDTO> GetApplicationDetailsAsync(int id);
-
-		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
-
 		Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync();
 	}
 }

@@ -401,42 +401,29 @@ public async Task<object> GetOfficerDashboardAsync(int officerId)
 
 }
 
-public async Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId)
+		public async Task<IEnumerable<OfficerCaseDashboardDTO>> GetOfficerDetailedDashboardAsync(int officerId)
+		{
+			var today = DateTime.UtcNow;
 
-{
+			var query = from c in _context.Case
+						join sla in _context.SLARecords on c.CaseId equals sla.CaseId
+						join app in _context.Application on c.ApplicationID equals app.ApplicationID
+						join svc in _context.Services on app.ServiceID equals svc.ServiceID  
+						where c.AssignedOfficerId == officerId && c.Status != "Completed"
+						select new OfficerCaseDashboardDTO
+						{
+							CaseId = c.CaseId,
+							ApplicationName = svc.ServiceName,  
+							Status = c.Status,
+							DeadlineDate = sla.EndDate,
+							DaysRemaining = (sla.EndDate - today).Days
+						};
 
-    var today = DateTime.UtcNow;
-
-
-    var query = from c in _context.Case
-
-                join sla in _context.SLARecords on c.CaseId equals sla.CaseId
-
-                join app in _context.Application on c.ApplicationID equals app.ApplicationID
-
-                where c.AssignedOfficerId == officerId && c.Status != "Completed"
-                select new OfficerCaseDashboardDTO
-                {
-
-                    CaseId = c.CaseId,
-
-                    ApplicationName = app.ServiceName,
-
-                    Status = c.Status,
-
-                    DeadlineDate = sla.EndDate,
-
-                    DaysRemaining = (sla.EndDate - today).Days
-
-                };
+			return await query.ToListAsync();
+		}
 
 
-    return await query.ToListAsync();
-
-}
-
-
-public async Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status)
+		public async Task<IEnumerable<Case>> GetCasesByStatusAsync(int officerId, string status)
 
 {
 

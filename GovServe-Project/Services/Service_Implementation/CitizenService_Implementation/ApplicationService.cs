@@ -145,16 +145,7 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				}).ToList() ?? new List<CitizenDocumentViewDTO>()
 			};
 		}
-
-		//for officer to view application details
-
-		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
-		{
-			return await
-				_applicationRepository.GetApplicationDetails(applicationId);
-
-
-		}
+		//FOR ADMIN PANEL - Get All Applications
 
 		public async Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync()
 
@@ -170,7 +161,6 @@ namespace GovServe_Project.Services.Service_Implementation.CitizenService_Implem
 				UserId = a.UserId,
 
 				ServiceID = a.ServiceID,
-
 
 				ApplicationStatus = a.ApplicationStatus,
 

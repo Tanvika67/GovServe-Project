@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
     public partial class Citizen : Migration
-========
-    public partial class Admin : Migration
->>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -400,15 +396,12 @@ namespace GovServe_Project.Migrations
                         principalTable: "RequiredDocuments",
                         principalColumn: "DocumentID",
                         onDelete: ReferentialAction.Cascade);
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
                     table.ForeignKey(
                         name: "FK_CitizenDocument_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
-========
->>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -485,7 +478,6 @@ namespace GovServe_Project.Migrations
                     CaseId = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -615,14 +607,11 @@ namespace GovServe_Project.Migrations
                 column: "DocumentID");
 
             migrationBuilder.CreateIndex(
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
                 name: "IX_CitizenDocument_UserId",
                 table: "CitizenDocument",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-========
->>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
                 name: "IX_EligibilityRules_ServiceID",
                 table: "EligibilityRules",
                 column: "ServiceID");

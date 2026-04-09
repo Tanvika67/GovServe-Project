@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovServe_Project.Migrations
 {
     [DbContext(typeof(GovServe_ProjectContext))]
-<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.Designer.cs
-    [Migration("20260404074102_Citizen")]
+    [Migration("20260409084246_Citizen")]
     partial class Citizen
-========
-    [Migration("20260402060752_Admin")]
-    partial class Admin
->>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -588,10 +583,6 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
