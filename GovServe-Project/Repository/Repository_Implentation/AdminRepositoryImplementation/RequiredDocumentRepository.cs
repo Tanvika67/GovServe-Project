@@ -59,5 +59,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
                             .Contains(serviceName.ToLower()))
                 .ToListAsync();
         }
-    }
+
+		//For citizen
+		public async Task<IEnumerable<RequiredDocument>> GetByServiceIdAsync(int serviceId)
+		{
+			return await _context.RequiredDocuments
+				.Include(d => d.Service)
+				.Where(d => d.ServiceID == serviceId)
+				.ToListAsync();
+		}
+	}
 }

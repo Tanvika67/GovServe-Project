@@ -64,7 +64,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.SuperRepositoryImp
 						{
 							CitizenDocumentID = d.CitizenDocumentID,
 							ApplicationID = d.ApplicationID,
-							DocumentName = d.DocumentName,
 							UploadedDate = d.UploadedDate,
 							VerificationStatus = d.VerificationStatus
 						}).ToList()

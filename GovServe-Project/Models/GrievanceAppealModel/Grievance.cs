@@ -10,7 +10,6 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 { 
 	public class Grievance
 	{
-		internal object g;
 
 		// Primary key of the table
 		[Key]
@@ -25,23 +24,22 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 		public int UserId { get; set; }
 		[ForeignKey("UserId")]
 		public virtual Users User { get; set; }	
-
 		
 		[MaxLength(500)]
-		public string Reason { get; set; }
+		public string? Reason { get; set; }
 
 		// Detailed explanation of grievance
 		[MaxLength(1000)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		// Remarks given by officer/supervisor (acts as notification for citizen)
-		public string Remarks { get; set; }
+		public string? Remarks { get; set; } = null;
 
 		// Workflow status
 		public GrievanceStatus Status { get; set; }
 
 		// Date when grievance was created
-		public DateTime FiledDate { get; set; } = DateTime.UtcNow;
+		public DateTime FiledDate { get; set; }
 
 	}
 }

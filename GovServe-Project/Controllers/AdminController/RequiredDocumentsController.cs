@@ -60,5 +60,13 @@ namespace GovServe_Project.Controllers.AdminController
         {
             return Ok(await _service.SearchByServiceNameAsync(serviceName));
         }
-    }
+
+		//for citizen 
+		[HttpGet("service/{serviceId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GetByServiceId(int serviceId)
+		{
+			return Ok(await _service.GetByServiceIdAsync(serviceId));
+		}
+	}
 }

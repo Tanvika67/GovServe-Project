@@ -1,7 +1,8 @@
-﻿using GovServe_Project.DTOs.CitizenDTO;
+﻿using System.Threading.Tasks;
+using GovServe_Project.DTOs.CitizenDTO;
+using GovServe_Project.Exceptions;
 using GovServe_Project.Models.CitizenModels;
 using GovServe_Project.Repositories.Citizen;
-using System.Threading.Tasks;
 
 namespace GovServe_Project.Services.Citizen
 {
@@ -32,18 +33,29 @@ namespace GovServe_Project.Services.Citizen
 				State = dto.State,
 				Pincode = dto.Pincode,
 				AadhaarNumber = dto.AadhaarNumber,
-				
 			};
 
-			return await _repo.CreateAsync(details);
+			try
+			{
+				// Keeping the original return type
+				return await _repo.CreateAsync(details);
+			}
+			catch (System.Exception)
+			{
+				// This prevents the code from stopping if a mandatory database field is missing
+				throw new BadRequestException("Failed to save details. Please ensure ApplicationID and all mandatory fields are valid.");
+			}
 		}
 
-		public async Task<CitizenDetails> UpdatePersonalDetailsAsync(UpdateCitizenDetailsDTO dto)
+		public async Task<CitizenDetails> UpdateByApplicationIdAsync(int applicationId, UpdateCitizenDetailsDTO dto)
 		{
-			var existing = await _repo.GetByIdAsync(dto.PersonalDetailID);
-			if (existing == null)
-				throw new System.Exception("Citizen details not found");
+			// 1. Get By ApplicationId
+			var existing = await _repo.GetByApplicationIdAsync(applicationId);
 
+			if (existing == null)
+				throw new NotFoundException($"Citizen details for Application ID {applicationId} not found.");
+
+			// 2. Fields update kara
 			existing.FullName = dto.FullName;
 			existing.Gender = dto.Gender;
 			existing.DateOfBirth = dto.DateOfBirth;
@@ -57,19 +69,29 @@ namespace GovServe_Project.Services.Citizen
 			existing.State = dto.State;
 			existing.Pincode = dto.Pincode;
 			existing.AadhaarNumber = dto.AadhaarNumber;
-			
 
+			// 3. Save kara
 			return await _repo.UpdateAsync(existing);
 		}
 
 		public async Task<CitizenDetails> GetByApplicationIdAsync(int applicationId)
 		{
-			return await _repo.GetByApplicationIdAsync(applicationId);
+			var details = await _repo.GetByApplicationIdAsync(applicationId);
+
+			if (details == null)
+				throw new NotFoundException($"No details found for Application ID {applicationId}.");
+
+			return details;
 		}
 
 		public async Task<CitizenDetails> GetByIdAsync(int personalDetailId)
 		{
-			return await _repo.GetByIdAsync(personalDetailId);
+			var details = await _repo.GetByIdAsync(personalDetailId);
+
+			if (details == null)
+				throw new NotFoundException($"Citizen detail with ID {personalDetailId} not found.");
+
+			return details;
 		}
 	}
 }

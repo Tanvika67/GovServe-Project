@@ -16,6 +16,7 @@ namespace GovServe_Project.Controllers.AdminController
             _service = service;
         }
 
+
         [HttpGet]
         //[Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> GetAll()
@@ -63,5 +64,14 @@ namespace GovServe_Project.Controllers.AdminController
             return Ok(await _service.SearchByServiceNameAsync(serviceName));
         }
 
-    }
+
+        //For Citizen
+		[HttpGet("service/{serviceId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GetByServiceId(int serviceId)
+		{
+			return Ok(await _service.GetByServiceIdAsync(serviceId));
+		}
+
+	}
 }

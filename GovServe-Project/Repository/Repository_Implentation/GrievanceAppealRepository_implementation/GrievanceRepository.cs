@@ -32,13 +32,12 @@ namespace GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRep
 				.ToListAsync();
 		}
 
-		// Get grievance by ID
-		public async Task<Grievance?> GetByIdAsync(int id)
+		// Get grievance by GrievanceId
+		public async Task<Grievance?> GetByIdAsync(int grievanceId)
 		{
-			return await _context.Grievance.
-				Include(g => g.Application)
-				.FirstOrDefaultAsync(g => g.GrievanceId == id);
-
+			return await _context.Grievance
+				.Include(g => g.Application)
+				.FirstOrDefaultAsync(g => g.GrievanceId == grievanceId);
 		}
 
 
@@ -62,7 +61,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRep
 		public async Task<int> GetPendingGrievanceCountAsync()
 		{
 			return await _context.Grievance
-				.Where(g => g.Status == Enum.GrievanceStatus.Submitted || g.Status == Enum.GrievanceStatus.ForwardedToSupervisor)
+				.Where(g => g.Status == Enum.GrievanceStatus.Submitted )
 				.CountAsync();
 		}
 		public async Task<int> GetResolvedGrievanceCountAsync()

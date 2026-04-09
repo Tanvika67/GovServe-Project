@@ -23,11 +23,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.GrievanceAppealRep
 			await _context.SaveChangesAsync();
 		}
 
-		// Get appeals by Application ID
-		public async Task<List<Appeal>> GetByApplicationAsync(int applicationId)
+		// Get appeals by User ID
+		public async Task<List<Appeal>> GetByUserAsync(int userId)
 		{
 			return await _context.Appeals
-				.Where(x => x.ApplicationID == applicationId)
+				.Where(x => x.UserId == userId)
 				.ToListAsync();
 		}
 

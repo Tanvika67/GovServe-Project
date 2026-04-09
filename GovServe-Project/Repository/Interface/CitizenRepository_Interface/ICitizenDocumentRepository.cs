@@ -1,5 +1,5 @@
 ﻿using GovServe_Project.Models;
-
+using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Models.CitizenModels;
 
 namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
@@ -16,6 +16,8 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task<List<CitizenDocument>> GetDocumentsByApplicationId(int applicationId);
 
+		//GET RequiredDocument 
+		Task<List<RequiredDocument>> GetRequiredDocumentsByService(int serviceId);
 		Task<CitizenDocument> GetByIdAsync(int id);
 
 		Task DeleteAsync(CitizenDocument document);

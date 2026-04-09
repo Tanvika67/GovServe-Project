@@ -68,18 +68,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+//app.UseMiddleware<ExceptionMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseMiddleware<ExceptionMiddleware>();
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("AllowAll");
 app.UseStaticFiles();
-//app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();   // JWT check
 app.UseAuthorization();    // Role check
 

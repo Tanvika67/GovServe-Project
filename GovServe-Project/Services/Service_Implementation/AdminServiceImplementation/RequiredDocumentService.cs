@@ -106,5 +106,22 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             });
 
         }
-    }
+
+		//For citizen 
+		public async Task<IEnumerable<RequiredDocumentResponseDTO>> GetByServiceIdAsync(int serviceId)
+		{
+			var documents = await _repository.GetByServiceIdAsync(serviceId);
+
+			if (!documents.Any())
+				throw new NotFoundException("No required documents found for this service.");
+
+			return documents.Select(d => new RequiredDocumentResponseDTO
+			{
+				DocumentID = d.DocumentID,
+				ServiceName = d.Service?.ServiceName ?? "",
+				DocumentName = d.DocumentName,
+				Mandatory = d.Mandatory ? "Yes" : "No"
+			});
+		}
+	}
 }

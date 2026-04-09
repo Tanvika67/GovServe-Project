@@ -34,10 +34,9 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 					ApplicationID = dto.ApplicationID,
 					UserId = dto.UserId,
 					Reason = dto.Reason,
-					Description = dto.Description,
-					Remarks = "null",
+					Description = dto.Description ,
 					FiledDate = DateTime.Now,
-					Status = Enum.GrievanceStatus.Submitted
+					Status = Enum.GrievanceStatus.Submitted,
 				};
 
 				await _repository.AddAsync(grievance);
@@ -51,12 +50,11 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 				return await _repository.GetByCitizenAsync(citizenId);
 			}
 
-			// Get grievance details/Status by Id
-			public async Task<Grievance?> GrievanceStatusAsync(int id)
+			// Get grievance details/Status by GrievanceId
+			public async Task<Grievance?> GrievanceStatusAsync(int grievanceId)
 			{
-				return await _repository.GetByIdAsync(id);
+				return await _repository.GetByIdAsync(grievanceId);
 			}
-
 
 			// Officer: Get All Grievances
 
@@ -76,7 +74,6 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 
 				grievance.Status = GrievanceStatus.Resolved;
 				grievance.Remarks = dto.Remarks;
-
 
 				await _repository.UpdateAsync(grievance);
 				await _notificationService.SendNotificationAsync(grievance.UserId,
@@ -103,24 +100,8 @@ namespace GovServe_Project.Services.Service_Implementation.GrievanceAppealServic
 				grievance.ApplicationID);
 			}
 
-			// Forward to Supervisor
 
-			public async Task ForwardToSupervisorAsync(GrievanceActionDTO dto)
-			{
-				var grievance = await _repository.GetByIdAsync(dto.GrievanceId);
-
-				if (grievance == null)
-					throw new Exception("Grievance not found.");
-
-				grievance.Status = GrievanceStatus.ForwardedToSupervisor;
-				grievance.Remarks = dto.Remarks;
-
-				await _repository.UpdateAsync(grievance);
-
-				await _notificationService.SendNotificationAsync(grievance.UserId,
-				"Your Grievance has been Forwarded to Supervisor. Remarks: " + dto.Remarks,
-				grievance.ApplicationID);
-			}
+			
 
 			public async Task<int> GetPendingGrievanceCountAsync()
 			{

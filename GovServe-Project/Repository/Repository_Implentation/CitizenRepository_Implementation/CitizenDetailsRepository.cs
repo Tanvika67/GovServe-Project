@@ -23,7 +23,10 @@ namespace GovServe_Project.Repositories.Citizen
 
 		public async Task<CitizenDetails> UpdateAsync(CitizenDetails details)
 		{
-			_context.CitizenDetails.Update(details);
+			// EF Core la sanga ki ha object existing aahe ani tyala update karayche aahe
+			_context.CitizenDetails.Attach(details);
+			_context.Entry(details).State = EntityState.Modified;
+
 			await _context.SaveChangesAsync();
 			return details;
 		}

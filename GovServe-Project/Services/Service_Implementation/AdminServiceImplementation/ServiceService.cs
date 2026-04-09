@@ -29,7 +29,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return services.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                //DepartmentID = s.DepartmentID,
+                DepartmentID = s.DepartmentID,
                 DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,
@@ -49,7 +49,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return new ServiceResponseDTO
             {
                 ServiceID = service.ServiceID,
-                //DepartmentID = service.DepartmentID,
+                DepartmentID = service.DepartmentID,
                 DepartmentName = service.DepartmentName ?? "",
                 ServiceName = service.ServiceName,
                 Description = service.Description,
@@ -66,7 +66,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return service.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                //DepartmentID = s.DepartmentID,
+                DepartmentID = s.DepartmentID,
                 DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,

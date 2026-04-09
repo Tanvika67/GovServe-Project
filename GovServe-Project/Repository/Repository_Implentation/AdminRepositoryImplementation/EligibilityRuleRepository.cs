@@ -61,5 +61,14 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
                             .Contains(serviceName.ToLower()))
                 .ToListAsync();
         }
-    }
+
+		//for citizen 
+		public async Task<IEnumerable<EligibilityRule>> GetByServiceIdAsync(int serviceId)
+		{
+			return await _context.EligibilityRules
+				.Include(r => r.Service)
+				.Where(r => r.ServiceID == serviceId)
+				.ToListAsync();
+		}
+	}
 }

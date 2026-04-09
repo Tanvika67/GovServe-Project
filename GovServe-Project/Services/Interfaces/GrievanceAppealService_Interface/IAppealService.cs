@@ -10,7 +10,7 @@ namespace GovServe_Project.Services.Interfaces
 		Task FileAppealAsync(AppealDTO dto);
 
 		// Citizen views own appeals
-		Task<List<Appeal>> MyAppealsAsync(int applicationId);
+		Task<List<Appeal>> MyAppealsByUserAsync(int userId);
 
 		// Citizen views appeal status
 		Task<Appeal?> GetAppealStatusAsync(int id);
