@@ -1,4 +1,5 @@
 ﻿using GovServe_Project.DTOs.Admin;
+using GovServe_Project.Models.AdminModels;
 using GovServe_Project.Services.Interfaces.AdminServiceInterface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,14 +39,17 @@ namespace GovServe_Project.Controllers.AdminController
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, RequiredDocumentDTO dto)
+        //[Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Update(int id, RequiredDocumentUpdateDTO dto)
         {
             return Ok(await _service.UpdateAsync(id, dto));
         }
 
+
+
         [HttpDelete("{id}")]
-      //  [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
@@ -55,18 +59,20 @@ namespace GovServe_Project.Controllers.AdminController
 
 
         [HttpGet("search")]
-        [Authorize(Roles = "Admin,Citizen,Officer")]
+       // [Authorize(Roles = "Admin,Citizen,Officer")]
         public async Task<IActionResult> SearchByServiceName([FromQuery] string serviceName)
         {
             return Ok(await _service.SearchByServiceNameAsync(serviceName));
         }
 
-		//for citizen 
-		[HttpGet("service/{serviceId}")]
-		[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> GetByServiceId(int serviceId)
-		{
-			return Ok(await _service.GetByServiceIdAsync(serviceId));
-		}
-	}
+        //for citizen
+        [HttpGet("service/{serviceId}")]
+        public async Task<IActionResult> GetByServiceId(int serviceId)
+
+        {
+
+        return Ok(await _service.GetByServiceIdAsync(serviceId));
+
+         }
+     }
 }

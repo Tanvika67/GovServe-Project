@@ -50,10 +50,9 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
         public async Task UpdateAsync(Service service)
         {
-            _context.Services.Update(service);
+            // Entity is already tracked from GetByIdAsync
             await _context.SaveChangesAsync();
         }
-
         public async Task DeleteAsync(Service service)
         {
             _context.Services.Remove(service);

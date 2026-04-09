@@ -60,11 +60,6 @@ namespace GovServe_Project.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("RuleExpression")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
 
@@ -135,11 +130,17 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("Days")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RoleID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceID")
+                        .HasColumnType("int");
 
                     b.HasKey("SLADayID");
+
+                    b.HasIndex("RoleID");
+
+                    b.HasIndex("ServiceID");
 
                     b.ToTable("SLADays");
                 });
@@ -582,10 +583,6 @@ namespace GovServe_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -658,11 +655,7 @@ namespace GovServe_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StageID"));
 
-                    b.Property<string>("ResponsibleRole")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RoleID")
+                    b.Property<int>("ResponsibleRoleID")
                         .HasColumnType("int");
 
                     b.Property<int>("SLA_Days")
@@ -676,7 +669,7 @@ namespace GovServe_Project.Migrations
 
                     b.HasKey("StageID");
 
-                    b.HasIndex("RoleID");
+                    b.HasIndex("ResponsibleRoleID");
 
                     b.HasIndex("ServiceID");
 
@@ -724,6 +717,25 @@ namespace GovServe_Project.Migrations
                     b.HasOne("GovServe_Project.Models.AdminModels.Service", null)
                         .WithMany("RequiredDocuments")
                         .HasForeignKey("ServiceID1");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("GovServe_Project.Models.AdminModels.SLADays", b =>
+                {
+                    b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
 
                     b.Navigation("Service");
                 });
@@ -961,15 +973,19 @@ namespace GovServe_Project.Migrations
 
             modelBuilder.Entity("GovServe_Project.Models.WorkflowStage", b =>
                 {
-                    b.HasOne("GovServe_Project.Models.AdminModels.Role", null)
+                    b.HasOne("GovServe_Project.Models.AdminModels.Role", "Role")
                         .WithMany("WorkflowStages")
-                        .HasForeignKey("RoleID");
+                        .HasForeignKey("ResponsibleRoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("GovServe_Project.Models.AdminModels.Service", "Service")
                         .WithMany("WorkflowStages")
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
 
                     b.Navigation("Service");
                 });

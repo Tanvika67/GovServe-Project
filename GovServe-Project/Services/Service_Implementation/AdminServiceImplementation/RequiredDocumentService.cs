@@ -62,19 +62,21 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return await GetByIdAsync(document.DocumentID);
         }
 
-        public async Task<RequiredDocumentResponseDTO> UpdateAsync(int id, RequiredDocumentDTO dto)
+        public async Task<RequiredDocumentResponseDTO> UpdateAsync(int id,RequiredDocumentUpdateDTO dto)
         {
             var document = await _repository.GetByIdAsync(id);
 
             if (document == null)
                 throw new NotFoundException("Required document not found.");
 
-            document.ServiceID = dto.ServiceID;
+            // ✅ ONLY editable fields
             document.DocumentName = dto.DocumentName;
             document.Mandatory = dto.Mandatory;
 
-            await _repository.UpdateAsync(document);
+            // ❌ DO NOT TOUCH
+            // document.ServiceID
 
+            await _repository.UpdateAsync(document);
             return await GetByIdAsync(id);
         }
 
@@ -107,21 +109,22 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
         }
 
-		//For citizen 
-		public async Task<IEnumerable<RequiredDocumentResponseDTO>> GetByServiceIdAsync(int serviceId)
-		{
-			var documents = await _repository.GetByServiceIdAsync(serviceId);
+        //For citizen
+        public async Task<IEnumerable<RequiredDocumentResponseDTO>> GetByServiceIdAsync(int serviceId)
+        {
+            var documents = await _repository.GetByServiceIdAsync(serviceId);
 
-			if (!documents.Any())
-				throw new NotFoundException("No required documents found for this service.");
+            if (!documents.Any())
+                throw new NotFoundException("No required documents found for this service.");
 
-			return documents.Select(d => new RequiredDocumentResponseDTO
-			{
-				DocumentID = d.DocumentID,
-				ServiceName = d.Service?.ServiceName ?? "",
-				DocumentName = d.DocumentName,
-				Mandatory = d.Mandatory ? "Yes" : "No"
-			});
-		}
-	}
+            return documents.Select(d => new RequiredDocumentResponseDTO
+            {
+                DocumentID = d.DocumentID,
+                ServiceName = d.Service?.ServiceName ?? "",
+                DocumentName = d.DocumentName,
+                Mandatory = d.Mandatory ? "Yes" : "No"
+            });
+        }
+
+    }
 }

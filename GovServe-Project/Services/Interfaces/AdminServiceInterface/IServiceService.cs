@@ -10,7 +10,7 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<IEnumerable<ServiceResponseDTO>> GetActiveAsync();
 
         Task<ServiceResponseDTO> CreateAsync(ServiceDTO dto);
-        Task<ServiceResponseDTO> UpdateAsync(int id, ServiceDTO dto);
+        Task<ServiceResponseDTO> UpdateAsync(int id, ServiceUpdateDTO dto);
         Task DeleteAsync(int id);
 
         Task<IEnumerable<ServiceResponseDTO>> SearchByDepartmentAsync(string departmentName);

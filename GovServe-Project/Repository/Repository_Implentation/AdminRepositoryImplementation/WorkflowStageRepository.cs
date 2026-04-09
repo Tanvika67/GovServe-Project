@@ -17,7 +17,8 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         // Get all stages ordered by SequenceNumber
         public async Task<IEnumerable<WorkflowStage>> GetAllAsync()
             =>await _context.WorkflowStages
-        .Include(w => w.Service)    // ⭐ add this
+        .Include(w => w.Service)
+        .Include(w => w.Role) // ⭐ add this
         .OrderBy(x => x.SequenceNumber)
         .ToListAsync();
 
@@ -25,10 +26,11 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         // Get stages for a specific service
         public async Task<IEnumerable<WorkflowStage>> GetByServiceAsync(int serviceId)
             => await _context.WorkflowStages
-                .Include(w => w.Service)
-                .Where(x => x.ServiceID == serviceId)
-                .OrderBy(x => x.SequenceNumber)
-                .ToListAsync();
+         .Include(w => w.Service)   // ✅ already present
+         .Include(w => w.Role)      // ✅ ADD THIS LINE
+         .Where(x => x.ServiceID == serviceId)
+         .OrderBy(x => x.SequenceNumber)
+         .ToListAsync();
 
         // Get stage by ID
         public async Task<WorkflowStage?> GetByIdAsync(int id)

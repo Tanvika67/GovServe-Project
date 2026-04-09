@@ -75,17 +75,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 
 				_caseRepo.Update(c);
 
-				await _notificationService.SendNotificationAsync(
-					citizenId,
-					"Your application is delayed and escalated",
-					c.CaseId
-				);
-
-				await _notificationService.SendNotificationAsync(
-					oldOfficerId,
-					"Case escalated due to delay",
-					c.CaseId
-				);
+				// For Notification
+				await _notificationService.NotifySLABreach(c.CaseId);
 			}
 
 			await _caseRepo.SaveAsync();
@@ -123,54 +114,8 @@ namespace GovServe_Project.Services.Service_Implementation.SuperServiceImplement
 				_caseRepo.Update(c);
 				await _caseRepo.SaveAsync();
 
-
-				// 1. Notify New Officer
-				await _notificationService.SendNotificationAsync(
-					newOfficerId,
-					$"New case {c.CaseId} assigned after SLA breach",
-					c.CaseId,
-					"Escalation"
-				);
-
-
-				// 2. Notify Old Officer
-				await _notificationService.SendNotificationAsync(
-					oldOfficerId,
-					$"Case {c.CaseId} escalated due to SLA breach",
-					c.CaseId,
-					"Escalation"
-				);
-
-
-				// 3. Notify Citizen
-				await _notificationService.SendNotificationAsync(
-					citizenId,
-					$"Your case {c.CaseId} escalated to another officer due to delay",
-					c.CaseId,
-					"Escalation"
-				);
-
-
-				// 4. Notify Admin
-				var adminId = await _userRepo.GetAdminIdAsync();
-
-				await _notificationService.SendNotificationAsync(
-					adminId,
-					$"Case {c.CaseId} escalated and reassigned",
-					c.CaseId,
-					"Escalation"
-				);
-
-
-				// 5. Notify Grievance Officer (Optional but recommended)
-				var grievanceOfficerId = await _userRepo.GetGrievanceOfficerIdAsync();
-
-				await _notificationService.SendNotificationAsync(
-					grievanceOfficerId,
-					$"Case {c.CaseId} breached SLA. Please resolve within 1 day",
-					c.CaseId,
-					"SLA Breach"
-				);
+				//For Notification
+				await _notificationService.NotifyCaseEscalated(caseId, newOfficerId);
 
 				return "Case escalated successfully";
 			}

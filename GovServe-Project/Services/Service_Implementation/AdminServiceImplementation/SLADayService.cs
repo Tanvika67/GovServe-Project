@@ -17,59 +17,61 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
 
         public async Task<IEnumerable<SLADayResponseDto>> GetAllAsync()
         {
-            var list = await _repository.GetAllAsync();
+            var slaDays = await _repository.GetAllAsync();
 
-            return list.Select(x => new SLADayResponseDto
+            return slaDays.Select(x => new SLADayResponseDto
             {
                 SLADayID = x.SLADayID,
-                RoleName = x.RoleName,
+                ServiceName = x.Service.ServiceName,
+                RoleName = x.Role.RoleName,
                 Days = x.Days
             });
         }
 
         public async Task<SLADayResponseDto> GetByIdAsync(int id)
         {
-            var slaDay = await _repository.GetByIdAsync(id)
-                ?? throw new NotFoundException("SLA configuration not found");
+            var sla = await _repository.GetByIdAsync(id)
+                ?? throw new NotFoundException("SLA Day not found");
 
             return new SLADayResponseDto
             {
-                SLADayID = slaDay.SLADayID,
-                RoleName = slaDay.RoleName,
-                Days = slaDay.Days
+                SLADayID = sla.SLADayID,
+                ServiceName = sla.Service.ServiceName,
+                RoleName = sla.Role.RoleName,
+                Days = sla.Days
             };
         }
 
         public async Task<SLADayResponseDto> CreateAsync(SLADayCreateDto dto)
         {
-            var existing = await _repository.GetByRoleAsync(dto.RoleName);
-            //if (existing != null)
-            //    throw new BadRequestException("SLA already configured for this role");
+            var existing = await _repository
+                .GetByServiceAndRoleAsync(dto.ServiceID, dto.RoleID);
+
+            if (existing != null)
+                throw new BadRequestException("SLA already exists for this service and role");
 
             var slaDay = new SLADays
             {
-                RoleName = dto.RoleName,
+                ServiceID = dto.ServiceID,
+                RoleID = dto.RoleID,
                 Days = dto.Days
             };
 
             await _repository.AddAsync(slaDay);
             return await GetByIdAsync(slaDay.SLADayID);
-
-            return new SLADayResponseDto
-            {
-                SLADayID = slaDay.SLADayID,
-                RoleName = slaDay.RoleName,
-                Days = slaDay.Days
-            };
         }
 
-        public async Task<SLADayResponseDto> UpdateAsync(int id, SLADayCreateDto dto)
+        public async Task<SLADayResponseDto> UpdateAsync(int id, SLADayUpdateDto dto)
         {
             var slaDay = await _repository.GetByIdAsync(id)
-                ?? throw new NotFoundException("SLA configuration not found");
+                ?? throw new NotFoundException("SLA Day not found");
 
-            slaDay.RoleName = dto.RoleName;
+            // ✅ ONLY EDITABLE FIELDS
+            slaDay.RoleID = dto.RoleID;
             slaDay.Days = dto.Days;
+
+            // ❌ DO NOT TOUCH
+            // slaDay.ServiceID
 
             await _repository.UpdateAsync(slaDay);
             return await GetByIdAsync(id);
@@ -78,11 +80,9 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
         public async Task DeleteAsync(int id)
         {
             var slaDay = await _repository.GetByIdAsync(id)
-                ?? throw new NotFoundException("SLA configuration not found");
+                ?? throw new NotFoundException("SLA Day not found");
 
             await _repository.DeleteAsync(slaDay);
         }
     }
-
-
 }

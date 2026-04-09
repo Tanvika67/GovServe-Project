@@ -46,10 +46,13 @@ namespace GovServe_Project.Controllers.AdminController
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, ServiceDTO dto)
+       
+        public async Task<IActionResult> Update(int id, ServiceUpdateDTO dto)
         {
-            return Ok(await _service.UpdateAsync(id, dto));
+            var updatedService = await _service.UpdateAsync(id, dto);
+            return Ok(updatedService);
         }
+
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Admin")]

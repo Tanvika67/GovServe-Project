@@ -2,6 +2,6 @@
 {
     public class WorkflowStageReassignDto
     {
-        public string NewResponsibleRole { get; set; } = string.Empty;
+        public int NewRoleID { get; set; }
     }
 }

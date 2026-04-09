@@ -34,7 +34,6 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			return await _context.Application.FindAsync(ApplicationId);
 		}
 
-
 		// Get By UserId
 		public async Task<List<Application>> GetByUserIdAsync(int userId)
 		{
@@ -44,11 +43,10 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 								  .Include(a=>a.Department)
 								 .Where(a => a.UserId == userId)
 								 .ToListAsync();
-
 		}
 
-		// Delete Application
-		public async Task DeleteAsync(Application ApplicationId)
+        // Delete Application
+        public async Task DeleteAsync(Application ApplicationId)
 		{
 			_context.Application.Remove(ApplicationId);
 			await _context.SaveChangesAsync();
@@ -67,6 +65,16 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		}
 
 
+		
+
+		//supervisor needs this
+		public async Task<Application> GetApplicationWithDocuments(int applicationId)
+		{
+			return await _context.Application
+				.Include(a => a.CitizenDocuments)
+				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
+		}
+		
 		//for officer to view application details
 
 		public async Task<ApplicationDetails> GetApplicationDetails(int applicationId)
@@ -92,35 +100,18 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 
 			return data;
 
-		}
-
-		//---------------Supervisor methods-----------------
-		//supervisor needs this
-		public async Task<Application> GetApplicationWithDocuments(int applicationId)
-
-		{
-
-			return await _context.Application
-
-			.Include(a => a.CitizenDocuments)
-
-			.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
-		}
-
-		public async Task<List<Application>> GetAllAsync()
-
-		{
-
-			return await _context.Application
-
-				.Include(a => a.Service)
-
-				.Include(a => a.Department)
-
-				.Include(a => a.User)
-
-				.ToListAsync();
 
 		}
-	}
+
+        public async Task<List<Application>> GetAllAsync()
+        {
+            return await _context.Application
+                .Include(a => a.Service)
+                .Include(a => a.Department)
+                .Include(a => a.User)
+                .ToListAsync();
+        }
+
+
+    }
 }

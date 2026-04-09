@@ -92,18 +92,21 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return await GetByIdAsync(service.ServiceID);
         }
 
-        public async Task<ServiceResponseDTO> UpdateAsync(int id, ServiceDTO dto)
+        public async Task<ServiceResponseDTO> UpdateAsync(int id, ServiceUpdateDTO dto)
         {
             var service = await _repository.GetByIdAsync(id);
 
             if (service == null)
                 throw new NotFoundException("Service not found.");
 
-            service.DepartmentID = dto.DepartmentID;
-            service.ServiceName = dto.ServiceName;
+            // ✅ ONLY editable fields
             service.Description = dto.Description;
             service.SLA_Days = dto.SLA_Days;
             service.Status = dto.Status;
+
+            // ❌ DO NOT TOUCH
+            // service.DepartmentID
+            // service.ServiceName
 
             await _repository.UpdateAsync(service);
 
@@ -130,7 +133,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return services.Select(s => new ServiceResponseDTO
             {
                 ServiceID = s.ServiceID,
-                // DepartmentID = s.DepartmentID,
+                 DepartmentID = s.DepartmentID,
                 DepartmentName = s.DepartmentName ?? "",
                 ServiceName = s.ServiceName,
                 Description = s.Description,

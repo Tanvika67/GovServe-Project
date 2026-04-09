@@ -8,8 +8,10 @@ namespace GovServe_Project.Services.Interfaces.AdminServiceInterface
         Task<RequiredDocumentResponseDTO> GetByIdAsync(int id);
         Task<IEnumerable<RequiredDocumentResponseDTO>> SearchByServiceNameAsync(string serviceName);
         Task<RequiredDocumentResponseDTO> CreateAsync(RequiredDocumentDTO dto);
-        Task<RequiredDocumentResponseDTO> UpdateAsync(int id, RequiredDocumentDTO dto);
+        Task<RequiredDocumentResponseDTO> UpdateAsync(int id, RequiredDocumentUpdateDTO dto);
+
         Task DeleteAsync(int id);
+
         Task<IEnumerable<RequiredDocumentResponseDTO>> GetByServiceIdAsync(int serviceId);
-	}
+    }
 }

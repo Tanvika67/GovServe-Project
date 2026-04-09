@@ -1,5 +1,6 @@
 ﻿using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.SuperModels;
 
 namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
 {
@@ -12,7 +13,9 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task AddAsync(SLARecords record);
         Task UpdateAsync(SLARecords record);
         Task DeleteAsync(SLARecords record);
-       
+        Task<IEnumerable<Case>> GetCasesWithoutSLAAsync();
+
+
     }
 
 }

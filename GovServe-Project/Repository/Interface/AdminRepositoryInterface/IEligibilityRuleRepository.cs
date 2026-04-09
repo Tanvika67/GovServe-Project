@@ -12,6 +12,5 @@ namespace GovServe_Project.Repository.Interface.AdminRepositoryInterface
         Task DeleteAsync(EligibilityRule rule);
         Task<IEnumerable<EligibilityRule>> GetByServiceNameAsync(string serviceName);
         Task<IEnumerable<EligibilityRule>> GetByServiceIdAsync(int serviceId);
-
-	}
+    }
 }

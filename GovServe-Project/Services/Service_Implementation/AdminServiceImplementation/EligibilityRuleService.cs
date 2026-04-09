@@ -27,8 +27,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             {
                 RuleID = r.RuleID,
                 ServiceName = r.ServiceName ?? "",
-                RuleDescription = r.RuleDescription,
-                RuleExpression = r.RuleExpression
+                RuleDescription = r.RuleDescription
+                
             });
         }
 
@@ -44,7 +44,7 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
                 RuleID = rule.RuleID,
                 ServiceName = rule.ServiceName ?? "",
                 RuleDescription = rule.RuleDescription,
-                RuleExpression = rule.RuleExpression
+                
             };
         }
 
@@ -55,8 +55,8 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             var rule = new EligibilityRule
             {
                 ServiceID = dto.ServiceID,
-                RuleDescription = dto.RuleDescription,
-                RuleExpression = dto.RuleExpression
+                RuleDescription = dto.RuleDescription
+                
             };
 
             await _repository.AddAsync(rule);
@@ -64,19 +64,20 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return await GetByIdAsync(rule.RuleID);
         }
 
-        public async Task<EligibilityRuleResponseDTO> UpdateAsync(int id, EligibilityRuleDTO dto)
+        public async Task<EligibilityRuleResponseDTO> UpdateAsync(int id,EligibilityRuleUpdateDTO dto)
         {
             var rule = await _repository.GetByIdAsync(id);
 
             if (rule == null)
                 throw new NotFoundException("Eligibility rule not found.");
 
-            rule.ServiceID = dto.ServiceID;
+            // ✅ ONLY editable field
             rule.RuleDescription = dto.RuleDescription;
-            rule.RuleExpression = dto.RuleExpression;
+
+            // ❌ DO NOT TOUCH
+            // rule.ServiceID
 
             await _repository.UpdateAsync(rule);
-
             return await GetByIdAsync(id);
         }
 
@@ -102,27 +103,34 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             {
                 RuleID = r.RuleID,
                 ServiceName = r.ServiceName ?? "",
-                RuleDescription = r.RuleDescription,
-                RuleExpression = r.RuleExpression
+                RuleDescription = r.RuleDescription
             });
-        
+
         }
 
-		//for citizen
-		public async Task<IEnumerable<EligibilityRuleResponseDTO>> GetByServiceIdAsync(int serviceId)
-		{
-			var rules = await _repository.GetByServiceIdAsync(serviceId);
+        //for citizen
+        public async Task<IEnumerable<EligibilityRuleResponseDTO>> GetByServiceIdAsync(int serviceId)
+        {
 
-			if (!rules.Any())
-				throw new NotFoundException("No eligibility rules found for this service.");
+          var rules = await _repository.GetByServiceIdAsync(serviceId);
 
-			return rules.Select(r => new EligibilityRuleResponseDTO
-			{
-				RuleID = r.RuleID,
-				ServiceName = r.Service?.ServiceName ?? "",
-				RuleDescription = r.RuleDescription,
-				RuleExpression = r.RuleExpression
-			});
-		}
-	}
+
+         if (!rules.Any())
+
+        throw new NotFoundException("No eligibility rules found for this service.");
+
+         return rules.Select(r => new EligibilityRuleResponseDTO {
+
+            RuleID = r.RuleID,
+
+         ServiceName = r.Service?.ServiceName ?? "",
+
+         RuleDescription = r.RuleDescription,
+
+         
+
+        });
+
+    }
+   }
 }

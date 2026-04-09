@@ -1,6 +1,7 @@
 ﻿using GovServe_Project.Data;
 using GovServe_Project.Enum;
 using GovServe_Project.Models.AdminModels;
+using GovServe_Project.Models.SuperModels;
 using GovServe_Project.Repository.Interface.AdminRepositoryInterface;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,12 +66,25 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
         }
 
 
-        
-   
+
+        public async Task<IEnumerable<Case>> GetCasesWithoutSLAAsync()
+        {
+            var caseIdsWithSla = _context.SLARecords
+                .Select(s => s.CaseId);
+
+            return await _context.Case
+                .Include(c => c.Application)
+                .Include(c => c.Department)
+                .Include(c => c.AssignedOfficer)
+                 .ThenInclude(o => o.Department)
+                .Where(c => !caseIdsWithSla.Contains(c.CaseId))
+                .ToListAsync();
+        }
+
 
     }
-           
-  }
+
+}
 
 
 

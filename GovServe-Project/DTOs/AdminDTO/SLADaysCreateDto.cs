@@ -2,7 +2,8 @@
 {
     public class SLADayCreateDto
     {
-        public string RoleName { get; set; } = string.Empty;
+        public int ServiceID { get; set; }
+        public int RoleID { get; set; }
         public int Days { get; set; }
     }
 }
