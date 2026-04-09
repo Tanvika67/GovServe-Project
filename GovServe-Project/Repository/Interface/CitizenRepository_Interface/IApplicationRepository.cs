@@ -14,8 +14,7 @@ namespace GovServe_Project.Repository.Interface.CitizenRepository_Interface
 
 		Task DeleteAsync(Application ApplicationId);
 
-
-		
+		//------------Super Admin----------------
 		Task<Application> GetApplicationWithDocuments(int applicationId);
 
 		

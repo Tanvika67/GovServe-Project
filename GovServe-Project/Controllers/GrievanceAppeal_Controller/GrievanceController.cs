@@ -27,6 +27,7 @@ namespace GovServe_Project.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> RaiseGrievance([FromBody] RaiseGrievanceDTO dto)
 		{
 			if (!ModelState.IsValid)
@@ -39,19 +40,19 @@ namespace GovServe_Project.Controllers
 
 		// View My Grievances
 		[HttpGet("user/{citizenId}")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyGrievances(int citizenId)
 		{
 			var data = await _service.MyGrievancesAsync(citizenId);
 			return Ok(data);
 		}
 
-		// View Grievance Details / Status
-		
-		[HttpGet("{id}")]
-		//[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> GrievanceStatus(int id)
+		// View Grievance Details / Status by GrievanceId
+		[HttpGet("status/{grievanceId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GrievanceStatus(int grievanceId)
 		{
-			var data = await _service.GrievanceStatusAsync(id);
+			var data = await _service.GrievanceStatusAsync(grievanceId);
 
 			if (data == null)
 				return NotFound("Grievance not found");
@@ -69,6 +70,17 @@ namespace GovServe_Project.Controllers
 		public async Task<IActionResult> GetAllGrievances()
 		{
 			var data = await _service.GetAllGrievancesAsync();
+			var result=data.Select(g => new
+			{
+				g.GrievanceId,
+				g.ApplicationID,
+				g.UserId,
+				g.Reason,
+				g.Description,
+				g.FiledDate,
+				g.Status,
+				g.Remarks
+			}).ToList();	
 			return Ok(data);
 		}
 
@@ -92,14 +104,7 @@ namespace GovServe_Project.Controllers
 			return Ok("Grievance rejected successfully.");
 		}
 
-		[HttpPut("forward/{id}")]
-		[Authorize(Roles = "Officer")]
-		public async Task<IActionResult> ForwardToSupervisor(int id, GrievanceActionDTO dto)
-		{
-			dto.GrievanceId = id;
-			await _service.ForwardToSupervisorAsync(dto);
-			return Ok("Grievance forwarded to Supervisor successfully.");
-		}
+		
 
 		[HttpGet("count/pending")]
 		[Authorize(Roles = "Officer")]

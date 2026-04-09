@@ -233,16 +233,8 @@ namespace GovServe_Project.Migrations
                     b.Property<int>("DepartmentID")
                         .HasColumnType("int");
 
-                    b.Property<string>("DepartmentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ServiceID")
                         .HasColumnType("int");
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SubmittedDate")
                         .HasColumnType("datetime2");
@@ -357,6 +349,9 @@ namespace GovServe_Project.Migrations
                     b.Property<DateTime>("UploadedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("VerificationStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -366,6 +361,8 @@ namespace GovServe_Project.Migrations
                     b.HasIndex("ApplicationID");
 
                     b.HasIndex("DocumentID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CitizenDocument");
                 });
@@ -382,7 +379,6 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -390,12 +386,10 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Remarks")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -428,7 +422,6 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -436,12 +429,10 @@ namespace GovServe_Project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Remarks")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -839,9 +830,17 @@ namespace GovServe_Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("GovServe_Project.Models.Users", "User")
+                        .WithMany("CitizenDocuments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Application");
 
                     b.Navigation("RequiredDocument");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GovServe_Project.Models.GrievanceAppealModel.Appeal", b =>
@@ -1038,6 +1037,8 @@ namespace GovServe_Project.Migrations
                     b.Navigation("Applications");
 
                     b.Navigation("Cases");
+
+                    b.Navigation("CitizenDocuments");
 
                     b.Navigation("Grievances");
                 });

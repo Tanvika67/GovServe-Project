@@ -27,7 +27,7 @@ namespace GovServe_Project.Controllers
 
 		// File Appeal
 		[HttpPost]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> FileAppeal([FromBody] AppealDTO dto)
 		{
 			await _service.FileAppealAsync(dto);
@@ -35,18 +35,29 @@ namespace GovServe_Project.Controllers
 		}
 
 
-		// My Appeals
-		[HttpGet("application/{applicationId}")]
-		//[Authorize(Roles = "Citizen")]
-		public async Task<IActionResult> MyAppeals(int applicationId)
+		// My Appeals by User
+		[HttpGet("user/{userId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> MyAppeals(int userId)
 		{
-			var data = await _service.MyAppealsAsync(applicationId);
+			var data = await _service.MyAppealsByUserAsync(userId);
+			var result = data.Select(g => new
+			{
+				g.AppealID,
+				g.ApplicationID,
+				g.UserId,
+				g.Reason,
+				g.Description,
+				g.FiledDate,
+				g.Status,
+				g.Remarks
+			}).ToList();
 			return Ok(data);
 		}
 
 		// Appeal Status (View Only)
 		[HttpGet("status/{id}")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> AppealStatus(int id)
 		{
 			var data = await _service.GetAppealStatusAsync(id);

@@ -40,6 +40,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			return await _context.Application
 
 								  .Include(a => a.Service)
+								  .Include(a=>a.Department)
 								 .Where(a => a.UserId == userId)
 								 .ToListAsync();
 		}
@@ -49,6 +50,18 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 		{
 			_context.Application.Remove(ApplicationId);
 			await _context.SaveChangesAsync();
+		}
+
+		// for citizen to view application details with all related data (service, department, documents, etc.)
+		public async Task<Application> GetApplicationWithAllDetailsAsync(int applicationId)
+		{
+			return await _context.Application
+				.Include(a => a.Service)           
+				.Include(a => a.Department)      
+				.Include(a => a.CitizenDetails)    
+				.Include(a => a.CitizenDocuments)  
+				.ThenInclude(d => d.RequiredDocument)
+				.FirstOrDefaultAsync(a => a.ApplicationID == applicationId);
 		}
 
 
@@ -76,15 +89,11 @@ namespace GovServe_Project.Repository.Repository_Implentation.CitizenRepository_
 			.Select(a => new ApplicationDetails
 
 			{
-
 				ApplicationID = a.ApplicationID,
-
-				//ApplicantName = a.CitizenDocuments.,
 
 				ApplicationStatus = a.ApplicationStatus.ToString(),
 
 				SubmittedDate = a.SubmittedDate
-
 			})
 
 			.FirstOrDefaultAsync();

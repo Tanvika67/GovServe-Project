@@ -21,17 +21,17 @@ namespace GovServe_Project.Models.GrievanceAppealModel
 
 		// Reason for appeal
 		[MaxLength(500)]
-		public string Reason { get; set; }
+		public string? Reason { get; set; }
 
 		// Detailed explanation
 		[MaxLength(1000)]
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		// Remarks by authority (acts as notification)
-		public string Remarks { get; set; }
+		public string? Remarks { get; set; } = null;
 
 		// Workflow status
-		public AppealStatus Status { get; set; } = AppealStatus.Approved;
+		public AppealStatus Status { get; set; }
 
 		// Date filed
 		public DateTime FiledDate { get; set; }

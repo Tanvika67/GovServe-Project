@@ -1,13 +1,15 @@
-﻿//Application Response Dto
-namespace GovServe_Project.DTOs.CitizenDTO
+﻿namespace GovServe_Project.DTOs.CitizenDTO
 {
-    public class ApplicationResponseDTO
-    {
-        public int ApplicationId { get; set; }
-        public int UserId { get; set; }
-        public int ServiceID { get; set; }
-        public string ServiceName { get; set; }
-        public string ApplicationStatus { get; set; }
-        public DateTime SubmittedDate { get; set; }
-    }
+	public class ApplicationResponseDTO
+	{
+		public int ApplicationId { get; set; }	
+		public int UserId { get; set; }
+		public int ServiceID { get; set; }
+		public int DepartmentID { get; set; }
+		public string  ServiceName{ get; set; }
+		public string DepartmentName{ get; set; }
+		public string ApplicationStatus { get; set; }
+		public DateTime SubmittedDate { get; set; }
+		public DateTime? CompletedDate { get; set; }
+	}
 }

@@ -6,7 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GovServe_Project.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
+    public partial class Citizen : Migration
+========
     public partial class Admin : Migration
+>>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -218,9 +222,7 @@ namespace GovServe_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ServiceID = table.Column<int>(type: "int", nullable: false),
-                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DepartmentID = table.Column<int>(type: "int", nullable: false),
-                    DepartmentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ApplicationStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -261,9 +263,9 @@ namespace GovServe_Project.Migrations
                     AppealID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ApplicationID = table.Column<int>(type: "int", nullable: false),
@@ -376,6 +378,7 @@ namespace GovServe_Project.Migrations
                 {
                     CitizenDocumentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ApplicationID = table.Column<int>(type: "int", nullable: false),
                     DocumentID = table.Column<int>(type: "int", nullable: false),
                     URI = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -397,6 +400,15 @@ namespace GovServe_Project.Migrations
                         principalTable: "RequiredDocuments",
                         principalColumn: "DocumentID",
                         onDelete: ReferentialAction.Cascade);
+<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
+                    table.ForeignKey(
+                        name: "FK_CitizenDocument_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+========
+>>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -407,9 +419,9 @@ namespace GovServe_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApplicationID = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     FiledDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -603,6 +615,14 @@ namespace GovServe_Project.Migrations
                 column: "DocumentID");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:GovServe-Project/Migrations/20260404074102_Citizen.cs
+                name: "IX_CitizenDocument_UserId",
+                table: "CitizenDocument",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+========
+>>>>>>>> ead1cb3f23685cec84e7702e67e4dbfd0f5a380d:GovServe-Project/Migrations/20260402060752_Admin.cs
                 name: "IX_EligibilityRules_ServiceID",
                 table: "EligibilityRules",
                 column: "ServiceID");

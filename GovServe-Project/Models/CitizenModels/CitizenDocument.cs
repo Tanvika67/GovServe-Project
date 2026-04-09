@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using GovServe_Project.Models.AdminModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GovServe_Project.Models.CitizenModels
 {
@@ -9,6 +10,10 @@ namespace GovServe_Project.Models.CitizenModels
 	{
 		[Key]
 		public int CitizenDocumentID { get; set; }
+
+		public int UserId { get; set; }
+		[ForeignKey("UserId")]
+		public virtual Users User { get; set; }
 
 		[Required]
 		public int ApplicationID { get; set; }

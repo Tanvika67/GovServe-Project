@@ -22,14 +22,6 @@ namespace GovServe_Project.Services.Service_Implementation
 		}
 
 
-		// Citizen Action - File Appeal
-
-		public async Task FileAppealAsync(Appeal appeal)
-		{
-			// Set default workflow values
-			appeal.FiledDate = DateTime.Now;
-			appeal.Status = AppealStatus.Submitted;
-		}
 
 		// File Appeal (Citizen fills reason)
 		public async Task FileAppealAsync(AppealDTO dto)
@@ -37,11 +29,11 @@ namespace GovServe_Project.Services.Service_Implementation
 			var appeal = new Appeal
 			{
 				ApplicationID = dto.ApplicationID,
+				UserId = dto.UserId,
 				Reason = dto.Reason,
 				Description = dto.Description,
-				Remarks = "null",
 				FiledDate = DateTime.Now,
-				Status = AppealStatus.Submitted,
+				Status = AppealStatus.Submitted
 			};
 
 
@@ -50,11 +42,10 @@ namespace GovServe_Project.Services.Service_Implementation
 		}
 
 
-		// Citizen - View Appeals
-		// My Appeals
-		public async Task<List<Appeal>> MyAppealsAsync(int applicationId)
+		// Citizen - View Appeals by User
+		public async Task<List<Appeal>> MyAppealsByUserAsync(int userId)
 		{
-			return await _repository.GetByApplicationAsync(applicationId);
+			return await _repository.GetByUserAsync(userId);
 		}
 
 

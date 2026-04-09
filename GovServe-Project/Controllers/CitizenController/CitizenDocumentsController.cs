@@ -32,7 +32,7 @@ namespace GovServe_Project.Controllers.CitizenController
 
 		// Upload Document
 		[HttpPost("upload")]
-	
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> UploadDocument([FromForm] UploadCitizenDocumentDTO model)
 		{
 			var result = await _service.UploadDocumentAsync(model);
@@ -43,7 +43,9 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok("Document Uploaded Successfully");
 		}
 
+		//Get My All Documents
 		[HttpGet("GetMyAllDocuments/{userId}")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetMyAllDocuments(int userId)
 		{
 			var result = await _service.GetMyAllDocuments(userId);
@@ -54,7 +56,11 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(result);
 		}
 
+
+		//Get Documents by ApplicationId
+
 		[HttpGet("GetDocumentsByApplicationId/{applicationId}")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentsByApplicationId(int applicationId)
 		{
 			var result = await _service.GetDocumentsByApplicationId(applicationId);
@@ -65,9 +71,22 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(result);
 		}
 
+
+		// Get Required Documents by ServiceId
+		[HttpGet("required-documents/{serviceId}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GetRequiredDocuments(int serviceId)
+		{
+			var docs = await _service.GetRequiredDocumentsByService(serviceId);
+			if (!docs.Any())
+				return NotFound("No required documents found");
+			return Ok(docs);
+		}
+
+
 		// Document Status
 		[HttpGet("status/{id}")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> GetDocumentStatus(int id)
 		{
 			var status = await _service.GetDocumentStatusAsync(id);
@@ -78,9 +97,20 @@ namespace GovServe_Project.Controllers.CitizenController
 			return Ok(status);
 		}
 
+		// Update Document
+		[HttpPut("update/{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> UpdateDocument(int id, [FromForm] UploadCitizenDocumentDTO dto)
+		{
+	
+			var result = await _service.UpdateDocumentAsync(id, dto);
+
+			return Ok(new { Message = "Document updated successfully" });
+		}
+
 		// Delete Document
 		[HttpDelete("delete/{id}")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteDocument(int id)
 		{
 			var result = await _service.DeleteDocumentAsync(id);
@@ -92,7 +122,7 @@ namespace GovServe_Project.Controllers.CitizenController
 		}
 
 		[HttpPut("ApproveDocument/{CitizenDocumentID}")]
-		//[Authorize(Roles = "Officer")]
+		[Authorize(Roles = "Officer")]
 		public async Task<IActionResult> ApproveDocument(int id)
 		{
 			var result = await _service.ApproveDocument(id);

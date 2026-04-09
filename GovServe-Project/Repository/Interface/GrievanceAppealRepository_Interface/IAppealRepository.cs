@@ -9,8 +9,8 @@ namespace GovServe_Project.Repository.Interface
 		// Add new appeal into database
 		Task AddAsync(Appeal appeal);
 
-		// Get appeals by Application ID (Citizen My Appeals)
-		Task<List<Appeal>> GetByApplicationAsync(int applicationId);
+		// Get appeals by UserId
+		Task<List<Appeal>> GetByUserAsync(int userId);
 
 		// Get appeal by ID (Status view)
 		Task<Appeal?> GetByIdAsync(int id);

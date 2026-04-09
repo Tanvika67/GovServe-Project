@@ -32,7 +32,7 @@ namespace GovServe_Project.Controllers
 
 		//  Create Application
 		[HttpPost("create")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> CreateApplication(CreateApplicationDTO dto)
 		{
 
@@ -43,7 +43,7 @@ namespace GovServe_Project.Controllers
 
 		//  My Applications (Citizen Dashboard)
 		[HttpGet("my")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> MyApplications(int userId)
 		{
 
@@ -55,7 +55,7 @@ namespace GovServe_Project.Controllers
 
 		//  Application Status
 		[HttpGet("status/{id}")]
-		//[Authorize(Roles = "Citizen")]
+		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> ApplicationStatus(int ApplicationId)
 		{
 
@@ -67,7 +67,7 @@ namespace GovServe_Project.Controllers
 			return Ok(status);
 		}
 
-		//  Delete Application
+		// Delete Application
 		[HttpDelete("delete/{id}")]
 		[Authorize(Roles = "Citizen")]
 		public async Task<IActionResult> DeleteApplication(int ApplicationId)
@@ -80,15 +80,31 @@ namespace GovServe_Project.Controllers
 
 			return Ok("Application Deleted Successfully");
 		}
-		
+
+		// Application Details (Citizen Dashboard)
+		[HttpGet("{id}")]
+		[Authorize(Roles = "Citizen")]
+		public async Task<IActionResult> GetDetails(int id)
+		{
+			var details = await _applicationService.GetApplicationDetailsAsync(id);
+
+			if (details == null)
+			{
+				return NotFound(new { message = "Application details not found" });
+			}
+
+			return Ok(details);
+		}
+
 		////------------Admin use----------------
 		// Get All Applications (Admin / Officer)
 		[HttpGet("all")]
-		//[Authorize(Roles = "Admin,Officer,Supervisor")]
+		//[Authorize(Roles = "Admin,Officer")]
 		public async Task<IActionResult> GetAllApplications()
 		{
 			var applications = await _applicationService.GetAllApplicationsAsync();
 			return Ok(applications);
 		}
+
 	}
 }

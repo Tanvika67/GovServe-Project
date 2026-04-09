@@ -15,7 +15,7 @@ namespace GovServe_Project.Models.SuperModels
 		public virtual Users User { get; set; }
 		[Required]
 		[ForeignKey("Case")]
-		public int CaseId { get; set; }
+		public int? CaseId { get; set; }
 		public virtual Case Case { get; set; }
 		[Required]
 		public string Message { get; set; }

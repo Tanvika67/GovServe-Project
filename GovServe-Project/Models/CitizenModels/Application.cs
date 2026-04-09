@@ -30,14 +30,15 @@ namespace GovServe_Project.Models.CitizenModels
 		[ForeignKey("ServiceID")]
 		public virtual Service Service { get; set; }
 
-		[Required]
-		public string ServiceName { get; set; }
+		//[Required]
+		//public string ServiceName { get; set; }
 
 		public int DepartmentID { get; set; }
+
 		[ForeignKey("DepartmentID")]
 		public virtual Department Department { get; set; }
 
-		public string DepartmentName { get; set; }
+		//public string DepartmentName { get; set; }
 
 		public DateTime SubmittedDate { get; set; }
 		public DateTime? CompletedDate { get; set; } = null;

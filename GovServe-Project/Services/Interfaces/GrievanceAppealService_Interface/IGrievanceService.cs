@@ -15,7 +15,8 @@ namespace GovServe_Project.Services.Interfaces
 		Task<List<Grievance>> MyGrievancesAsync(int citizenId);
 
 		// Get grievance details
-		Task<Grievance?> GrievanceStatusAsync(int id);
+		Task<Grievance?> GrievanceStatusAsync(int grievanceId);
+
 
 
 		// Officer Actions 
@@ -29,9 +30,6 @@ namespace GovServe_Project.Services.Interfaces
 
 		// Reject grievance
 		Task RejectGrievanceAsync(GrievanceActionDTO dto);
-
-		// Forward grievance to supervisor
-		Task ForwardToSupervisorAsync(GrievanceActionDTO dto);
 
 		Task<int> GetPendingGrievanceCountAsync();
 

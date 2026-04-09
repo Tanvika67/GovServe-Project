@@ -10,21 +10,20 @@ namespace GovServe_Project.Services.Interfaces.CitizenService_Interface
 {
 	public interface IApplicationService
 	{
-	
-		Task<string> CreateApplicationAsync(CreateApplicationDTO dto);
+
+		Task<Application> CreateApplicationAsync(CreateApplicationDTO dto);
 
 	
 		Task<List<ApplicationResponseDTO>> GetMyApplicationsAsync(int userId);
 
 		Task<string> GetApplicationStatusAsync(int ApplicationId);
-        Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync();
-
-        Task<bool> DeleteApplicationAsync(int ApplicationId);
-
 		
+		Task<bool> DeleteApplicationAsync(int ApplicationId);
+
+		Task<ApplicationDetailsDTO> GetApplicationDetailsAsync(int id);
+
 		Task<ApplicationDetails> GetApplicationDetails(int applicationId);
 
-
-
+		Task<List<ApplicationResponseDTO>> GetAllApplicationsAsync();
 	}
 }

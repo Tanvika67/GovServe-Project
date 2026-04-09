@@ -80,71 +80,105 @@ namespace GovServe_Project.Repository.Repository_Implentation
 		}
 
 		//--------------------------------------Supervisor Repository Methods--------------------------------------
-
-		//supervisor needs this
 		public async Task<List<Users>> GetOfficersByDepartmentAsync(int departmentId)
+
 
 		{
 
+
 			return await _context.User
+
 
 			.Where(u => u.RoleName == "Officer" && u.DepartmentID == departmentId)
 
+
 			.ToListAsync();
 
+
 		}
+
 		//Count of active cases
 		public async Task<int> GetActiveCaseCountByOfficerAsync(int officerId)
 
+
 		{
+
 
 			return await _context.Case
 
+
 			.CountAsync(c => c.AssignedOfficerId == officerId && c.Status != "Completed");
 
+
 		}
+
 		//To get admin Id for notification
 		public async Task<int> GetAdminIdAsync()
 
+
 		{
+
 
 			var admin = await _context.User
 
+
 			.FirstOrDefaultAsync(u => u.Role.RoleName == "Admin");
+
 
 			return admin?.UserId ?? 0;
 
+
 		}
+
 		//To get grievance officer id
 		public async Task<int> GetGrievanceOfficerIdAsync()
 
+
 		{
+
 
 			return await _context.User
 
+
 			.Where(u => u.RoleName == "GrievanceOfficer")
+
 
 			.Select(u => u.UserId)
 
+
 			.FirstOrDefaultAsync();
+
 
 		}
 
-        public async Task<int> GetSupervisorIdAsync()
-        {
-            var supervisorId = await _context.User
-                .Where(u => u.RoleName == "Supervisor")
-                .Select(u => (int?)u.UserId)
-                .FirstOrDefaultAsync();
 
-            if (supervisorId == null)
-                throw new Exception("Supervisor user not found");
+		public async Task<int> GetSupervisorIdAsync()
 
-            return supervisorId.Value;
-        }
+		{
+			var supervisorId = await _context.User
 
-    }
+				.Where(u => u.RoleName == "Supervisor")
+
+				.Select(u => (int?)u.UserId)
+
+				.FirstOrDefaultAsync();
+
+
+			if (supervisorId == null)
+
+				throw new Exception("Supervisor user not found");
+
+
+			return supervisorId.Value;
+
+		}
+
+
+	}
+
 
 }
+
+
 
 
