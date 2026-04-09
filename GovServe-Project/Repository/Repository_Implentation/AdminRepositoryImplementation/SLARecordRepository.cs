@@ -74,6 +74,7 @@ namespace GovServe_Project.Repository.Repository_Implentation.AdminRepositoryImp
 
             return await _context.Case
                 .Include(c => c.Application)
+                .ThenInclude(a=>a.Service)
                 .Include(c => c.Department)
                 .Include(c => c.AssignedOfficer)
                  .ThenInclude(o => o.Department)

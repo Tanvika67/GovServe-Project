@@ -153,12 +153,17 @@ namespace GovServe_Project.Services.Service_Implementation.AdminServiceImplement
             return cases.Select(c => new PendingSlaCaseDto
             {
                 CaseId = c.CaseId,
-                ApplicationNumber = $"APP-{c.ApplicationID}",     // ✅ derived
-                ServiceName = c.Application?.ServiceName ?? "",   // ✅ FIX HERE
+                ApplicationNumber = $"APP-{c.ApplicationID}",
+
+                // Instead of Application.ServiceName, fetch from Service entity
+                ServiceName = c.Application != null && c.Application.Service != null
+                    ? c.Application.Service.ServiceName
+                    : "",
+
                 DepartmentName = c.Department?.DepartmentName ?? "",
                 OfficerName = c.AssignedOfficer != null
-                 ? c.AssignedOfficer.FullName
-                 : "Unassigned",
+                    ? c.AssignedOfficer.FullName
+                    : "Unassigned",
 
                 OfficerDepartment = c.AssignedOfficer?.Department?.DepartmentName ?? "",
                 Status = c.Status,
